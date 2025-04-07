@@ -1,0 +1,30 @@
+package com.topics.product.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import com.topics.product.model.bean.ProductBean;
+import com.topics.product.model.service.ProductService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class ProductController {
+
+	@Autowired
+	private ProductService pService;
+	
+	@GetMapping("/product/find")
+	public ProductBean findProductBiId(@RequestParam Integer param) {
+		ProductBean product = pService.findProductById(param);
+	    if (product != null) {
+	        return product; // 你可以回傳 JSON 或 JSP 頁面（若用 Thymeleaf 等）
+	    }
+	    return null;
+	}
+	
+	
+	
+}

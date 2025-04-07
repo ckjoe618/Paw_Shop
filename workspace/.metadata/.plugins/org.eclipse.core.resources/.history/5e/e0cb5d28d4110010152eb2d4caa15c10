@@ -1,0 +1,27 @@
+package com.topics.product.model.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.topics.product.model.bean.ProductBean;
+import com.topics.product.model.repository.ProductRepository;
+
+@Service
+public class ProductService {
+	
+	@Autowired
+	private ProductRepository pRepos;
+	
+	public ProductBean findProductById(Integer id) {
+		Optional<ProductBean> op = pRepos.findById(id);
+		
+		if(op.isPresent()) {
+			return op.get();
+		}
+		
+		return null;
+	}
+	
+}
