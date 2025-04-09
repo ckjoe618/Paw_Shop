@@ -1,5 +1,6 @@
 package com.topics.discuss.model.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,11 @@ public class ArticleBean {
     private int viewCountNum;
     private boolean isPinnedStatus;
     private boolean isFeaturedStatus;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedDate;
     private boolean isDeletedStatus;
 }
