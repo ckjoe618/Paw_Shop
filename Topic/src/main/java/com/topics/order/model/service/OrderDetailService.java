@@ -21,8 +21,8 @@ public class OrderDetailService {
 	private OrderRepository orderRepository;
 	
 	//新增
-	public OrderDetailBean insertOrderDetail(Integer orderId, OrderDetailBean orderDetailBean) {
-		OrderBean getByorderid = orderRepository.findById(orderId).get();
+	public OrderDetailBean insertOrderDetail(OrderDetailBean orderDetailBean) {
+		OrderBean getByorderid = orderRepository.findById(orderDetailBean.getOrder().getOrderId()).get();
 		orderDetailBean.setOrder(getByorderid);
 		
 		Integer unitPrice = orderDetailBean.getUnitPrice();
