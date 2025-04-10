@@ -483,7 +483,7 @@
                         $("#tbody-details").empty();
                         if (data == null) {
                         } else {
-                            let tr = null;
+                            let tr = "";
                             let priceTotal = 0;
                             $.each(data, function (i, m) {
                                 let trStyle = (m.status === "disabled") ? " style='text-decoration: line-through'" : "";
@@ -520,6 +520,22 @@
                     type: "get",
                     url: "/orderdetail/delete?orderDetailId=" + selectedOrderDetailId,
                     success: (data) => {
+                        $("tr#totalPrice-" + selectedOrderId).remove();
+                        let priceTotal = 0;
+                        $("#tbody-details tr").each(function () {
+                            if (!$(this).attr("id")?.startsWith("totalPrice-")) {
+                                if (!$(this).attr("style")?.includes("text-decoration: line-through")) {
+                                    let subtotal = $(this).find("td:eq(4)").text().replace('$', '').trim();
+                                    if (subtotal !== "" && !isNaN(subtotal)) {
+                                        priceTotal += parseInt(subtotal);
+                                    }
+                                }
+                            }
+                        });
+                        let totalRow = "<tr id='totalPrice-" + selectedOrderId + "'><td colspan='4'></td><td class='fw-bold'>總計：$" + priceTotal + "</td>" +
+                            "<td><button type='button' class='btn btn-outline-warning btn-sm addDetail-btn'>新增</button></td></tr>";
+
+                        $("#tbody-details").append(totalRow);
                     },
                     error: () => {
                         Swal.fire({
@@ -563,17 +579,25 @@
                                 "</td><td>$" + data.subtotal +
                                 "</td><td><button type='button' class='btn btn-secondary btn-sm delete-btn' data-id='" + data.orderDetailId + "'>刪除</button></td></tr>";
 
-                            $("#tbody-details tr:last").before(tr);
+                            $("tr#totalPrice-" + selectedOrderId).remove();
+                            $("#tbody-details").append(tr);
 
                             let priceTotal = 0;
                             $("#tbody-details tr").each(function () {
-                                let subtotal = $(this).find("td:eq(4)").text().replace('$', '').trim();
-                                if (subtotal !== "" && !isNaN(subtotal)) {
-                                    priceTotal += parseFloat(subtotal);
+                                if (!$(this).attr("id")?.startsWith("totalPrice-")) {
+                                    if (!$(this).attr("style")?.includes("text-decoration: line-through")) {
+                                        let subtotal = $(this).find("td:eq(4)").text().replace('$', '').trim();
+                                        if (subtotal !== "" && !isNaN(subtotal)) {
+                                            priceTotal += parseInt(subtotal);
+                                        }
+                                    }
                                 }
                             });
                             console.log(priceTotal);
-                            $("tr#totalPrice-" + selectedOrderId).find("td:eq(4)").text("總計：$" + priceTotal);
+                            let totalRow = "<tr id='totalPrice-" + selectedOrderId + "'><td colspan='4'></td><td class='fw-bold'>總計：$" + priceTotal + "</td>" +
+                                "<td><button type='button' class='btn btn-outline-warning btn-sm addDetail-btn'>新增</button></td></tr>";
+
+                            $("#tbody-details").append(totalRow);
                         }
                     },
                     error: () => {
