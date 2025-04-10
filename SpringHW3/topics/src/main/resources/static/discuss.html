@@ -22,10 +22,47 @@
 </head>
 <body>
 <div class="container mt-4">
-    <h2>討論管理</h2>
     <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#articleModal" onclick="openCreateModal()">
         新增文章
     </button>
+
+    <!-- 文字欄位搜尋 -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <select id="columnSelect" class="form-select">
+                <option value="0">文章ID</option>
+                <option value="1">會員ID</option>
+                <option value="2">標題</option>
+                <option value="3">內容</option>
+                <option value="4">分類</option>
+            </select>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="columnSearch" class="form-control" placeholder="請輸入關鍵字...">
+        </div>
+    </div>
+
+    <!-- 日期區間搜尋 -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <select id="dateColumnSelect" class="form-select">
+                <option value="8">建立時間</option>
+                <option value="9">更新時間</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="startDate" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="endDate" class="form-control" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col text-end">
+            <button id="clearFilters" class="btn btn-secondary">清除搜尋設定</button>
+        </div>
+    </div>
+
 
     <table id="articleTable" class="table table-striped table-bordered">
         <thead>
@@ -98,6 +135,18 @@
 
     $(document).ready(function () {
         table = $('#articleTable').DataTable({
+            language: {
+                "lengthMenu": "每頁顯示 _MENU_ 筆資料",
+                "zeroRecords": "查無資料",
+                "info": "第 _START_ 到第 _END_ 筆資料，共 _TOTAL_ 筆",
+                "infoEmpty": "第 0 到第 0 筆資料，共 0 筆",
+                "infoFiltered": "(過濾自 _MAX_ 筆資料)",
+                "search": "快速搜尋：",
+                "paginate": {
+                    "next": "下一頁",
+                    "previous": "上一頁"
+                }
+            },
             ajax: {
                 url: '/discuss/article',
                 dataSrc: ''
@@ -127,6 +176,31 @@
             ]
         });
 
+        // 欄位文字搜尋
+        $('#columnSearch').on('keyup', function () {
+            const columnIndex = $('#columnSelect').val();
+            const keyword = $(this).val();
+            table.column(columnIndex).search(keyword).draw();
+        });
+
+        // 日期區間搜尋（建立/更新時間）
+        $.fn.dataTable.ext.search.push(function (settings, data) {
+            const dateColumnIndex = parseInt($('#dateColumnSelect').val());
+            const start = $('#startDate').val();
+            const end = $('#endDate').val();
+            const cellDate = data[dateColumnIndex].split(' ')[0]; // 拿 yyyy-MM-dd
+
+            if (!start && !end) return true;
+            if (start && cellDate < start) return false;
+            if (end && cellDate > end) return false;
+            return true;
+        });
+
+        $('#startDate, #endDate, #dateColumnSelect').on('change', function () {
+            table.draw();
+        });
+
+        // Modal 表單送出
         $('#articleForm').on('submit', function (e) {
             e.preventDefault();
             const article = {
@@ -206,7 +280,7 @@
                     timer: 1500,
                     showConfirmButton: false
                 });
-                table.ajax.reload();
+                $('#articleTable').DataTable().ajax.reload();
             }
         });
     }
@@ -225,7 +299,7 @@
                     timer: 1500,
                     showConfirmButton: false
                 });
-                table.ajax.reload();
+                $('#articleTable').DataTable().ajax.reload();
             }
         });
     }
@@ -234,6 +308,22 @@
         $('#articleForm')[0].reset();
         $('#articleId').val('');
     }
+
+    $('#clearFilters').on('click', function () {
+        // 清除欄位搜尋
+        $('#columnSearch').val('');
+        table.search('').columns().search('');
+
+        // 重設選單為預設
+        $('#columnSelect').val('0');
+        $('#dateColumnSelect').val('8');
+        $('#startDate').val('');
+        $('#endDate').val('');
+
+        // 重新繪製表格
+        table.draw();
+    });
+
 </script>
 </body>
 </html>
