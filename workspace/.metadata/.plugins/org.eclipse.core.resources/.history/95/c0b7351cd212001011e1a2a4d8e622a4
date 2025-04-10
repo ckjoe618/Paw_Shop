@@ -1,0 +1,12 @@
+package com.topics.product.model.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.topics.product.model.bean.ProductBean;
+
+public interface ProductRepository extends JpaRepository<ProductBean, Integer> {
+	
+	List<ProductBean> findByIsDeletedStatusFalse();
+}

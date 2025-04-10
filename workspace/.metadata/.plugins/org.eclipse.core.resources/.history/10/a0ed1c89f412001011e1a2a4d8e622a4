@@ -1,0 +1,82 @@
+package com.topics.product.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import com.topics.product.model.bean.ProductBean;
+import com.topics.product.model.service.ProductService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class ProductController {
+
+	@Autowired
+	private ProductService pService;
+	
+	//查詢單筆
+	@GetMapping("/product/find")
+	public ProductBean findProductById(@RequestParam Integer id) {
+		ProductBean product = pService.findProductById(id);
+	    if (product != null) {
+	        return product; // 你可以回傳 JSON 或 JSP 頁面（若用 Thymeleaf 等）
+	    }
+	    return null;
+	}
+	
+	//查詢未被刪除
+	@GetMapping("/product/available")
+	public List<ProductBean> findAvailableProducts() {
+	    return pService.findAvailableProducts();
+	}
+	
+	//查詢全部
+	@GetMapping("/product/findAll")
+	public List<ProductBean> findAllProducts() {
+	    return pService.findAllProducts();
+	}
+	
+	//新增
+	@PostMapping("/product/insert")
+	public ProductBean insertProduct(@RequestBody ProductBean product) {
+	    return pService.insertProduct(product);
+	}
+	
+	//修改
+	@PutMapping("/product/update")
+	public ProductBean updateProduct(@RequestParam Integer id, @RequestBody ProductBean product) {
+	    return pService.updateProduct(id, product);
+	}
+	
+	//軟刪除
+	@DeleteMapping("/product/delete")
+	public String deleteProduct(@RequestParam Integer id) {
+	    boolean result = pService.deleteProduct(id);
+	    return result ? "刪除成功" : "查無資料";
+	}
+	
+	// 軟刪除復原
+	@PutMapping("/product/restore")
+	public String restoreProduct(@RequestParam Integer id) {
+	    boolean result = pService.restoreProduct(id);
+	    return result ? "產品已復原" : "查無此產品";
+	}
+	
+	// 模糊查詢商品名稱
+	@GetMapping("/product/search")
+	public List<ProductBean> searchProducts(@RequestParam String keyword) {
+	    return pService.findByProductName(keyword);
+	}
+	
+	
+	
+}

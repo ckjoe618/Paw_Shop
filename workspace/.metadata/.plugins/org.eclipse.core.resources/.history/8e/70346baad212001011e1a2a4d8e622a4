@@ -1,0 +1,75 @@
+package com.topics.product.model.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.topics.product.model.bean.ProductBean;
+import com.topics.product.model.repository.ProductRepository;
+
+@Service
+public class ProductService {
+	
+	@Autowired
+	private ProductRepository pRepos;
+	
+	
+	//查詢單筆By id
+	public ProductBean findProductById(Integer id) {
+		Optional<ProductBean> op = pRepos.findById(id);
+		
+		if(op.isPresent()) {
+			return op.get();
+		}
+		
+		return null;
+	}
+	
+	//查詢未被刪除
+	public List<ProductBean> findAvailableProducts() {
+	    return pRepos.findByIsDeletedStatusFalse();
+	}
+	
+	//查詢全部
+	public List<ProductBean> findAllProducts() {
+	    return pRepos.findAll();
+	}
+	
+	
+	//新增
+	public ProductBean insertProduct(ProductBean product) {
+	    return pRepos.save(product);
+	}
+	
+	//修改
+	public ProductBean updateProduct(Integer id, ProductBean updateData) {
+	    Optional<ProductBean> optional = pRepos.findById(id);
+	    if (optional.isPresent()) {
+	        ProductBean product = optional.get();
+	        product.setProductName(updateData.getProductName());
+	        product.setProductDes(updateData.getProductDes());
+	        product.setProductPrice(updateData.getProductPrice());
+	        product.setProductStock(updateData.getProductStock());
+	        product.setCategoryName(updateData.getCategoryName());
+	        product.setProductPhoto(updateData.getProductPhoto());
+	        // 其他欄位也可以更新...
+	        return pRepos.save(product);
+	    }
+	    return null;
+	}
+	
+	//軟刪除
+	public boolean deleteProduct(Integer id) {
+	    Optional<ProductBean> optional = pRepos.findById(id);
+	    if (optional.isPresent()) {
+	        ProductBean product = optional.get();
+	        product.setIsDeletedStatus(true);
+	        pRepos.save(product);
+	        return true;
+	    }
+	    return false;
+	}
+	
+}

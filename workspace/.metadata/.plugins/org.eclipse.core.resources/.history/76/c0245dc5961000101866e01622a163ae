@@ -1,0 +1,23 @@
+package com.topics.product.model.bean;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "purchasing_order")
+public class purchasingOrderBean {
+
+	@Id @Column(name = "purchasing_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer purchasingId;
+	
+	@Column(name = "product_id")
+	private Integer productId;
+	
+	@Column(name = "purchasing_quantity")
+	private Integer purchasingQuantity;
+}
