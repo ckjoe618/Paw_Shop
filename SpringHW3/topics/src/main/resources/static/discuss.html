@@ -26,7 +26,7 @@
         新增文章
     </button>
 
-    <!-- 🔍 文字欄位搜尋 -->
+    <!-- 文字欄位搜尋 -->
     <div class="row mb-3">
         <div class="col-md-4">
             <select id="columnSelect" class="form-select">
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <!-- 📅 日期區間搜尋 -->
+    <!-- 日期區間搜尋 -->
     <div class="row mb-3">
         <div class="col-md-3">
             <select id="dateColumnSelect" class="form-select">
@@ -176,14 +176,14 @@
             ]
         });
 
-        // 🔍 欄位文字搜尋
+        // 欄位文字搜尋
         $('#columnSearch').on('keyup', function () {
             const columnIndex = $('#columnSelect').val();
             const keyword = $(this).val();
             table.column(columnIndex).search(keyword).draw();
         });
 
-        // 📅 日期區間搜尋（建立/更新時間）
+        // 日期區間搜尋（建立/更新時間）
         $.fn.dataTable.ext.search.push(function (settings, data) {
             const dateColumnIndex = parseInt($('#dateColumnSelect').val());
             const start = $('#startDate').val();
@@ -200,7 +200,7 @@
             table.draw();
         });
 
-        // 📝 Modal 表單送出
+        // Modal 表單送出
         $('#articleForm').on('submit', function (e) {
             e.preventDefault();
             const article = {
