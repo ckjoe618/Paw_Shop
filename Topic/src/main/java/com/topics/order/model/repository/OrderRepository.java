@@ -14,10 +14,10 @@ public interface OrderRepository extends JpaRepository<OrderBean, Integer> {
 	@Query("SELECT o FROM OrderBean o WHERE o.orderStatus != '訂單失效'")
 	public List<OrderBean> findAllActiveOrder();
 	
-	public List<OrderBean> findByMemberId(Integer memberId);
-	
-	@Query("SELECT o FROM OrderBean o WHERE o.memberId = ?1 AND (transactionTime BETWEEN ?2 AND ?3)")
-	public List<OrderBean> findByMemberIdAndTxnTime(Integer memberId, String startDate, String endDate);
+//	public List<OrderBean> findByMemberId(Integer memberId);
+//	
+//	@Query("SELECT o FROM OrderBean o WHERE o.memberId = ?1 AND (transactionTime BETWEEN ?2 AND ?3)")
+//	public List<OrderBean> findByMemberIdAndTxnTime(Integer memberId, String startDate, String endDate);
 	
 	//刪除（假刪除）
 	@Modifying

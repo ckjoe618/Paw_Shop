@@ -14,7 +14,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "order_detail")
 public class OrderDetailBean {
@@ -32,5 +31,10 @@ public class OrderDetailBean {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId")
 	private OrderBean order;
+	
+	public OrderDetailBean() {
+		super();
+		status = "active";
+	}
 
 }
