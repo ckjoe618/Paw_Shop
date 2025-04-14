@@ -14,6 +14,17 @@ const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate); // 使用持久化插件，能避免 F5 後，全部遺忘
 app.use(pinia);
 
+// 使用 vuetify 插件
+import "vuetify/styles";
+import { createVuetify } from "vuetify";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
+const vuetify = createVuetify({
+  components,
+  directives,
+});
+app.use(vuetify);
+
 // 使用 Font Awesome 插件
 import "@fortawesome/fontawesome-free/css/all.css";
 
