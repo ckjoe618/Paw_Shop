@@ -2,7 +2,7 @@ GitHub分支說明如下:
 
 1. master: 程式已全數整合，完全可以運行，正式上線的網站
 
-2. develop: 發現 master 分支有錯誤要修，便會在此分支修正
+2. develop: 發現 master 分支有錯誤要修，便會在此分支修正，也是各功能 "Push" 上去的分支
 
 3. release: 在整合 master 前，做最後的測試，測試完成後合併 master
 
