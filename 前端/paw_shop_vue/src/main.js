@@ -19,14 +19,23 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
 const vuetify = createVuetify({
   components,
   directives,
+  icons: {
+    defaultSet: 'mdi',
+  }
 });
 app.use(vuetify);
 
 // 使用 Font Awesome css
 import "@fortawesome/fontawesome-free/css/all.css";
+
+// 使用 Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // 掛載 APP
 app.mount("#app");
