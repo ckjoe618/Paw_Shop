@@ -484,3 +484,24 @@
 2025-04-15 10:53:37,175 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src/main/resources to target/classes
 2025-04-15 10:53:37,291 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 22 resources from src/main/resources to target/classes
 2025-04-15 10:53:37,296 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory /Users/chin/Documents/Java資策會/Spring/workspace/Topics/src/test/resources
+2025-04-15 12:02:24,445 [Worker-30: Importing Maven projects] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.example:Topics:0.0.1-SNAPSHOT @ /Users/chin/Documents/Java資策會/Spring/workspace/後端/Topics/pom.xml.
+2025-04-15 12:02:25,604 [Worker-30: Importing Maven projects] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Topics/src/main/java
+2025-04-15 12:02:25,606 [Worker-30: Importing Maven projects] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Topics/src/main/resources
+2025-04-15 12:02:25,609 [Worker-30: Importing Maven projects] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Topics/src/main/resources
+2025-04-15 12:02:25,612 [Worker-30: Importing Maven projects] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Topics/src/test/java
+2025-04-15 12:02:25,613 [Worker-30: Importing Maven projects] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Topics/src/test/resources
+2025-04-15 12:02:25,970 [Worker-30: Importing Maven projects] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Imported and configured 1 project(s) in 3 sec
+2025-04-15 12:02:27,044 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src/main/resources to target/classes
+2025-04-15 12:02:27,077 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 22 resources from src/main/resources to target/classes
+2025-04-15 12:02:27,146 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory /Users/chin/Documents/Java資策會/Spring/workspace/後端/Topics/src/test/resources
+2025-04-15 12:02:47,185 [Worker-29: Updating Maven Project] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2025-04-15 12:02:48,263 [Worker-29: Updating Maven Project] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.example:Topics:0.0.1-SNAPSHOT @ /Users/chin/Documents/Java資策會/Spring/workspace/後端/Topics/pom.xml.
+2025-04-15 12:02:49,137 [Worker-29: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Topics/src/main/java
+2025-04-15 12:02:49,137 [Worker-29: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Topics/src/main/resources
+2025-04-15 12:02:49,137 [Worker-29: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Topics/src/main/resources
+2025-04-15 12:02:49,138 [Worker-29: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Topics/src/test/java
+2025-04-15 12:02:49,138 [Worker-29: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Topics/src/test/resources
+2025-04-15 12:02:49,387 [Worker-29: Updating Maven Project] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed for 1 poms: local refresh takes 0.00 sec, refresh facades takes 1.00 sec, update config takes 0.00 sec 
+2025-04-15 12:02:50,704 [Worker-31: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src/main/resources to target/classes
+2025-04-15 12:02:50,740 [Worker-31: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 22 resources from src/main/resources to target/classes
+2025-04-15 12:02:50,811 [Worker-31: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory /Users/chin/Documents/Java資策會/Spring/workspace/後端/Topics/src/test/resources
