@@ -1,4 +1,4 @@
-package com.topics.order.controller;
+package com.topics.order.controller.admin;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
