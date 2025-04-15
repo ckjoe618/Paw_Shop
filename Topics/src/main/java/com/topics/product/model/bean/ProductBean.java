@@ -3,9 +3,14 @@ package com.topics.product.model.bean;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.topics.order.model.bean.OrderDetailBean;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -57,6 +62,10 @@ public class ProductBean {
 
 	@Column(name = "is_deleted_status", nullable = false, columnDefinition = "BIT DEFAULT 0")
 	private Boolean isDeletedStatus = false; // SQL Server 的 BIT 可用 Boolean
+	
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<OrderDetailBean> orderDetailBean;
 
 	// ✅ 雙向關聯：一個產品對應多筆進貨單
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
