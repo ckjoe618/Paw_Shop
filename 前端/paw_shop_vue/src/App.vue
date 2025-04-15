@@ -1,12 +1,11 @@
 <template>
-  <div>
-    <ad></ad>
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
+  <MainLayout></MainLayout>
 </template>
 
 <script setup>
-import ad from "../src/home/ad.vue";
+import MainLayout from "@/member/views/MainLayout.vue";
+
 </script>
 
 <style scoped></style>
