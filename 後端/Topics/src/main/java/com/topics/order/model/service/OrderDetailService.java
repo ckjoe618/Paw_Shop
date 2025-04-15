@@ -21,6 +21,7 @@ public class OrderDetailService {
 	private OrderRepository orderRepository;
 	
 	//新增
+	@Transactional
 	public OrderDetailBean insertOrderDetail(OrderDetailBean orderDetailBean) {
 		OrderBean getByorderid = orderRepository.findById(orderDetailBean.getOrder().getOrderId()).get();
 		orderDetailBean.setOrder(getByorderid);
@@ -36,6 +37,7 @@ public class OrderDetailService {
 	@Transactional
 	public void deleteByOrderDetailId(Integer orderDetailId) {
 		orderDetailRepository.softDeleteById(orderDetailId);
+		
 	}
 	
 	//查詢（依orderId）

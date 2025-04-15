@@ -17,25 +17,16 @@ public class OrderService {
 	private OrderRepository orderRepository;
 
 	// 查詢
-	@Transactional
-	public OrderBean findOrderByOrderId(Integer orderId) {
-		Optional<OrderBean> op = orderRepository.findById(orderId);
-		if (op.isPresent()) {
-			return op.get();
-		}
-		return null;
-	};
-
-//	public List<OrderBean> findOrderByMemberId(Integer memberId) {
-//		return orderRepository.findByMemberId(memberId);
-//		
-//	};
-
-	public List<OrderBean> findAllOrders() {
+	public List<OrderBean> findAllActiveOrders() {
 		return orderRepository.findAllActiveOrder();
 	};
+	
+	public List<OrderBean> findAllOrders(){
+		return orderRepository.findAll();
+	}
 
 	// 新增
+	@Transactional
 	public OrderBean insertOrder(OrderBean insertBean) {
 		return orderRepository.save(insertBean);
 	};
@@ -47,6 +38,17 @@ public class OrderService {
 	};
 
 	// 修改
+	@Transactional
+	public OrderBean findOrderByOrderId(Integer orderId) {
+		Optional<OrderBean> op = orderRepository.findById(orderId);
+		if (op.isPresent()) {
+			OrderBean orderBean = op.get();
+			orderBean.setTrackingNum(orderBean.getTrackingNum().trim());
+			return orderBean;
+		}
+		return null;
+	};
+	@Transactional
 	public OrderBean updateOrderByOrderId(OrderBean orderBean) {
 		return orderRepository.save(orderBean);
 	};
