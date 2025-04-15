@@ -1,6 +1,7 @@
 <template>
+  <router-view></router-view>
   <!-- <AdminLayout></AdminLayout> -->
-  <FrontLayout></FrontLayout>
+  <!-- <FrontLayout></FrontLayout> -->
 </template>
 
 <script setup>
