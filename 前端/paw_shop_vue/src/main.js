@@ -25,7 +25,7 @@ const vuetify = createVuetify({
 });
 app.use(vuetify);
 
-// 使用 Font Awesome 插件
+// 使用 Font Awesome css
 import "@fortawesome/fontawesome-free/css/all.css";
 
 // 掛載 APP

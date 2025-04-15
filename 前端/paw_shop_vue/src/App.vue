@@ -1,7 +1,9 @@
 <template>
-  <div></div>
+  <MainLayout></MainLayout>
 </template>
 
-<script setup></script>
+<script setup>
+import MainLayout from "@/member/views/MainLayout.vue";
+</script>
 
 <style scoped></style>
