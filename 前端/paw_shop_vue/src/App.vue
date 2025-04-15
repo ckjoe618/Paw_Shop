@@ -1,9 +1,9 @@
 <template>
-  <MainLayout></MainLayout>
+  <AdminLayout></AdminLayout>
 </template>
 
 <script setup>
-import MainLayout from "@/member/views/MainLayout.vue";
+import AdminLayout from "@/member/views/AdminLayout.vue";
 </script>
 
 <style scoped></style>

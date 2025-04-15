@@ -10,9 +10,12 @@
       single-line
       hide-details
       dense
-      append-inner-icon="mdi-magnify"
       class="mr-4"
-    />
+    >
+      <template #append-inner>
+        <v-btn icon><i class="fas fa-search"></i></v-btn>
+      </template>
+    </v-text-field>
     <v-btn icon><i class="fas fa-heart"></i></v-btn>
     <v-btn icon><i class="fas fa-cart-shopping"></i></v-btn>
     <v-btn icon><i class="fas fa-user"></i></v-btn>

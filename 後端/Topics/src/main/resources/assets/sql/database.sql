@@ -1,15 +1,29 @@
 CREATE TABLE member (
-	member_id			INT					IDENTITY(1,1) CONSTRAINT member_memberId_PK PRIMARY KEY,
+	member_id			INT					IDENTITY(1,1) PRIMARY KEY,
 	member_name			NVARCHAR(30)		NOT NULL,
 	gender				VARCHAR(6)			NOT NULL,
-	idno				VARCHAR(10)			CONSTRAINT member_idno_UK UNIQUE,
-	email				NVARCHAR(100)		CONSTRAINT member_email_UK UNIQUE,
-	phone				VARCHAR(10)			CONSTRAINT member_phone_UK UNIQUE,
+	idno				VARCHAR(10)			UNIQUE,
+	email				NVARCHAR(100)		UNIQUE,
+	phone				VARCHAR(10)			UNIQUE,
 	birth_date			DATE				NOT NULL,
 	account				VARCHAR(50)			NOT NULL,
 	password			VARCHAR(20)			NOT NULL,
-	create_account_date	DATETIME			CONSTRAINT member_createAccount_DF DEFAULT GETDATE(),
-	active_status		BIT					CONSTRAINT member_isActive_DF DEFAULT 1
+	create_account_date	DATETIME			DEFAULT GETDATE(),
+	active_status		BIT					DEFAULT 1
+);
+
+CREATE TABLE address (
+	address_id			INT					IDENTITY(1,1) PRIMARY KEY,
+	member_id			INT,
+	recipient_name		NVARCHAR(30),
+	phone				VARCHAR(10),
+	zipcode				VARCHAR(10),
+	city				NVARCHAR(30),
+	district			NVARCHAR(30),
+	address_detail		NVARCHAR(100),
+	created_date		DATETIME			DEFAULT GETDATE(),
+	default_status		BIT					DEFAULT 1,
+	CONSTRAINT FK_address_member FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
 
 CREATE TABLE article (
@@ -26,15 +40,6 @@ CREATE TABLE article (
     is_deleted_status   BIT					DEFAULT 0
 );
 
-CREATE TABLE owner (
-    member_id			INT					PRIMARY KEY,
-    member_name			VARCHAR(50)			NOT NULL,
-    phone_number		VARCHAR(15)			NOT NULL, 
-    email				VARCHAR(100)		NOT NULL UNIQUE,
-    addr				VARCHAR(255)		NOT NULL,
-    join_date			DATE				NOT NULL
-);
-
 CREATE TABLE pets (
     pet_id				INT					IDENTITY(1,1) PRIMARY KEY,
 	member_id			INT,
@@ -43,7 +48,7 @@ CREATE TABLE pets (
     pet_size			VARCHAR(30)			NOT NULL,
     pet_fur				VARCHAR(30)			NOT NULL,
 	pet_status			TINYINT				NOT NULL
-	FOREIGN KEY (member_id) REFERENCES owner(member_id)
+	FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
 
 CREATE TABLE appointments (
@@ -55,7 +60,7 @@ CREATE TABLE appointments (
     appointment_total	INT					NOT NULL DEFAULT 0,
     appointment_status	TINYINT				NOT NULL DEFAULT 0,
     payment_status		TINYINT				NOT NULL DEFAULT 0,
-    FOREIGN KEY (member_id) REFERENCES owner(member_id),
+    FOREIGN KEY (member_id) REFERENCES member(member_id),
     FOREIGN KEY (pet_id)	REFERENCES pets(pet_id)
 );
 
@@ -70,7 +75,7 @@ CREATE TABLE item_details (
     appointment_id		INT					NOT NULL,
     item_id				INT					NOT NULL,
     item_detail_quantity INT				NOT NULL DEFAULT 1,
-    FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id),
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id),
     FOREIGN KEY (item_id)		 REFERENCES items(item_id)
 );
 
@@ -86,7 +91,7 @@ CREATE TABLE package_details (
     appointment_id		INT					NOT NULL,
     package_id			INT					NOT NULL,
     package_details_quantity INT			NOT NULL DEFAULT 1,
-    FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id),
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id),
     FOREIGN KEY (package_id)	 REFERENCES packages(package_id)
 );
 
