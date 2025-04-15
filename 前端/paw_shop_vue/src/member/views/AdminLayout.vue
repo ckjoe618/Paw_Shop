@@ -86,43 +86,62 @@ const openedGroups = ref(["使用者"]);
 const items = ref([
   {
     title: "使用者",
-    icon: "fas fa-user",
+    icon: "mdi-account",
     children: [
-      { label: "用戶管理", link: "" },
-      { label: "角色權限", link: "" },
+      {
+        label: "用戶管理",
+        link: "/user/manage",
+        icon: "mdi-account-multiple-outline",
+      },
+      { label: "角色權限", link: "/user/roles" },
     ],
   },
   {
     title: "賣場",
-    icon: "fas fa-store",
+    icon: "mdi-storefront",
     children: [
-      { label: "商品管理", link: "" },
-      { label: "訂單管理", link: "" },
+      {
+        label: "商品管理",
+        link: "/shop/products",
+      },
+      { label: "訂單管理", link: "/shop/orders" },
     ],
   },
   {
     title: "美容預約",
-    icon: "fas fa-cut",
+    icon: "mdi-calendar-account",
     children: [
-      { label: "預約紀錄", link: "" },
-      { label: "服務項目資訊", link: "" },
+      {
+        label: "預約紀錄",
+        link: "/reservation/history",
+      },
+      {
+        label: "服務項目資訊",
+        link: "/reservation/services",
+      },
     ],
   },
   {
     title: "論壇",
-    icon: "fas fa-comments",
+    icon: "mdi-forum",
     children: [
-      { label: "文章管理", link: "" },
-      { label: "分類", link: "" },
+      {
+        label: "文章管理",
+        link: "/forum/posts",
+      },
+      { label: "分類", link: "/forum/categories" },
     ],
   },
   {
     title: "首頁內容",
-    icon: "fas fa-home",
+    icon: "mdi-home-outline",
     children: [
-      { label: "最新活動", link: "" },
-      { label: "公司資訊", link: "" },
-      { label: "常見問答", link: "" },
+      { label: "最新活動", link: "/home/events" },
+      { label: "公司資訊", link: "/home/about" },
+      {
+        label: "常見問答",
+        link: "/home/faq",
+      },
     ],
   },
 ]);

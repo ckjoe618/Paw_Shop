@@ -50,23 +50,23 @@ const navItems = [
 const petCategories = [
   {
     name: "Cat",
-    image: "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+    icon: "mdi-cat",
   },
   {
     name: "Dog",
-    image: "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+    icon: "mdi-dog",
   },
   {
     name: "Small Pet",
-    image: "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+    icon: "mdi-rabbit-variant",
   },
   {
     name: "Fish",
-    image: "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+    icon: "mdi-fish",
   },
   {
     name: "Bird",
-    image: "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+    icon: "mdi-bird",
   },
 ];
 </script>
