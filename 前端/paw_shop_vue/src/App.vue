@@ -1,12 +1,7 @@
 <template>
   <router-view></router-view>
-  <!-- <AdminLayout></AdminLayout> -->
-  <!-- <FrontLayout></FrontLayout> -->
 </template>
 
-<script setup>
-import AdminLayout from "@/member/views/AdminLayout.vue";
-import FrontLayout from "@/member/views/FrontLayout.vue";
-</script>
+<script setup></script>
 
 <style scoped></style>
