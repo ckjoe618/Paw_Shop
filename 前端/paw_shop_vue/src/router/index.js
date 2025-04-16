@@ -1,22 +1,7 @@
-// import { createRouter, createWebHistory } from 'vue-router'
-// import OrderLayout from '../../src/order/components/backsite/layout/Orderlayout.vue'
-// import OrderListPage from '../../src/order/pages/OrderListPage.vue'
-
-// const routes = [
-//   {
-//     path: '/orders',
-//     component: OrderListPage,
-//   }
-// ]
-
-// const router = createRouter({
-//   history: createWebHistory(),
-//   routes
-// })
-
-// export default router
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
+import OrderLayout from "../../src/order/components/backsite/layout/Orderlayout.vue";
+import OrderListPage from "../../src/order/pages/OrderListPage.vue";
 
 const routes = [
   {
@@ -28,19 +13,23 @@ const routes = [
     path: "/login",
     name: "Login",
     component: () => import("@/member/views/LoginView.vue"),
-    meta: { requiresGuest: true }, // ✅ 僅未登入可進入
+    meta: { requiresGuest: true },
   },
   // {
   //   path: "/dashboard",
   //   name: "Dashboard",
   //   component: () => import("@/member/views/DashboardView.vue"),
-  //   meta: { requiresAuth: true }, // ✅ 需登入才可進入
+  //   meta: { requiresAuth: true },
   // },
   {
     path: "/admin",
     name: "Admin",
     component: () => import("@/member/views/AdminView.vue"),
-    meta: { requiresAuth: true, requiresAdmin: true }, // ✅ 限管理員
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/orders",
+    component: OrderListPage,
   },
 ];
 
