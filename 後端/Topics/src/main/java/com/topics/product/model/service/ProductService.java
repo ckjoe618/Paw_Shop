@@ -1,5 +1,6 @@
 package com.topics.product.model.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,17 @@ public class ProductService {
 
 	// 新增
 	public ProductBean insertProduct(ProductBean product) {
+		// 補上預設值，避免 NULL 寫入資料庫
+	    if (product.getTotalStar() == null) {
+	        product.setTotalStar(0);
+	    }
+	    if (product.getTotalReview() == null) {
+	        product.setTotalReview(0);
+	    }
+	    if (product.getAverageRating() == null) {
+	        product.setAverageRating(BigDecimal.valueOf(0.0));
+	    }
+		
 		return pRepos.save(product);
 	}
 
@@ -96,6 +108,10 @@ public class ProductService {
 	// 查詢未被刪除的商品名稱 (模糊)
 	public List<ProductBean> findByProductName(String keyword) {
 		return pRepos.findByProductNameContainingAndIsDeletedStatusFalse(keyword);
+	}
+	
+	public List<ProductBean> findAvailableStockProducts() {
+	    return pRepos.findByProductStockGreaterThanAndIsDeletedStatusFalse(0);
 	}
 
 }

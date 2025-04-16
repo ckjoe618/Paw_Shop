@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
-import OrderLayout from "../../src/order/components/backsite/layout/Orderlayout.vue";
+import OrderLayout from "../../src/order/components/backsite/layout/OrderLayout.vue";
 import OrderListPage from "../../src/order/pages/OrderListPage.vue";
 
 const routes = [
