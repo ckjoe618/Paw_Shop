@@ -6,6 +6,9 @@ import com.topics.product.model.bean.ProductBean;
 
 public interface ProductRepository extends JpaRepository<ProductBean, Integer> {
 
+	// 查詢庫存數量不為 0 且未刪除的產品
+	List<ProductBean> findByProductStockGreaterThanAndIsDeletedStatusFalse(int stock);
+	
 	// 查詢未刪除
 	List<ProductBean> findByIsDeletedStatusFalse();
 

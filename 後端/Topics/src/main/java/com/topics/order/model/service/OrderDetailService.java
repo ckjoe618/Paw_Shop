@@ -10,6 +10,8 @@ import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.bean.OrderDetailBean;
 import com.topics.order.model.repository.OrderDetailRepository;
 import com.topics.order.model.repository.OrderRepository;
+import com.topics.product.model.bean.ProductBean;
+import com.topics.product.model.repository.ProductRepository;
 
 @Service
 public class OrderDetailService {
@@ -19,6 +21,9 @@ public class OrderDetailService {
 	
 	@Autowired
 	private OrderRepository orderRepository;
+	
+	@Autowired
+	private ProductRepository productRepository;
 	
 	//新增
 	@Transactional
@@ -30,12 +35,30 @@ public class OrderDetailService {
 		Integer quantity = orderDetailBean.getQuantity();
 		orderDetailBean.setSubtotal(unitPrice*quantity);
 		
+		// 扣庫存
+		ProductBean product = productRepository
+			    .findById(orderDetailBean.getProduct().getProductId())
+			    .orElseThrow(() -> new RuntimeException("Product not found"));
+		product.setProductStock(product.getProductStock() - quantity);
+		productRepository.save(product);
+	    
 		return orderDetailRepository.save(orderDetailBean);
 	}
 	
 	//刪除
 	@Transactional
 	public void deleteByOrderDetailId(Integer orderDetailId) {
+		OrderDetailBean detail = orderDetailRepository.findById(orderDetailId).orElse(null);
+	    if (detail != null && "active".equals(detail.getStatus())) {
+	    	Integer productId = detail.getProduct().getProductId();
+
+	        ProductBean product = productRepository.findById(productId)
+	                .orElseThrow(() -> new RuntimeException("找不到對應商品"));
+
+	        product.setProductStock(product.getProductStock() + detail.getQuantity());
+	        productRepository.save(product);
+	    }
+		
 		orderDetailRepository.softDeleteById(orderDetailId);
 		
 	}

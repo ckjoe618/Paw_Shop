@@ -4,11 +4,8 @@
       <v-card-title class="text-h6">訂單明細</v-card-title>
       <v-card-text>
         <v-divider class="my-2" />
-        <div v-if="Array.isArray(orderDetails) && orderDetails.length">
-          <h4
-            class="text-subtitle-1 mb-2"
-            style="font-weight: bold; color: #4f4f4f"
-          >
+        <div>
+          <h4 class="text-subtitle-1 mb-2" style="font-weight: bold; color: #4f4f4f">
             <v-icon>mdi-shopping-search</v-icon>明細項目：
           </h4>
           <v-table density="comfortable">
@@ -23,24 +20,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="(item, index) in orderDetails"
-                :key="item.orderDetailId"
-                :style="
-                  item.status === 'disabled'
-                    ? 'text-decoration: line-through'
-                    : ''
-                "
-              >
+              <tr v-for="(item, index) in orderDetails" :key="item.orderDetailId" :style="item.status === 'disabled'
+                ? 'text-decoration: line-through'
+                : ''
+                ">
                 <td>{{ item.product.productId }}</td>
                 <td>{{ item.product.productName }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>${{ item.unitPrice }}</td>
                 <td>${{ item.unitPrice * item.quantity }}</td>
                 <td>
-                  <formDeletebtn
-                    @click="confirmDelete(item.orderDetailId)"
-                  ></formDeletebtn>
+                  <formDeletebtn @click="confirmDelete(item.orderDetailId)"></formDeletebtn>
                 </td>
               </tr>
               <tr>
@@ -65,38 +55,12 @@
     <v-card>
       <v-card-title>新增明細</v-card-title>
       <v-card-text>
-        <v-autocomplete
-          v-model="selectedProduct"
-          :items="filteredProducts"
-          item-title="customLabel"
-          item-value="productId"
-          label="商品編號"
-          variant="solo"
-          :search-input.sync="searchText"
-          return-object
-          @update:modelValue="onProductSelect"
-        ></v-autocomplete>
-        <v-text-field
-          v-model="form.productName"
-          label="商品名稱"
-          variant="solo"
-          readonly
-        />
-        <v-text-field
-          v-model="form.unitPrice"
-          label="單價"
-          type="number"
-          prefix="$"
-          variant="solo"
-          required
-        />
-        <v-text-field
-          v-model="form.quantity"
-          label="數量"
-          type="number"
-          variant="solo"
-          required
-        />
+        <v-autocomplete v-model="selectedProduct" :items="filteredProducts" item-title="customLabel"
+          item-value="productId" label="商品編號" variant="solo" :search-input.sync="searchText" return-object
+          @update:modelValue="onProductSelect"></v-autocomplete>
+        <v-text-field v-model="form.productName" label="商品名稱" variant="solo" readonly />
+        <v-text-field v-model="form.unitPrice" label="單價" type="number" prefix="$" variant="solo" required />
+        <v-text-field v-model="form.quantity" label="數量" type="number" variant="solo" required />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
