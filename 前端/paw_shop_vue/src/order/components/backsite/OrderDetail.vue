@@ -4,7 +4,7 @@
       <v-card-title class="text-h6">訂單明細</v-card-title>
       <v-card-text>
         <v-divider class="my-2" />
-        <div v-if="Array.isArray(orderDetails) && orderDetails.length">
+        <div>
           <h4
             class="text-subtitle-1 mb-2"
             style="font-weight: bold; color: #4f4f4f"
@@ -24,6 +24,7 @@
             </thead>
             <tbody>
               <tr
+                v-if="Array.isArray(orderDetails) && orderDetails.length"
                 v-for="(item, index) in orderDetails"
                 :key="item.orderDetailId"
                 :style="
@@ -198,6 +199,18 @@ const confirmDelete = async (orderDetailId) => {
 const productList = ref([]);
 const searchText = ref("");
 const selectedProduct = ref(null);
+watch(showAddDetail, (val) => {
+  if (val) {
+    form.value = {
+      productId: "",
+      productName: "",
+      unitPrice: "",
+      quantity: "",
+    };
+    selectedProduct.value = null;
+    searchText.value = "";
+  }
+});
 onMounted(async () => {
   try {
     const res = await axios.get("http://localhost:8080/product/available");
@@ -238,7 +251,6 @@ const submitDetail = async () => {
     unitPrice: form.value.unitPrice,
     quantity: form.value.quantity,
   };
-  console.log(newData);
 
   try {
     const res = await axios.post(

@@ -4,7 +4,7 @@
       id="carouselAds"
       class="carousel slide"
       data-bs-ride="carousel"
-      data-bs-interval="5000"
+      data-bs-interval="4000"
     >
       <div class="carousel-indicators">
         <button
@@ -39,18 +39,6 @@
           data-bs-slide-to="4"
           aria-label="Slide 5"
         ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselAds"
-          data-bs-slide-to="5"
-          aria-label="Slide 6"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselAds"
-          data-bs-slide-to="6"
-          aria-label="Slide 7"
-        ></button>
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
@@ -58,20 +46,6 @@
             src="../order/assets/pictures/messageImage_1744271934310.jpg"
             class="d-block w-100"
             alt="新開幕"
-          />
-        </div>
-        <div class="carousel-item">
-          <img
-            src="../order/assets/pictures/ChatGPT Image 2025年4月15日 下午03_55_32.png"
-            class="d-block w-100"
-            alt="快來買"
-          />
-        </div>
-        <div class="carousel-item">
-          <img
-            src="../order/assets/pictures/ChatGPT Image 2025年4月15日 下午03_58_17.png"
-            class="d-block w-100"
-            alt="大特價"
           />
         </div>
         <div class="carousel-item">
@@ -99,7 +73,7 @@
           <img
             src="../order/assets/pictures/4_Carousel_Desktop_HarryPotter.png"
             class="d-block w-100"
-            alt="支持年輕人"
+            alt="快來買"
           />
         </div>
       </div>

@@ -1,7 +1,13 @@
 <template>
-  <v-app-bar app color="green darken-3" dark>
+  <v-app-bar app color="#215d1e" dark height="80">
     <v-toolbar-title class="text-h5">
-      <i class="fas fa-paw mr-2"></i> PawShop
+      <router-link to="/" style="text-decoration: none">
+        <img
+          src="../assets/images/ChatGPT Image 2025年4月16日 上午10_53_06.png"
+          alt="PawShop"
+          style="height: 80px"
+        />
+      </router-link>
     </v-toolbar-title>
     <v-spacer />
     <v-text-field
@@ -11,6 +17,7 @@
       hide-details
       dense
       class="mr-4"
+      outlined
     >
       <template #append-inner>
         <v-btn icon><i class="fas fa-search"></i></v-btn>

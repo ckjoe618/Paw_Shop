@@ -9,11 +9,11 @@
         disabled
       ></v-text-field>
       <v-text-field
-        v-model="form.memberId"
+        v-model="form.member.memberId"
         label="會員編號"
         :rules="[numberRule]"
         variant="solo"
-        required
+        disabled
       ></v-text-field>
       <v-text-field
         v-model="form.priceTotal"
@@ -91,7 +91,9 @@ const formRef = ref(null);
 const emit = defineEmits(["success", "cancel"]);
 
 const form = ref({
-  memberId: "",
+  member: {
+    memberId: null,
+  },
   priceTotal: "",
   paymentMethod: "",
   paymentStatus: "",
@@ -140,18 +142,26 @@ const submitForm = async () => {
   try {
     if (props.orderId) {
       // 編輯
+      const newData = {
+        ...form.value,
+        member: { memberId: form.value.memberId },
+      };
       console.log("送出資料:", JSON.stringify(form.value));
       const response = await axios.put(
         `http://localhost:8080/order/update/${props.orderId}`,
-        form.value
+        newData
       );
       console.log("訂單更新成功！", response.data);
       emit("success", response.data);
     } else {
       // 新增
+      const newData = {
+        ...form.value,
+        member: { memberId: form.value.memberId },
+      };
       const response = await axios.post(
         "http://localhost:8080/order/add",
-        form.value
+        newData
       );
       console.log("訂單建立成功！", response.data);
       emit("success", response.data);

@@ -1,6 +1,5 @@
-package com.topics.order.controller.admin;
+package com.topics.order.controller.back;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -41,17 +40,15 @@ public class OrderController {
 		String totalpricerule = "^[0-9]+$";
 		String trackingnumrule = "^[0-9]{10}$";
 
-		String memberid = String.valueOf(orderBean.getMemberId());
+		String memberid = String.valueOf(orderBean.getMember().getMemberId());
 		String totalprice = String.valueOf(orderBean.getPriceTotal());
 		String trackingNum = orderBean.getTrackingNum();
 
 		if (memberid.matches(memberidrule) && totalprice.matches(totalpricerule) &&
 				(trackingNum != "") ? trackingNum.matches(trackingnumrule) : true) {
-
-			orderBean.setTransactionTime(LocalDateTime.now().withNano(0));
-			orderBean.setUpdateTime(LocalDateTime.now().withNano(0));
-
+			
 			return orderService.insertOrder(orderBean);
+			
 		} else {
 			return null;
 		}
@@ -80,14 +77,13 @@ public class OrderController {
 		String totalpricerule = "^[0-9]+$";
 		String trackingnumrule = "^[0-9]{10}$";
 
-		String memberid = String.valueOf(orderBean.getMemberId());
+		String memberid = String.valueOf(orderBean.getMember().getMemberId());
 		String totalprice = String.valueOf(orderBean.getPriceTotal());
 		String trackingNum = orderBean.getTrackingNum();
 
 		if (memberid.matches(memberidrule) && totalprice.matches(totalpricerule) &&
 				(trackingNum != "") ? trackingNum.matches(trackingnumrule) : true) {
 			orderBean.setOrderId(orderId);
-			orderBean.setUpdateTime(LocalDateTime.now().withNano(0));
 			return orderService.updateOrderByOrderId(orderBean);
 		} else {
 			return null;
