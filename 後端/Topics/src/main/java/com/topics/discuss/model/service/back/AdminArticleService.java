@@ -23,8 +23,6 @@ public class AdminArticleService {
 	}
 
 	public ArticleBean insertArticle(ArticleBean article) {
-		article.setCreatedDate(LocalDateTime.now());
-		article.setUpdatedDate(LocalDateTime.now());
 		return articleRepo.save(article);
 	}
 

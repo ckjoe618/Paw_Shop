@@ -29,6 +29,10 @@ const routes = [
         path: "member",
         component: () => import("@/member/components/MemberTable.vue"),
       },
+      {
+        path: "discuss",
+        component: () => import("@/discuss/pages/ArticleListPage.vue")
+      }
     ],
   },
 ];
