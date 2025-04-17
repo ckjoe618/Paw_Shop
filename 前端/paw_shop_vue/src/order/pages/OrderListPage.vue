@@ -23,8 +23,21 @@
       </v-col>
     </v-row>
 
+<<<<<<< HEAD
+    <v-data-table
+      :headers="headers"
+      :items="filteredOrders"
+      item-value="orderId"
+      class="elevation-1"
+      items-per-page-text="每頁顯示筆數："
+    >
+      <template #item.memberId="{ item }">
+        {{ item.member?.memberId }}
+      </template>
+=======
     <v-data-table :headers="headers" :items="filteredOrders" item-value="orderId" class="elevation-1"
       items-per-page-text="每頁顯示筆數：">
+>>>>>>> 2c6fa6790f118700586a034c337dd2249b40f618
       <template #item.actions="{ item }">
         <div class="d-flex align-center" style="gap: 8px">
           <formCheckbtn @click="openDetailDialog(item)" />
@@ -116,7 +129,9 @@ const filterOrders = () => {
 
   filteredOrders.value = source.filter((order) => {
     const txnDate = order.transactionTime?.split("T")[0];
-    const matchMemberId = memberId ? String(order.memberId) == memberId : true;
+    const matchMemberId = memberId
+      ? String(order.member.memberId) == memberId
+      : true;
     const matchDateRange =
       start && end ? txnDate >= start && txnDate <= end : true;
 

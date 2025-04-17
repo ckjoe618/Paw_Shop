@@ -5,7 +5,14 @@
       <v-card-text>
         <v-divider class="my-2" />
         <div>
+<<<<<<< HEAD
+          <h4
+            class="text-subtitle-1 mb-2"
+            style="font-weight: bold; color: #4f4f4f"
+          >
+=======
           <h4 class="text-subtitle-1 mb-2" style="font-weight: bold; color: #4f4f4f">
+>>>>>>> 2c6fa6790f118700586a034c337dd2249b40f618
             <v-icon>mdi-shopping-search</v-icon>明細項目：
           </h4>
           <v-table density="comfortable">
@@ -20,10 +27,23 @@
               </tr>
             </thead>
             <tbody>
+<<<<<<< HEAD
+              <tr
+                v-if="Array.isArray(orderDetails) && orderDetails.length"
+                v-for="(item, index) in orderDetails"
+                :key="item.orderDetailId"
+                :style="
+                  item.status === 'disabled'
+                    ? 'text-decoration: line-through'
+                    : ''
+                "
+              >
+=======
               <tr v-for="(item, index) in orderDetails" :key="item.orderDetailId" :style="item.status === 'disabled'
                 ? 'text-decoration: line-through'
                 : ''
                 ">
+>>>>>>> 2c6fa6790f118700586a034c337dd2249b40f618
                 <td>{{ item.product.productId }}</td>
                 <td>{{ item.product.productName }}</td>
                 <td>{{ item.quantity }}</td>
@@ -162,6 +182,18 @@ const confirmDelete = async (orderDetailId) => {
 const productList = ref([]);
 const searchText = ref("");
 const selectedProduct = ref(null);
+watch(showAddDetail, (val) => {
+  if (val) {
+    form.value = {
+      productId: "",
+      productName: "",
+      unitPrice: "",
+      quantity: "",
+    };
+    selectedProduct.value = null;
+    searchText.value = "";
+  }
+});
 onMounted(async () => {
   try {
     const res = await axios.get("http://localhost:8080/product/available");
@@ -202,7 +234,6 @@ const submitDetail = async () => {
     unitPrice: form.value.unitPrice,
     quantity: form.value.quantity,
   };
-  console.log(newData);
 
   try {
     const res = await axios.post(

@@ -1,6 +1,5 @@
 package com.topics.order.model.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.topics.product.model.bean.ProductBean;
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.topics.order.model.bean.OrderDetailBean;
+import com.topics.order.model.bean.ShoppingcartItemBean;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -66,6 +67,10 @@ public class ProductBean {
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<OrderDetailBean> orderDetailBean;
+	
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<ShoppingcartItemBean> shoppingcartItem;
 
 	// ✅ 雙向關聯：一個產品對應多筆進貨單
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

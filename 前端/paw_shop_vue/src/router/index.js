@@ -1,35 +1,34 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
-import OrderLayout from "../../src/order/components/backsite/layout/OrderLayout.vue";
-import OrderListPage from "../../src/order/pages/OrderListPage.vue";
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: () => import("@/member/views/HomeView.vue"),
+    component: () => import("@/layout/AdminLayout.vue"),
+    children: [
+      { path: "", component: () => import("@/layout/FrontLayout.vue") },
+      {
+        path: "login",
+        component: () => import("@/layout/LoginLayout.vue"),
+        meta: { requiresGuest: true },
+      },
+      // { path: "xx", component:  },
+    ],
   },
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("@/member/views/LoginView.vue"),
-    meta: { requiresGuest: true },
-  },
-  // {
-  //   path: "/dashboard",
-  //   name: "Dashboard",
-  //   component: () => import("@/member/views/DashboardView.vue"),
-  //   meta: { requiresAuth: true },
-  // },
   {
     path: "/admin",
-    name: "Admin",
-    component: () => import("@/member/views/AdminView.vue"),
+    component: () => import("@/layout/AdminLayout.vue"),
     meta: { requiresAuth: true, requiresAdmin: true },
-  },
-  {
-    path: "/orders",
-    component: OrderListPage,
+    children: [
+      // {
+      //   path: "",
+      //   component: AdminDashboard, // ⬅️ 進入後台管理時看到的主頁
+      // },
+      {
+        path: "orders",
+        component: () => import("@/order/pages/OrderListPage.vue"),
+      },
+    ],
   },
 ];
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 延伸頁腳：整合導覽、服務、法規、社群、下載、付款方式等 -->
-    <v-sheet class="py-12" color="#faf8f5">
+    <v-sheet class="py-12" color="#215d1e">
       <v-container>
         <v-row>
           <v-col cols="12" sm="6" md="3">
