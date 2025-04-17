@@ -3,14 +3,14 @@ import { useAuthStore } from "@/member/stores/auth";
 
 const routes = [
   {
-    path: "/",
-    component: () => import("@/layout/FrontLayout.vue"),
-    children: [],
-  },
-  {
     path: "/login",
     component: () => import("@/layout/LoginLayout.vue"),
     meta: { requiresGuest: true },
+  },
+  {
+    path: "/",
+    component: () => import("@/layout/FrontLayout.vue"),
+    children: [],
   },
   {
     path: "/admin",
@@ -18,12 +18,16 @@ const routes = [
     meta: { requiresAuth: true, requiresAdmin: true },
     children: [
       {
-        path: "appointment",
-        component: () => import("@/layout/LoginLayout.vue"),
+        path: "home",
+        component: () => import("@/components/CardHover.vue"),
       },
       {
         path: "orders",
         component: () => import("@/order/pages/OrderListPage.vue"),
+      },
+      {
+        path: "member",
+        component: () => import("@/member/components/MemberTable.vue"),
       },
     ],
   },
@@ -47,9 +51,13 @@ router.beforeEach((to, from, next) => {
     return next("/");
   }
 
-  if (to.meta.requiresAdmin && authStore.role !== "ADMIN") {
-    // 非管理員進入管理頁，導回首頁或 403
-    return next("/");
+  if (to.meta.requiresAdmin) {
+    if (!authStore.isLoggedIn) {
+      return next("/login");
+    }
+    if (authStore.role !== "ADMIN") {
+      return next("/403"); // 沒權限
+    }
   }
 
   return next();

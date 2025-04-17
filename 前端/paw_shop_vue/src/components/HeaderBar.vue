@@ -19,12 +19,17 @@
       @keyup.esc="closeSearch"
     >
       <!-- 🔍 搜尋圖示按鈕 -->
-      <v-btn icon @click="toggleSearch" class="search-icon-btn">
+      <v-btn
+        icon
+        @click.stop="toggleSearch"
+        class="search-icon-btn"
+        v-if="showSearchIcon"
+      >
         <i class="fas fa-search"></i>
       </v-btn>
 
       <!-- 🔄 展開搜尋欄 -->
-      <v-expand-transition>
+      <v-slide-x-reverse-transition>
         <div v-if="showSearch" class="search-bar">
           <v-text-field
             v-model="search"
@@ -34,6 +39,7 @@
             solo-inverted
             flat
             class="search-input"
+            style="width: 250px"
             @keyup.enter="handleSearch"
           >
             <template #append-inner>
@@ -43,7 +49,7 @@
             </template>
           </v-text-field>
         </div>
-      </v-expand-transition>
+      </v-slide-x-reverse-transition>
     </div>
 
     <!-- 收藏按鈕 -->
@@ -75,36 +81,59 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 
-const search = ref("");
 const router = useRouter();
 const authStore = useAuthStore();
+
+const search = ref("");
+const showSearch = ref(false);
+const showSearchIcon = ref(true);
 const searchContainer = ref(null);
+
+const toggleSearch = () => {
+  showSearch.value = true;
+  showSearchIcon.value = false;
+};
+
+const closeSearch = () => {
+  showSearch.value = false;
+  setTimeout(() => {
+    showSearchIcon.value = true;
+  }, 300); // 與動畫時間同步
+  search.value = "";
+};
+
+// 在掛載前，建立點擊事件
+onMounted(() => document.addEventListener("click", handleClickOutside));
+// 在卸載後，移除點擊事件
+onBeforeUnmount(() =>
+  document.removeEventListener("click", handleClickOutside)
+);
+
+const handleClickOutside = (e) => {
+  if (searchContainer.value && !searchContainer.value.contains(e.target)) {
+    closeSearch();
+  }
+};
 
 const handleSearch = () => {
   if (search.trim() !== "") {
     // router.push("/search?q=" + search);
+    closeSearch();
   }
 };
 
-const toggleSearch = () => {
-  showSearch.value = !showSearch.value;
-};
-
-const login = () => {
-  router.push("/login");
-};
-
-const logout = () => {
-  authStore.logout();
-};
-
-const goToMember = () => {
-  // router.push("/member");
-};
+const login = () => router.push("/login");
+const logout = () => authStore.logout();
 </script>
 
-<style scoped></style>
+<style scoped>
+.search-bar {
+  width: 250px;
+  margin-left: 8px;
+  transition: width 0.3s ease;
+}
+</style>

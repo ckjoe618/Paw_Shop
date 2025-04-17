@@ -76,8 +76,8 @@
 </template>
 
 <script setup>
-import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
-import CardHover from "@//components/CardHover.vue";
+import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
+import CardHover from "@/components/CardHover.vue";
 import { ref } from "vue";
 import router from "@/router";
 
