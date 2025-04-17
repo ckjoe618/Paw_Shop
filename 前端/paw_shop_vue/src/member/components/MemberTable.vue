@@ -9,25 +9,24 @@
 
     <v-data-table
       :headers="headers"
-      :items="filteredMembers"
+      :items="members"
       :loading="loading"
       class="elevation-1"
       item-value="memberId"
-      :items-per-page="itemsPerPage"
-      :items-per-page-options="[5, 10, 20]"
-      show-current-page
-      show-select
-      v-model:page="page"
     >
-      <template #item.member_photo="{ item }">
+      <template #loading>
+        <v-skeleton-loader type="table-row@10" />
+      </template>
+
+      <template #item.photo="{ item }">
         <v-avatar size="36">
-          <v-img :src="item.member_photo" />
+          <v-img :src="item.photo" />
         </v-avatar>
       </template>
 
       <template #item.activeStatus="{ item }">
-        <v-chip :color="item.activeStatus === 1 ? 'green' : 'grey'" dark>
-          {{ item.activeStatus === 1 ? "啟用" : "停用" }}
+        <v-chip :color="item.activeStatus === true ? 'green' : 'grey'" dark>
+          {{ item.activeStatus === true ? "啟用" : "停用" }}
         </v-chip>
       </template>
 
@@ -35,6 +34,10 @@
         <v-chip :color="item.role === 'ADMIN' ? 'red' : 'blue'" dark>
           {{ item.role }}
         </v-chip>
+      </template>
+
+      <template #item.birthDate="{ item }">
+        {{ new Date(item.birthDate).toLocaleDateString() }}
       </template>
 
       <template #item.actions="{ item }">
@@ -51,25 +54,23 @@
 
 <script setup>
 import { defineProps } from "vue";
-import { ref } from "vue";
 
 const props = defineProps({
   members: Array,
   loading: Boolean,
 });
 
-const page = ref(1);
-const itemsPerPage = ref(5); // 預設每頁筆數
-
 const headers = [
   { title: "ID", value: "memberId" },
+  { title: "頭像", value: "photo" },
   { title: "姓名", value: "memberName" },
   { title: "性別", value: "gender" },
+  { title: "身分證", value: "idno" },
   { title: "Email", value: "email" },
   { title: "電話", value: "phone" },
-  { title: "生日", value: "birth_date" },
-  { title: "頭像", value: "member_photo" },
+  { title: "生日", value: "birthDate" },
   { title: "角色", value: "role" },
+  { title: "建立時間", value: "createAccountDate" },
   { title: "狀態", value: "activeStatus" },
   { title: "操作", value: "actions", sortable: false },
 ];
