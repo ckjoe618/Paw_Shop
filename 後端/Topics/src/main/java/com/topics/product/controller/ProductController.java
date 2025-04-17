@@ -14,10 +14,11 @@ public class ProductController {
 	@Autowired
 	private ProductService pService;
 
-	// 管理頁（導向 HTML 不加 @ResponseBody）
-	@GetMapping("/admin")
-	public String adminProductPage() {
-		return "productAdmin";
+	// 查詢目前尚有庫存的商品（且未被刪除）
+	@GetMapping("/stock/available")
+	@ResponseBody
+	public List<ProductBean> findAvailableStockProducts() {
+	    return pService.findAvailableStockProducts();
 	}
 
 	// 查詢單筆

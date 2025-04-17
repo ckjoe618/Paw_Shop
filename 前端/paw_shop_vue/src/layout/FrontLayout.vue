@@ -27,9 +27,9 @@
 </template>
 
 <script setup>
-import HeaderBar from "@/member/components/HeaderBar.vue";
-import NavTabs from "@/member/components/NavTabs.vue";
-import FooterBar from "@/member/components/FooterBar.vue";
+import HeaderBar from "@/components/HeaderBar.vue";
+import NavTabs from "@/components/NavTabs.vue";
+import FooterBar from "@/components/FooterBar.vue";
 
 const navItems = [
   "Dog",

@@ -1,14 +1,16 @@
 CREATE TABLE member (
 	member_id			INT					IDENTITY(1,1) PRIMARY KEY,
 	member_name			NVARCHAR(30)		NOT NULL,
-	gender				VARCHAR(6)			NOT NULL,
-	idno				VARCHAR(10)			UNIQUE,
-	email				NVARCHAR(100)		UNIQUE,
-	phone				VARCHAR(10)			UNIQUE,
+	gender				NVARCHAR(6)			NOT NULL,
+	idno				VARCHAR(10)			NOT NULL UNIQUE,
+	email				NVARCHAR(100)		NOT NULL UNIQUE,
+	phone				VARCHAR(10)			NOT NULL UNIQUE,
 	birth_date			DATE				NOT NULL,
-	account				VARCHAR(50)			NOT NULL,
-	password			VARCHAR(20)			NOT NULL,
+	member_photo		NVARCHAR(255),
+	account				NVARCHAR(50)		NOT NULL,
+	password			NVARCHAR(255)		NOT NULL,
 	create_account_date	DATETIME			DEFAULT GETDATE(),
+	role				NVARCHAR(20)		NOT NULL DEFAULT 'user',
 	active_status		BIT					DEFAULT 1
 );
 
@@ -118,31 +120,59 @@ CREATE TABLE purchasing_order (
 );
 
 CREATE TABLE orders (
-    orderId				INT					IDENTITY(1,1) PRIMARY KEY,
-    memberId			INT					NOT NULL,
-    priceTotal			INT					NOT NULL,
-    transactionTime		DATETIME2(0)		NOT NULL,
-    paymentMethod		NVARCHAR(10)		NOT NULL,
-    paymentStatus		NVARCHAR(10)		NOT NULL,
-    orderStatus			NVARCHAR(10)		NOT NULL,
-    pickupMethod		NVARCHAR(10)		NOT NULL,
-    trackingNum			NVARCHAR(10)		NULL,
-    updateTime			DATETIME2(0)		NOT NULL
+    order_id			INT					IDENTITY(1,1) PRIMARY KEY,
+    member_id			INT					NOT NULL,
+    price_total			INT					NOT NULL,
+    transaction_time	DATETIME2(0)		NOT NULL,
+    payment_method		NVARCHAR(10)		NOT NULL,
+    payment_status		NVARCHAR(10)		NOT NULL,
+    order_status		NVARCHAR(10)		NOT NULL,
+    pickup_method		NVARCHAR(10)		NOT NULL,
+    tracking_num		NVARCHAR(10)		NULL,
+    update_time			DATETIME2(0)		NOT NULL
 );
 
+ALTER TABLE orders
+ADD CONSTRAINT FK_orders_member
+FOREIGN KEY (member_id)
+REFERENCES member(member_id);
+
 CREATE TABLE order_detail (
-    orderDetailId		INT					IDENTITY(1,1) PRIMARY KEY,
-    orderId				INT					NOT NULL,
-    productId			INT					NOT NULL,
+	order_detail_id		INT					IDENTITY(1,1) PRIMARY KEY,
+    order_id			INT					NOT NULL,
+    product_id			INT					NOT NULL,
     quantity			INT					NOT NULL,
-    unitPrice			INT					NOT NULL,
+    unit_price			INT					NOT NULL,
     subtotal			INT					NOT NULL,
     rating				INT					NULL,
     comment				NVARCHAR(50)		NULL,
-    status				VARCHAR(20)			NULL DEFAULT ('active')
+    status				VARCHAR(20),
 );
 
 ALTER TABLE order_detail
 ADD CONSTRAINT FK_order_detail_orders
-FOREIGN KEY (orderId)
-REFERENCES orders(orderId);
+FOREIGN KEY (order_id)
+REFERENCES orders(order_id);
+
+ALTER TABLE order_detail
+ADD CONSTRAINT FK_order_detail_product
+FOREIGN KEY (product_id)
+REFERENCES product(product_id);
+
+CREATE TABLE shoppingcart_item (
+    cart_item_id		INT					IDENTITY(1,1) PRIMARY KEY,
+    member_id			INT					NOT NULL,
+    product_id			INT					NOT NULL,
+    quantity			INT					NOT NULL,
+    created_time		DATETIME2(0)		NOT NULL
+);
+
+ALTER TABLE shoppingcart_item
+ADD CONSTRAINT FK_shoppingcart_item_member
+FOREIGN KEY (member_id)
+REFERENCES member(member_id);
+
+ALTER TABLE shoppingcart_item
+ADD CONSTRAINT FK_shoppingcart_item_product
+FOREIGN KEY (product_id)
+REFERENCES product(product_id);

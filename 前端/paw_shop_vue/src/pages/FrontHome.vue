@@ -10,8 +10,8 @@
 <script setup>
 import QA from "@/components/QA.vue";
 import ad from "@/components/ad.vue";
-import CategoryIcons from "@/member/components/CategoryIcons.vue";
-import ProductRecommendations from "@/member/components/ProductRecommendations.vue";
+import CategoryIcons from "@/components/CategoryIcons.vue";
+import ProductRecommendations from "@/components/ProductRecommendations.vue";
 
 const petCategories = [
   {

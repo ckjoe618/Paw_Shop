@@ -7,24 +7,13 @@
 
     <v-row class="mt-4" justify="center" align="center" style="gap: 32px">
       <v-col cols="12" sm="3" class="d-flex">
-        <v-text-field
-          v-model="filterMemberId"
-          label="輸入會員編號"
-          prepend-icon="mdi-account-outline"
-          density="compact"
-          @input="filterOrders"
-        ></v-text-field>
+        <v-text-field v-model="filterMemberId" label="輸入會員編號" prepend-icon="mdi-account-outline" density="compact"
+          @input="filterOrders"></v-text-field>
       </v-col>
       <v-col cols="12" sm="4" class="d-flex">
         <DatePicker v-model="filterRange" @update:modelValue="filterOrders" />
-        <v-btn
-          icon
-          variant="plain"
-          size="28"
-          class="ml-10"
-          @click="clearFilter"
-          style="box-shadow: none; min-width: 0; height: 40px"
-        >
+        <v-btn icon variant="plain" size="28" class="ml-10" @click="clearFilter"
+          style="box-shadow: none; min-width: 0; height: 40px">
           <v-icon size="24">mdi-close</v-icon>
         </v-btn>
       </v-col>
@@ -34,6 +23,7 @@
       </v-col>
     </v-row>
 
+<<<<<<< HEAD
     <v-data-table
       :headers="headers"
       :items="filteredOrders"
@@ -44,6 +34,10 @@
       <template #item.memberId="{ item }">
         {{ item.member?.memberId }}
       </template>
+=======
+    <v-data-table :headers="headers" :items="filteredOrders" item-value="orderId" class="elevation-1"
+      items-per-page-text="每頁顯示筆數：">
+>>>>>>> 2c6fa6790f118700586a034c337dd2249b40f618
       <template #item.actions="{ item }">
         <div class="d-flex align-center" style="gap: 8px">
           <formCheckbtn @click="openDetailDialog(item)" />
@@ -59,26 +53,14 @@
           editingOrderId ? "編輯訂單" : "新增訂單"
         }}</v-card-title>
         <v-card-text>
-          <OrderForm
-            :order-id="editingOrderId"
-            @success="onOrderCreated"
-            @cancel="showCreateDialog = false"
-          />
+          <OrderForm :order-id="editingOrderId" @success="onOrderCreated" @cancel="showCreateDialog = false" />
         </v-card-text>
       </v-card>
     </v-dialog>
 
-    <OrderDeleteDialog
-      :order-id="deletingOrderId"
-      v-model:visible="showDeleteDialog"
-      @confirm="deleteOrder"
-    />
+    <OrderDeleteDialog :order-id="deletingOrderId" v-model:visible="showDeleteDialog" @confirm="deleteOrder" />
 
-    <OrderDetail
-      :order="selectedOrder"
-      v-model:visible="showDetailDialog"
-      @updateOrderPriceTotal="updatePriceTotal"
-    />
+    <OrderDetail :order="selectedOrder" v-model:visible="showDetailDialog" @updateOrderPriceTotal="updatePriceTotal" />
   </v-container>
 </template>
 
@@ -206,6 +188,7 @@ const deleteOrder = async () => {
 const selectedOrder = ref(null);
 const showDetailDialog = ref(false);
 const openDetailDialog = (order) => {
+  console.log("打開明細的訂單：", order); // ⬅️ 加這行
   selectedOrder.value = order;
   showDetailDialog.value = true;
 };
