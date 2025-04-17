@@ -18,6 +18,9 @@ public class AuthService {
 		MemberBean member = memberRepository.findByAccount(info.getLoginId());
 		if (member == null) {
 			member = memberRepository.findByEmail(info.getLoginId());
+			if(member == null) {
+				member = memberRepository.findByPhone(info.getLoginId());
+			}
 		}
 		if (member == null) {
 			throw new LoginFailException("登入失敗，帳號或 email 錯誤");
