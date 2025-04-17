@@ -76,7 +76,7 @@
   </div>
 </template>
 <script setup>
-import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
+import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { ref } from "vue";
 import { apiLogin } from "@/member/api/api";
 import { useRouter } from "vue-router";
@@ -89,11 +89,6 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const handlerLogin = async () => {
-  console.log("登入資料", {
-    account: account.value,
-    password: password.value,
-  });
-
   const response = await apiLogin({
     account: account.value,
     password: password.value,

@@ -4,26 +4,23 @@ import { useAuthStore } from "@/member/stores/auth";
 const routes = [
   {
     path: "/",
-    component: () => import("@/layout/AdminLayout.vue"),
-    children: [
-      { path: "", component: () => import("@/layout/FrontLayout.vue") },
-      {
-        path: "login",
-        component: () => import("@/layout/LoginLayout.vue"),
-        meta: { requiresGuest: true },
-      },
-      // { path: "xx", component:  },
-    ],
+    component: () => import("@/layout/FrontLayout.vue"),
+    children: [],
+  },
+  {
+    path: "/login",
+    component: () => import("@/layout/LoginLayout.vue"),
+    meta: { requiresGuest: true },
   },
   {
     path: "/admin",
     component: () => import("@/layout/AdminLayout.vue"),
     meta: { requiresAuth: true, requiresAdmin: true },
     children: [
-      // {
-      //   path: "",
-      //   component: AdminDashboard, // ⬅️ 進入後台管理時看到的主頁
-      // },
+      {
+        path: "appointment",
+        component: () => import("@/layout/LoginLayout.vue"),
+      },
       {
         path: "orders",
         component: () => import("@/order/pages/OrderListPage.vue"),

@@ -1,11 +1,9 @@
 package com.topics.order.model.bean;
 
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.topics.member.model.bean.MemberBean;
+import com.topics.member.model.entity.MemberBean;
 import com.topics.product.model.bean.ProductBean;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,15 +28,15 @@ public class ShoppingcartItemBean {
 	private Integer cartItemId;
 	private Integer quantity;
 	private LocalDateTime createdTime;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "memberId")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private MemberBean member;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "productId")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private ProductBean product;
 
 }

@@ -3,13 +3,13 @@ package com.topics.member.model.repository;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import com.topics.member.model.entity.Member;
+import com.topics.member.model.entity.MemberBean;
 
-public interface MemberRepository extends JpaRepository<Member, Integer> {
+public interface MemberRepository extends JpaRepository<MemberBean, Integer> {
 
-	@Query("from Member where activeStatus = true")
-	List<Member> findByActive();
+	@Query("from MemberBean where activeStatus = true")
+	List<MemberBean> findByActive();
 
-	Member findByAccount(String account);
+	MemberBean findByAccount(String account);
 
 }

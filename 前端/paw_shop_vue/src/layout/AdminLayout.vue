@@ -68,7 +68,7 @@
           rounded="lg"
           width="100%"
         >
-          <cardHover />
+          <router-view />
         </v-sheet>
       </div>
     </v-main>
@@ -77,8 +77,9 @@
 
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
-import CardHover from "@/member/components/CardHover.vue";
+import CardHover from "@//components/CardHover.vue";
 import { ref } from "vue";
+import router from "@/router";
 
 const drawer = ref(true);
 const openedGroups = ref(["使用者"]);

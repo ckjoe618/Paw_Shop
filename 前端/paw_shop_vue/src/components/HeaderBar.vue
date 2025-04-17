@@ -3,7 +3,7 @@
     <v-toolbar-title class="text-h5">
       <router-link to="/" style="text-decoration: none">
         <img
-          src="../assets/images/ChatGPT Image 2025年4月16日 上午10_53_06.png"
+          src="@/member/assets/images/PawShop_gtreen_logo.png"
           alt="PawShop"
           style="height: 80px"
         />
@@ -12,20 +12,39 @@
 
     <v-spacer />
 
-    <v-text-field
-      v-model="search"
-      label="Search the store"
-      single-line
-      hide-details
-      dense
-      class="mr-4"
-      outlined
-      @keyup.enter="handleSearch"
+    <!-- 搜尋欄 -->
+    <div
+      class="d-flex align-center search-container"
+      ref="searchContainer"
+      @keyup.esc="closeSearch"
     >
-      <template #append-inner>
-        <v-btn @click="handleSearch"><i class="fas fa-search"></i></v-btn>
-      </template>
-    </v-text-field>
+      <!-- 🔍 搜尋圖示按鈕 -->
+      <v-btn icon @click="toggleSearch" class="search-icon-btn">
+        <i class="fas fa-search"></i>
+      </v-btn>
+
+      <!-- 🔄 展開搜尋欄 -->
+      <v-expand-transition>
+        <div v-if="showSearch" class="search-bar">
+          <v-text-field
+            v-model="search"
+            label="Search the store"
+            dense
+            hide-details
+            solo-inverted
+            flat
+            class="search-input"
+            @keyup.enter="handleSearch"
+          >
+            <template #append-inner>
+              <v-btn icon @click="handleSearch">
+                <i class="fas fa-search"></i>
+              </v-btn>
+            </template>
+          </v-text-field>
+        </div>
+      </v-expand-transition>
+    </div>
 
     <!-- 收藏按鈕 -->
     <v-btn><i class="fas fa-heart"></i></v-btn>
@@ -63,11 +82,16 @@ import { useAuthStore } from "@/member/stores/auth";
 const search = ref("");
 const router = useRouter();
 const authStore = useAuthStore();
+const searchContainer = ref(null);
 
 const handleSearch = () => {
   if (search.trim() !== "") {
     // router.push("/search?q=" + search);
   }
+};
+
+const toggleSearch = () => {
+  showSearch.value = !showSearch.value;
 };
 
 const login = () => {

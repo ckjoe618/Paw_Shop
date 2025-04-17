@@ -46,7 +46,6 @@ public class JwtUtil {
 
 	public static Boolean isTokenValid(String token) {
 		getSubject(token); // 若 token 有任何異常，則由 jjwt 套件直接拋出錯誤。
-
 		return true; // 能走到回傳表示驗證通過，token 合法
 	}
 }
