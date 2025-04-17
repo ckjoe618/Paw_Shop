@@ -15,13 +15,19 @@ public class AuthService {
 	private MemberRepository memberRepository;
 
 	public MemberDto login(AuthDto info) {
-		MemberBean member = memberRepository.findByAccount(info.getAccount());
-		if (member == null
-				|| !member.getAccount().equals(info.getAccount())
-				|| !member.getPassword().equals(info.getPassword())) {
-			throw new LoginFailException("登入失敗，帳號或密碼錯誤");
+		MemberBean member = memberRepository.findByAccount(info.getLoginId());
+		if (member == null) {
+			member = memberRepository.findByEmail(info.getLoginId());
+			if(member == null) {
+				member = memberRepository.findByPhone(info.getLoginId());
+			}
+		}
+		if (member == null) {
+			throw new LoginFailException("登入失敗，帳號或 email 錯誤");
+		}
+		if (!info.getPassword().equals(member.getPassword())) {
+			throw new LoginFailException("登入失敗，密碼錯誤");
 		}
 		return new MemberDto(member);
 	}
-
 }

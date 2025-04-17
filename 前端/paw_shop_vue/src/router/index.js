@@ -27,7 +27,7 @@ const routes = [
       },
       {
         path: "member",
-        component: () => import("@/member/components/MemberTable.vue"),
+        component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
         path: "discuss",
