@@ -12,10 +12,10 @@
 
       <v-text-field
         density="compact"
-        placeholder="Email address"
+        placeholder="Email address or account"
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
-        v-model="account"
+        v-model="loginId"
       ></v-text-field>
 
       <div
@@ -83,14 +83,14 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 
 const visible = ref(false);
-const account = ref("");
+const loginId = ref("");
 const password = ref("");
 const router = useRouter();
 const authStore = useAuthStore();
 
 const handlerLogin = async () => {
   const response = await apiLogin({
-    account: account.value,
+    loginId: loginId.value,
     password: password.value,
   });
   if (response.data.success) {
