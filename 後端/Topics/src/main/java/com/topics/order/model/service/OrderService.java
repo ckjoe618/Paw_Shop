@@ -1,5 +1,6 @@
 package com.topics.order.model.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ public class OrderService {
 	// 新增
 	@Transactional
 	public OrderBean insertOrder(OrderBean insertBean) {
+		insertBean.setTransactionTime(LocalDateTime.now().withNano(0));
+		insertBean.setUpdateTime(LocalDateTime.now().withNano(0));
 		return orderRepository.save(insertBean);
 	};
 
@@ -50,6 +53,7 @@ public class OrderService {
 	};
 	@Transactional
 	public OrderBean updateOrderByOrderId(OrderBean orderBean) {
+		orderBean.setUpdateTime(LocalDateTime.now().withNano(0));
 		return orderRepository.save(orderBean);
 	};
 

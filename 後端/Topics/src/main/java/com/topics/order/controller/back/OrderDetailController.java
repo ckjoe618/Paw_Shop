@@ -1,4 +1,4 @@
-package com.topics.order.controller.admin;
+package com.topics.order.controller.back;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ public class OrderDetailController {
 	// 新增
 	@PostMapping("/orderdetail/add")
 	public OrderDetailBean insertOrderDetail(@RequestBody OrderDetailBean orderDetailBean) {
-		System.out.println("Hoooooooo!" + orderDetailBean.getOrder().getOrderId());
 		return orderDetailService.insertOrderDetail(orderDetailBean);
 	}
 
@@ -36,7 +35,6 @@ public class OrderDetailController {
 	// 查詢
 	@GetMapping("/orderdetail/allorderdetails")
 	public List<OrderDetailBean> getOrderDetails(@RequestParam Integer orderId) {
-		System.out.println(orderDetailService.findByOrderId(orderId));
 		return orderDetailService.findByOrderId(orderId);
 	}
 	

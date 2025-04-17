@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.topics.member.model.bean.MemberBean;
+import com.topics.member.model.dto.MemberDto;
+import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.repository.MemberRepository;
 
 @Service
@@ -14,30 +14,37 @@ public class MemberService {
 	@Autowired
 	private MemberRepository memberRepository;
 
-	public MemberBean insertMember(MemberBean member) {
-		return memberRepository.save(member);
+	public MemberDto insertMember(MemberBean member) {
+		MemberBean memberNew = memberRepository.save(member);
+		return new MemberDto(memberNew);
 	}
 
-	public MemberBean updateMember(MemberBean member) {
-		return memberRepository.save(member);
+	public MemberDto updateMember(MemberBean member) {
+		MemberBean memberNew = memberRepository.save(member);
+		return new MemberDto(memberNew);
 	}
 
-	public MemberBean deleteMemberById(Integer id) {
+	public MemberDto deleteMemberById(Integer id) {
 		Optional<MemberBean> op = memberRepository.findById(id);
 		MemberBean member = op.get();
-		member.setActive(false);
-		return memberRepository.save(member);
+		member.setActiveStatus(false);
+		MemberBean memberNew = memberRepository.save(member);
+		return new MemberDto(memberNew);
 	}
 
-	public MemberBean selectMemberById(Integer id) {
+	public MemberDto selectMemberById(Integer id) {
 		Optional<MemberBean> op = memberRepository.findById(id);
 		if (op.isPresent()) {
-			return op.get();
+			return new MemberDto(op.get());
 		}
 		return null;
 	}
 
-	public List<MemberBean> selectMember() {
-		return memberRepository.findByActive();
+	public List<MemberDto> selectMember() {
+		List<MemberDto> members = memberRepository.findByActive().stream()
+				.map(m -> new MemberDto(m))
+				.toList();
+		return members;
 	}
+
 }
