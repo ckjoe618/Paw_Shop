@@ -10,13 +10,26 @@ const routes = [
   {
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
-    children: [],
+    children: [
+      {
+        path: "",
+        redirect: "home",
+      },
+      {
+        path: "home",
+        component: () => import("@/pages/FrontHome.vue"),
+      },
+    ],
   },
   {
     path: "/admin",
     component: () => import("@/layout/AdminLayout.vue"),
     meta: { requiresAuth: true, requiresAdmin: true },
     children: [
+      {
+        path: "",
+        redirect: "/admin/home",
+      },
       {
         path: "home",
         component: () => import("@/components/CardHover.vue"),
