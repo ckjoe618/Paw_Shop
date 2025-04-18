@@ -64,7 +64,7 @@
 
     <v-app-bar border="b" class="ps-4" flat>
       <v-app-bar-nav-icon
-        v-if="$vuetify.display.smAndDown"
+        v-if="$vuetify.display.smAndDown || $vuetify.display.md"
         @click="drawer = !drawer"
       >
         <v-icon>mdi-menu</v-icon>
