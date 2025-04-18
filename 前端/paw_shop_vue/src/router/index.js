@@ -70,17 +70,12 @@ const routes = [
         component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
-<<<<<<< HEAD
         path: 'products',
         component: () => import('@/product/backsite/ProductListPage.vue')
       },
       {
         path: 'appointments',
         component: () => import("@/appointment/components/AppointmentList.vue")
-=======
-        path: "appointments",
-        component: () => import("@/appointment/components/AppointmentList.vue"),
->>>>>>> upstream/develop
       },
       {
         path: "/appointments/edit/:id",
@@ -108,7 +103,6 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresGuest && authStore.isLoggedIn) {
     // 已登入卻想進登入頁，導回首頁
     return next("/");
-<<<<<<< HEAD
   }
 
   if (to.meta.requiresAdmin) {
@@ -120,19 +114,6 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-=======
-  }
-
-  if (to.meta.requiresAdmin) {
-    if (!authStore.isLoggedIn) {
-      return next("/login");
-    }
-    if (authStore.role !== "ADMIN") {
-      return next("/403"); // 沒權限
-    }
-  }
-
->>>>>>> upstream/develop
   return next();
 });
 
