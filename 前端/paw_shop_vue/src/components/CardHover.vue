@@ -51,7 +51,7 @@ const items = ref([
     icon: "fas fa-user",
     image: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
     button: [
-      { label: "用戶管理", link: "" },
+      { label: "用戶管理", link: "/admin/member" },
       { label: "角色權限", link: "" },
     ],
   },

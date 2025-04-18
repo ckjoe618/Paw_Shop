@@ -29,6 +29,22 @@
           </v-list-group>
         </v-list>
       </div>
+
+      <div class="pa-8">
+        <v-card
+          class="pa-2 d-flex align-center justify-center hover-scale"
+          elevation="3"
+          rounded="xl"
+          color="white"
+          @click="goHome"
+          style="cursor: pointer"
+        >
+          <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
+          <span class="text-body-1 font-weight-medium text-primary"
+            >返回首頁</span
+          >
+        </v-card>
+      </div>
     </v-navigation-drawer>
 
     <v-app-bar border="b" class="ps-4" flat>
@@ -92,46 +108,48 @@ const logout = () => {
   router.push("/login");
 };
 
+const goHome = () => router.push("/home");
+
 const items = ref([
   {
     title: "使用者",
     icon: "mdi-account",
     children: [
-      { label: "用戶管理", link: "/user/manage" },
-      { label: "角色權限", link: "/user/roles" },
+      { label: "用戶管理", link: "/member" },
+      { label: "角色權限", link: "/" },
     ],
   },
   {
     title: "賣場",
     icon: "mdi-storefront",
     children: [
-      { label: "商品管理", link: "/shop/products" },
-      { label: "訂單管理", link: "/shop/orders" },
+      { label: "商品管理", link: "/" },
+      { label: "訂單管理", link: "/" },
     ],
   },
   {
     title: "美容預約",
     icon: "mdi-calendar-account",
     children: [
-      { label: "預約紀錄", link: "/admin/appointments" },
-      { label: "服務項目資訊", link: "/reservation/services" },
+      { label: "預約紀錄", link: "/" },
+      { label: "服務項目資訊", link: "/" },
     ],
   },
   {
     title: "論壇",
     icon: "mdi-forum",
     children: [
-      { label: "文章管理", link: "/forum/posts" },
-      { label: "分類", link: "/forum/categories" },
+      { label: "文章管理", link: "/f" },
+      { label: "分類", link: "/" },
     ],
   },
   {
     title: "首頁內容",
     icon: "mdi-home-outline",
     children: [
-      { label: "最新活動", link: "/home/events" },
-      { label: "公司資訊", link: "/home/about" },
-      { label: "常見問答", link: "/home/faq" },
+      { label: "最新活動", link: "/" },
+      { label: "公司資訊", link: "/" },
+      { label: "常見問答", link: "/" },
     ],
   },
 ]);

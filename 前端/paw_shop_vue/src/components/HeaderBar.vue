@@ -1,12 +1,8 @@
 <template>
-  <v-app-bar app color="#215d1e" dark height="80">
+  <v-app-bar app color="#215d1e" dark height="80" class="pe-6">
     <v-toolbar-title class="text-h5">
       <router-link to="/" style="text-decoration: none">
-        <img
-          src="@/member/assets/images/PawShop_gtreen_logo.png"
-          alt="PawShop"
-          style="height: 80px"
-        />
+        <img :src="PawShopLogo" alt="PawShop" style="height: 80px" />
       </router-link>
     </v-toolbar-title>
 
@@ -71,8 +67,13 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item title="會員中心"></v-list-item>
-          <v-list-item title="登出" @click="authStore.logout()"></v-list-item>
+          <v-list-item
+            v-for="item in items"
+            :key="item.title"
+            :to="item.link"
+            @click="handleMenuClick(item)"
+            >{{ item.title }}</v-list-item
+          >
         </v-list>
       </v-menu>
     </div>
@@ -95,6 +96,7 @@
 </template>
 
 <script setup>
+import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
@@ -106,6 +108,38 @@ const search = ref("");
 const showSearch = ref(false);
 const showSearchIcon = ref(true);
 const searchContainer = ref(null);
+
+const items = ref([
+  {
+    title: "會員中心",
+    link: "/member",
+  },
+  {
+    title: "訂單管理",
+    link: "/",
+  },
+  {
+    title: "預約管理",
+    link: "/",
+  },
+  {
+    title: "論壇管理",
+    link: "/",
+  },
+  {
+    title: "登出",
+    link: null,
+  },
+]);
+
+// 針對登出按鈕判斷
+const handleMenuClick = (item) => {
+  if (item.title === "登出") {
+    logout();
+  } else {
+    router.push(item.link);
+  }
+};
 
 const toggleSearch = () => {
   showSearch.value = true;
@@ -141,6 +175,7 @@ const handleSearch = () => {
 };
 
 const login = () => router.push("/login");
+const logout = () => authStore.logout();
 const goToAdmin = () => router.push("/admin");
 </script>
 
