@@ -23,9 +23,7 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> postMethodName(@RequestBody AuthDto info) {
 		MemberDto loginMember = authService.login(info);
-		String token = JwtUtil.generateToken(loginMember.getMemberId().toString(), 
-				loginMember.getRole(),
-				loginMember.getMemberName());
+		String token = JwtUtil.generateToken(loginMember.getMemberId().toString());
 
 		Map<String, Object> response = new HashMap<>();
 		response.put("success", true);
@@ -33,6 +31,8 @@ public class AuthController {
 		response.put("memberId", loginMember.getMemberId());
 		response.put("memberName", loginMember.getMemberName());
 		response.put("role", loginMember.getRole());
+		response.put("photo", loginMember.getPhoto());
+		System.out.println(loginMember.getPhoto());
 
 		return ResponseEntity.ok(response);
 	}

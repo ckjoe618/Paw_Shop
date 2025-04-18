@@ -103,6 +103,7 @@ const password = ref("");
 const router = useRouter();
 const authStore = useAuthStore();
 
+// 一般登入
 const handlerLogin = async () => {
   const response = await apiLogin({
     loginId: loginId.value,
@@ -112,8 +113,9 @@ const handlerLogin = async () => {
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
-      role: response.data.role,
       memberName: response.data.memberName,
+      role: response.data.role,
+      photo: response.data.photo,
     });
     router.push("/");
   } else {

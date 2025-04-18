@@ -18,7 +18,7 @@
       ref="searchContainer"
       @keyup.esc="closeSearch"
     >
-      <!-- 🔍 搜尋圖示按鈕 -->
+      <!-- 搜尋圖示按鈕 -->
       <v-btn
         icon
         @click.stop="toggleSearch"
@@ -28,7 +28,7 @@
         <i class="fas fa-search"></i>
       </v-btn>
 
-      <!-- 🔄 展開搜尋欄 -->
+      <!-- 展開搜尋欄 -->
       <v-slide-x-reverse-transition>
         <div v-if="showSearch" class="search-bar">
           <v-text-field
@@ -62,9 +62,7 @@
         <template v-slot:activator="{ props }">
           <v-btn icon v-bind="props">
             <v-avatar size="32">
-              <v-img
-                src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-              />
+              <v-img :src="authStore.photo" />
             </v-avatar>
           </v-btn>
         </template>
