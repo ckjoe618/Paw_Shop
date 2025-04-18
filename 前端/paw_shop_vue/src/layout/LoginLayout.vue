@@ -110,14 +110,12 @@ const handlerLogin = async () => {
     password: password.value,
   });
   if (response.data.success) {
-    console.log(response.data.photo);
-
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
       memberName: response.data.memberName,
       role: response.data.role,
-      photo: response.data.photo,
+      memberPhoto: response.data.memberPhoto,
     });
     router.push("/");
   } else {
@@ -132,12 +130,14 @@ const handlerAdminLogin = async () => {
     password: "123456",
   });
   if (response.data.success) {
+    console.log(response.data);
+
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
       memberName: response.data.memberName,
       role: response.data.role,
-      photo: response.data.photo,
+      memberPhoto: response.data.memberPhoto,
     });
     router.push("/");
   } else {
@@ -152,12 +152,14 @@ const handlerUserLogin = async () => {
     password: "123456",
   });
   if (response.data.success) {
+    console.log(response.data);
+
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
       memberName: response.data.memberName,
       role: response.data.role,
-      photo: response.data.photo,
+      memberPhoto: response.data.memberPhoto,
     });
     router.push("/");
   } else {

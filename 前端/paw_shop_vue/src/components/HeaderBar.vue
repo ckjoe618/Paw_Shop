@@ -62,7 +62,7 @@
         <template v-slot:activator="{ props }">
           <v-btn icon v-bind="props" class="mx-1">
             <v-avatar size="50">
-              <v-img :src="authStore.photo" />
+              <v-img :src="authStore.memberPhoto" />
             </v-avatar>
           </v-btn>
         </template>

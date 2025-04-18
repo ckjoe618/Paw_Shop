@@ -80,7 +80,7 @@
               class="elevation-3"
               style="border: 2px solid #fff"
             >
-              <v-img :src="authStore.photo" alt="avatar" />
+              <v-img :src="authStore.memberPhoto" alt="avatar" />
             </v-avatar>
           </v-btn>
         </template>
