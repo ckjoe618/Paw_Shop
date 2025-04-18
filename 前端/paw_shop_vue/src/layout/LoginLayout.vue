@@ -103,7 +103,6 @@ const password = ref("");
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-
 const redirectPath = route.query.redirect || "/";
 
 // 一般登入
@@ -120,7 +119,7 @@ const handlerLogin = async () => {
       role: response.data.role,
       memberPhoto: response.data.memberPhoto,
     });
-    router.push("/");
+    router.push(redirectPath);
   } else {
     alert("登入失敗：" + response.data.message);
   }

@@ -60,6 +60,12 @@ const apihandleQueryAppointmentPet = (data) =>
 // 查詢已預約時段
 const apihandleQueryBookingTime = (data) =>
   memberRequest.get(`/api/querybookingtime/${data}`);
+//購物車內容
+const apiFindShoppingCartItem = () => memberRequest.get(`/api/shoppingcart`);
+const apiUpdateShoppingCartItem = (data) =>
+  memberRequest.put(`/api/shoppingcart`, data);
+const apiDeleteShoppingCartItem = (data) =>
+  memberRequest.delete(`/api/shoppingcart/${data}`);
 
 export {
   memberRequest,
@@ -77,4 +83,7 @@ export {
   apiDeleteAppointment,
   apihandleQueryAppointmentPet,
   apihandleQueryBookingTime,
+  apiFindShoppingCartItem,
+  apiUpdateShoppingCartItem,
+  apiDeleteShoppingCartItem,
 };

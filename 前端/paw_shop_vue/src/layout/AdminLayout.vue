@@ -109,10 +109,21 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
+<<<<<<< HEAD
+import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
+import CardHover from "@/components/CardHover.vue";
+=======
+import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
+import { useAuthStore } from "@/member/stores/auth";
+import router from "@/router";
+>>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
+=======
 
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";
+>>>>>>> 24072d3ee682da96e290bb88e3a286229f9079da
 import { ref } from "vue";
 
 const authStore = useAuthStore();

@@ -2,7 +2,12 @@
   <v-app-bar app color="#215d1e" dark height="80" class="pe-6">
     <v-toolbar-title class="text-h5">
       <router-link to="/" style="text-decoration: none">
-        <img :src="PawShopLogo" alt="PawShop" style="height: 80px" class="ml-6"/>
+        <img
+          :src="PawShopLogo"
+          alt="PawShop"
+          style="height: 80px"
+          class="ml-6"
+        />
       </router-link>
     </v-toolbar-title>
 
@@ -65,10 +70,11 @@
         >
           <v-btn
             icon
+            class="text-white mx-1"
             v-bind="props"
             @hover="cartMenuVisible = !cartMenuVisible"
           >
-            <i class="fas fa-cart-shopping fa-lg"></i>
+            <v-icon size="28">mdi-cart</v-icon>
           </v-btn>
         </v-badge>
         <v-btn icon v-else v-bind="props">
@@ -125,6 +131,7 @@
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 import { memberRequest } from "@/member/api/api.js";
@@ -177,10 +184,6 @@ const toggleSearch = () => {
   showSearchIcon.value = false;
 };
 
-const logout = () => {
-  authStore.logout();
-  router.push("/");
-}
 const closeSearch = () => {
   showSearch.value = false;
   setTimeout(() => {
@@ -202,11 +205,22 @@ const handleClickOutside = (e) => {
   }
 };
 
+const handleSearch = () => {
+  if (search.trim() !== "") {
+    // router.push("/search?q=" + search);
+    closeSearch();
+  }
+};
+
+const login = () => router.push("/login");
+const logout = () => authStore.logout();
+const goToAdmin = () => router.push("/admin");
+
+// 載入購物車資料
 const totalCartQty = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.qty, 0)
 );
 
-// 載入購物車資料
 const loadCart = async () => {
   if (authStore.token) {
     // ✅ 已登入 → 從後端拿購物車
@@ -228,18 +242,6 @@ const loadCart = async () => {
     }
   }
 };
-
-const handleSearch = () => {
-  if (search.trim() !== "") {
-    // router.push("/search?q=" + search);
-    closeSearch();
-  }
-};
-
-const login = () => router.push("/login");
-const logout = () => authStore.logout();
-const goToAdmin = () => router.push("/admin");
-
 </script>
 
 <style scoped>
