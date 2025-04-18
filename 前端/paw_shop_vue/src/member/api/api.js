@@ -28,7 +28,8 @@ const apiAddMember = (data) => memberRequest.post("/api/member", data);
 const apiUpdateMemberAll = (data) =>
   memberRequest.put(`/api/member/${data.memberId}`, data);
 // 單筆會員修改
-const apiUpdateMember = (data) => memberRequest.put(`/api/member/${data}`);
+const apiUpdateMember = (data) =>
+  memberRequest.put(`/api/member/${data.memberId}`, data);
 // 單筆會員刪除
 const apiDeleteMember = (data) => memberRequest.delete(`/api/member/${data}`);
 // 全部會員刪除

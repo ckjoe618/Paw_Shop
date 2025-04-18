@@ -18,9 +18,10 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { apiFindMemberAll } from "@/member/api/api.js";
 import MemberTable from "@/member/components/MemberTable.vue";
 import MemberEditDialog from "@/member/components/MemberEditDialog.vue";
-import { apiFindMemberAll } from "@/member/api/api.js";
+import { apiDeleteMember } from "@/member/api/api.js";
 
 const members = ref([]);
 const loading = ref(false);
@@ -33,6 +34,7 @@ const fetchMembers = async () => {
   try {
     const response = await apiFindMemberAll();
     members.value = response.data;
+    console.log(members.value);
   } catch (e) {
     console.error("載入會員失敗", e);
   } finally {
@@ -50,10 +52,12 @@ const openEditDialog = (member) => {
 const handleDeactivate = async (member) => {
   if (confirm(`確定要停用 ${member.memberName} 嗎？`)) {
     try {
-      await axios.patch(`/api/admin/members/${member.memberId}/deactivate`);
+      await apiDeleteMember(member.memberId);
+      alert("會員已成功停用");
       fetchMembers();
     } catch (e) {
-      alert("停用失敗");
+      console.error("停用失敗", e.response?.data || e.message);
+      alert("停用失敗：" + (e.response?.data || "請稍後再試"));
     }
   }
 };

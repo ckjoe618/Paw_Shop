@@ -2,7 +2,12 @@
   <v-app-bar app color="#215d1e" dark height="80" class="pe-6">
     <v-toolbar-title class="text-h5">
       <router-link to="/" style="text-decoration: none">
-        <img :src="PawShopLogo" alt="PawShop" style="height: 80px" class="ml-6"/>
+        <img
+          :src="PawShopLogo"
+          alt="PawShop"
+          style="height: 80px"
+          class="ml-6"
+        />
       </router-link>
     </v-toolbar-title>
 
@@ -67,12 +72,13 @@
             icon
             v-bind="props"
             @hover="cartMenuVisible = !cartMenuVisible"
+            class="text-white mx-1"
           >
-            <i class="fas fa-cart-shopping fa-lg"></i>
+            <v-icon size="28">mdi-cart-outline</v-icon>
           </v-btn>
         </v-badge>
         <v-btn icon v-else v-bind="props">
-          <i class="fas fa-cart-shopping fa-lg"></i>
+          <v-icon size="28">mdi-cart-outline</v-icon>
         </v-btn>
       </template>
       <!-- 購物車預覽 -->
@@ -105,7 +111,7 @@
       </v-menu>
     </div>
     <div v-else>
-      <v-btn icon class="text-white mx-1" @click="login">
+      <v-btn icon class="text-white mx-1" @click="router.push(`/login`)">
         <v-icon size="28">mdi-login</v-icon>
       </v-btn>
     </div>
@@ -114,7 +120,7 @@
         prepend-icon="mdi-shield-account"
         class="text-white border-white mx-3"
         variant="outlined"
-        @click="goToAdmin"
+        @click="router.push(`/admin`)"
       >
         前往後臺
       </v-btn>
@@ -180,7 +186,7 @@ const toggleSearch = () => {
 const logout = () => {
   authStore.logout();
   router.push("/");
-}
+};
 const closeSearch = () => {
   showSearch.value = false;
   setTimeout(() => {
@@ -189,6 +195,11 @@ const closeSearch = () => {
   search.value = "";
 };
 
+const handleClickOutside = (e) => {
+  if (searchContainer.value && !searchContainer.value.contains(e.target)) {
+    closeSearch();
+  }
+};
 // 在掛載前，建立點擊事件
 onMounted(() => document.addEventListener("click", handleClickOutside));
 // 在卸載後，移除點擊事件
@@ -196,19 +207,13 @@ onBeforeUnmount(() =>
   document.removeEventListener("click", handleClickOutside)
 );
 
-const handleClickOutside = (e) => {
-  if (searchContainer.value && !searchContainer.value.contains(e.target)) {
-    closeSearch();
-  }
-};
-
 const totalCartQty = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.qty, 0)
 );
 
 // 載入購物車資料
 const loadCart = async () => {
-  if (authStore.token) {
+  if (authStore.isLoggedIn) {
     // ✅ 已登入 → 從後端拿購物車
     try {
       const res = await memberRequest.get("localhost:8080/shoppingcart");
@@ -235,11 +240,6 @@ const handleSearch = () => {
     closeSearch();
   }
 };
-
-const login = () => router.push("/login");
-const logout = () => authStore.logout();
-const goToAdmin = () => router.push("/admin");
-
 </script>
 
 <style scoped>

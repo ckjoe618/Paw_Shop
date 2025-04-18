@@ -104,65 +104,27 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const redirectPath = route.query.redirect || "/";
-
 // 一般登入
-const handlerLogin = async () => {
-  const response = await apiLogin({
-    loginId: loginId.value,
-    password: password.value,
-  });
-  if (response.data.success) {
-    authStore.login({
-      token: response.data.token,
-      memberId: response.data.memberId,
-      memberName: response.data.memberName,
-      role: response.data.role,
-      memberPhoto: response.data.memberPhoto,
-    });
-    router.push("/");
-  } else {
-    alert("登入失敗：" + response.data.message);
-  }
-};
+const handlerLogin = () => performLogin(loginId.value, password.value);
 
 // 管理者快速登入
-const handlerAdminLogin = async () => {
-  const response = await apiLogin({
-    loginId: "lzx5",
-    password: "123456",
-  });
-  if (response.data.success) {
-    authStore.login({
-      token: response.data.token,
-      memberId: response.data.memberId,
-      memberName: response.data.memberName,
-      role: response.data.role,
-      memberPhoto: response.data.memberPhoto,
-    });
-    router.push("/");
-  } else {
-    alert("登入失敗：" + response.data.message);
-  }
-};
+const handlerAdminLogin = () => performLogin("lzx5", "123456");
 
 // 使用者快速登入
-const handlerUserLogin = async () => {
-  const response = await apiLogin({
-    loginId: "wxm1",
-    password: "123456",
-  });
-  if (response.data.success) {
-    authStore.login({
-      token: response.data.token,
-      memberId: response.data.memberId,
-      memberName: response.data.memberName,
-      role: response.data.role,
-      memberPhoto: response.data.memberPhoto,
-    });
-    router.push(redirectPath);
-  } else {
-    alert("登入失敗：" + response.data.message);
+const handlerUserLogin = () => performLogin("wxm1", "123456");
+
+// 統一登入模式
+const performLogin = async (loginId, password) => {
+  try {
+    const response = await apiLogin({ loginId, password });
+    if (response.data.success) {
+      authStore.login({ ...response.data });
+      router.push(route.query.redirect || "/");
+    } else {
+      alert("登入失敗：" + response.data.message);
+    }
+  } catch (error) {
+    console.error("登入失敗", error);
   }
 };
 </script>
