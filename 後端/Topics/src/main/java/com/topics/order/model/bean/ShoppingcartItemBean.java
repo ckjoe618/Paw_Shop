@@ -3,7 +3,7 @@ package com.topics.order.model.bean;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.topics.member.model.bean.MemberBean;
+import com.topics.member.model.entity.MemberBean;
 import com.topics.product.model.bean.ProductBean;
 
 import jakarta.persistence.Entity;

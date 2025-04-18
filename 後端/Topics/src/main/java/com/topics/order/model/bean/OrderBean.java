@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.topics.member.model.bean.MemberBean;
+import com.topics.member.model.entity.MemberBean;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

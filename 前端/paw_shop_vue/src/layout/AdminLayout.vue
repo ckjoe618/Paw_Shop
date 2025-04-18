@@ -2,40 +2,22 @@
   <v-layout>
     <v-navigation-drawer v-model="drawer" width="220">
       <div class="d-flex flex-column align-center">
-        <v-img
-          :src="PawShopLogo"
-          width="120"
-          height="120"
-          alt="logo"
-          style="margin-bottom: 50px"
-        />
+        <v-img :src="PawShopLogo" width="120" height="120" alt="logo" style="margin-bottom: 50px" />
         <v-list v-model:opened="openedGroups">
           <v-list-group v-for="item in items">
             <template #activator="{ props }">
-              <v-list-item
-                v-bind="props"
-                :prepend-icon="item.icon"
-                :title="item.title"
-              ></v-list-item>
+              <v-list-item v-bind="props" :prepend-icon="item.icon" :title="item.title"></v-list-item>
             </template>
 
-            <v-list-item
-              v-for="(child, index) in item.children"
-              :key="index"
-              :title="child.label"
-              :value="child.label"
-              :to="child.link"
-            ></v-list-item>
+            <v-list-item v-for="(child, index) in item.children" :key="index" :title="child.label" :value="child.label"
+              :to="child.link"></v-list-item>
           </v-list-group>
         </v-list>
       </div>
     </v-navigation-drawer>
 
     <v-app-bar border="b" class="ps-4" flat>
-      <v-app-bar-nav-icon
-        v-if="$vuetify.display.smAndDown"
-        @click="drawer = !drawer"
-      >
+      <v-app-bar-nav-icon v-if="$vuetify.display.smAndDown" @click="drawer = !drawer">
         <i class="fas fa-bars" />
       </v-app-bar-nav-icon>
 
@@ -43,11 +25,7 @@
 
       <template #append>
         <v-btn class="text-none me-2" height="48" icon slim>
-          <v-avatar
-            color="surface-light"
-            image="https://cdn.vuetifyjs.com/images/john.png"
-            size="50"
-          />
+          <v-avatar color="surface-light" image="https://cdn.vuetifyjs.com/images/john.png" size="50" />
 
           <v-menu activator="parent">
             <v-list density="compact" nav>
@@ -61,14 +39,8 @@
 
     <v-main>
       <div class="pa-4">
-        <v-sheet
-          border="dashed md"
-          color="surface-light"
-          height="100%"
-          rounded="lg"
-          width="100%"
-        >
-          <cardHover />
+        <v-sheet border="dashed md" color="surface-light" height="100%" rounded="lg" width="100%">
+          <router-view />
         </v-sheet>
       </div>
     </v-main>
@@ -77,7 +49,7 @@
 
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
-import CardHover from "@/member/components/CardHover.vue";
+import CardHover from "@/components/CardHover.vue";
 import { ref } from "vue";
 
 const drawer = ref(true);
@@ -113,7 +85,7 @@ const items = ref([
     children: [
       {
         label: "預約紀錄",
-        link: "/reservation/history",
+        link: "/admin/appointments",
       },
       {
         label: "服務項目資訊",
