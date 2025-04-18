@@ -98,6 +98,7 @@ import axios from "axios";
 const router = useRouter();
 
 const headers = [
+<<<<<<< HEAD
   { title: "訂單編號", key: "orderId", width: "110px" },
   { title: "會員編號", key: "memberId", width: "110px" },
   { title: "訂單金額", key: "priceTotal", width: "110px" },
@@ -108,6 +109,18 @@ const headers = [
   { title: "取貨方式", key: "pickupMethod" },
   { title: "物流編號", key: "trackingNum" },
   { title: "操作", key: "actions", sortable: false },
+=======
+  { title: "訂單編號", value: "orderId" },
+  { title: "會員編號", value: "memberId" },
+  { title: "訂單金額", value: "priceTotal" },
+  { title: "交易時間", value: "transactionTime" },
+  { title: "付款方式", value: "paymentMethod" },
+  { title: "付款狀態", value: "paymentStatus" },
+  { title: "訂單狀態", value: "orderStatus" },
+  { title: "取貨方式", value: "pickupMethod" },
+  { title: "物流編號", value: "trackingNum" },
+  { title: "操作", value: "actions", sortable: false },
+>>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
 ];
 
 //查詢所有訂單

@@ -3,20 +3,54 @@ import { useAuthStore } from "@/member/stores/auth";
 
 const routes = [
   {
+    path: "/login",
+    component: () => import("@/layout/LoginLayout.vue"),
+    meta: { requiresGuest: true },
+  },
+  {
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
+<<<<<<< HEAD
       { path: "", component: () => import("@/pages/FrontHome.vue") },
+=======
+>>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
       {
-        path: "login",
-        component: () => import("@/layout/LoginLayout.vue"),
-        meta: { requiresGuest: true },
+        path: "",
+        redirect: "home",
       },
+      {
+        path: "home",
+        component: () => import("@/pages/FrontHome.vue"),
+      },
+      {
+        path: "toappointments",
+        component: () =>
+          import("@/appointment/components/AppointmentFrontPage.vue"),
+      },
+      {
+        path: "toappointments/reserve",
+        component: () =>
+          import("@/appointment/components/AppointmentReserve.vue"),
+      },
+      {
+        path: "toappointments/hendlereserve",
+        component: () =>
+          import("@/appointment/components/AppointmentHendlePage.vue"),
+      },
+      {
+        path: "toappointments/queryreserve",
+        component: () =>
+          import("@/appointment/components/AppointmentQueryPage.vue"),
+      },
+<<<<<<< HEAD
       {
         path: "checkout",
         component: () => import("@/order/pages/Checkout.vue"),
         meta: { requiresAuth: true },
       },
+=======
+>>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
     ],
   },
   {
@@ -24,13 +58,31 @@ const routes = [
     component: () => import("@/layout/AdminLayout.vue"),
     meta: { requiresAuth: true, requiresAdmin: true },
     children: [
-      // {
-      //   path: "",
-      //   component: AdminDashboard, // ⬅️ 進入後台管理時看到的主頁
-      // },
+      {
+        path: "",
+        redirect: "/admin/home",
+      },
+      {
+        path: "home",
+        component: () => import("@/components/CardHover.vue"),
+      },
       {
         path: "orders",
         component: () => import("@/order/pages/OrderListPage.vue"),
+      },
+      {
+        path: "member",
+        component: () => import("@/member/pages/AdminMemberPage.vue"),
+      },
+      {
+        path: "appointments",
+        component: () => import("@/appointment/components/AppointmentList.vue"),
+      },
+      {
+        path: "/appointments/edit/:id",
+        name: "AppointmentEdit",
+        component: () =>
+          import("@/appointment/components/AppointmentEditPage.vue"),
       },
     ],
   },
@@ -54,9 +106,13 @@ router.beforeEach((to, from, next) => {
     return next("/");
   }
 
-  if (to.meta.requiresAdmin && authStore.role !== "ADMIN") {
-    // 非管理員進入管理頁，導回首頁或 403
-    return next("/");
+  if (to.meta.requiresAdmin) {
+    if (!authStore.isLoggedIn) {
+      return next("/login");
+    }
+    if (authStore.role !== "ADMIN") {
+      return next("/403"); // 沒權限
+    }
   }
 
   return next();
