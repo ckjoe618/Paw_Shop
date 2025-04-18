@@ -223,7 +223,9 @@ watch(showAddDetail, (val) => {
 });
 onMounted(async () => {
   try {
-    const res = await axios.get("http://localhost:8080/product/available");
+    const res = await axios.get(
+      "http://localhost:8080/product/stock/available"
+    );
     productList.value = res.data.map((p) => ({
       ...p,
       customLabel: `${p.productId} - ${p.productName}`,

@@ -14,7 +14,7 @@
 
     <!-- Main content -->
     <v-main class="pt-10">
-      <v-container class="mt-8">
+      <v-container class="mt-3">
         <router-view />
       </v-container>
 
@@ -32,14 +32,15 @@ import NavTabs from "@/components/NavTabs.vue";
 import FooterBar from "@/components/FooterBar.vue";
 
 const navItems = [
+  "Product",
   "Dog",
   "Cat",
   "Small Pet",
-  "Bird",
-  "Aquatic",
   "+ Vet",
   "Top Brands",
   "Special Offers",
+  "Appointment",
+  "Forum",
 ];
 </script>
 

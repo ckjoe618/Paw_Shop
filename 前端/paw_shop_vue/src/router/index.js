@@ -11,6 +11,7 @@ const routes = [
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
+      { path: "", component: () => import("@/pages/FrontHome.vue") },
       {
         path: "",
         redirect: "home",
@@ -39,6 +40,12 @@ const routes = [
         component: () =>
           import("@/appointment/components/AppointmentQueryPage.vue"),
       },
+
+      {
+        path: "checkout",
+        component: () => import("@/order/pages/Checkout.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {
@@ -63,8 +70,12 @@ const routes = [
         component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
-        path: "appointments",
-        component: () => import("@/appointment/components/AppointmentList.vue"),
+        path: 'products',
+        component: () => import('@/product/backsite/ProductListPage.vue')
+      },
+      {
+        path: 'appointments',
+        component: () => import("@/appointment/components/AppointmentList.vue")
       },
       {
         path: "/appointments/edit/:id",

@@ -22,14 +22,17 @@ const props = defineProps({
 });
 
 const iconMap = {
+  Product: "fa-solid fa-bag-shopping",
   Dog: "fas fa-dog",
   Cat: "fas fa-cat",
   "Small Pet": "fas fa-otter",
-  Bird: "fas fa-dove",
-  Aquatic: "fas fa-fish",
+  // Bird: "fas fa-dove",
+  // Aquatic: "fas fa-fish",
   "+ Vet": "fas fa-user-md",
   "Top Brands": "fas fa-star",
   "Special Offers": "fas fa-tags",
+  Appointment: "fa-solid fa-calendar-check",
+  Forum: "fa-solid fa-comment",
 };
 </script>
 

@@ -38,7 +38,7 @@
       :headers="headers"
       :items="filteredOrders"
       item-value="orderId"
-      class="elevation-1"
+      class="elevation-1 custom-table"
       items-per-page-text="每頁顯示筆數："
     >
       <template #item.memberId="{ item }">
@@ -98,16 +98,16 @@ import axios from "axios";
 const router = useRouter();
 
 const headers = [
-  { title: "訂單編號", value: "orderId" },
-  { title: "會員編號", value: "memberId" },
-  { title: "訂單金額", value: "priceTotal" },
-  { title: "交易時間", value: "transactionTime" },
-  { title: "付款方式", value: "paymentMethod" },
-  { title: "付款狀態", value: "paymentStatus" },
-  { title: "訂單狀態", value: "orderStatus" },
-  { title: "取貨方式", value: "pickupMethod" },
-  { title: "物流編號", value: "trackingNum" },
-  { title: "操作", value: "actions", sortable: false },
+  { title: "訂單編號", key: "orderId", width: "110px" },
+  { title: "會員編號", key: "memberId", width: "110px" },
+  { title: "訂單金額", key: "priceTotal", width: "110px" },
+  { title: "交易時間", key: "transactionTime", width: "130px" },
+  { title: "付款方式", key: "paymentMethod" },
+  { title: "付款狀態", key: "paymentStatus" },
+  { title: "訂單狀態", key: "orderStatus" },
+  { title: "取貨方式", key: "pickupMethod" },
+  { title: "物流編號", key: "trackingNum" },
+  { title: "操作", key: "actions", sortable: false },
 ];
 
 //查詢所有訂單
