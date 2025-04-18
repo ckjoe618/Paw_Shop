@@ -1,34 +1,29 @@
 <template>
-  <v-app-bar app color="#215d1e" dark height="80">
+  <v-app-bar app color="#215d1e" dark height="80" class="pe-6">
     <v-toolbar-title class="text-h5">
       <router-link to="/" style="text-decoration: none">
-        <img
-          src="@/member/assets/images/PawShop_gtreen_logo.png"
-          alt="PawShop"
-          style="height: 80px"
-        />
+        <img :src="PawShopLogo" alt="PawShop" style="height: 80px" class="ml-6"/>
       </router-link>
     </v-toolbar-title>
 
     <v-spacer />
-
     <!-- 搜尋欄 -->
     <div
       class="d-flex align-center search-container"
       ref="searchContainer"
       @keyup.esc="closeSearch"
     >
-      <!-- 🔍 搜尋圖示按鈕 -->
+      <!-- 搜尋圖示按鈕 -->
       <v-btn
         icon
+        class="text-white mx-1"
         @click.stop="toggleSearch"
-        class="search-icon-btn"
         v-if="showSearchIcon"
       >
-        <i class="fas fa-search"></i>
+        <v-icon size="28">mdi-magnify</v-icon>
       </v-btn>
 
-      <!-- 🔄 展開搜尋欄 -->
+      <!-- 展開搜尋欄 -->
       <v-slide-x-reverse-transition>
         <div v-if="showSearch" class="search-bar">
           <v-text-field
@@ -43,8 +38,8 @@
             @keyup.enter="handleSearch"
           >
             <template #append-inner>
-              <v-btn icon @click="handleSearch">
-                <i class="fas fa-search"></i>
+              <v-btn icon @click.stop="handleSearch">
+                <v-icon size="28">mdi-magnify</v-icon>
               </v-btn>
             </template>
           </v-text-field>
@@ -53,32 +48,74 @@
     </div>
 
     <!-- 收藏按鈕 -->
-    <v-btn><i class="fas fa-heart"></i></v-btn>
-    <!-- 購物車按鈕 -->
-    <v-btn><i class="fas fa-cart-shopping"></i></v-btn>
+    <v-btn icon class="text-white mx-1">
+      <v-icon size="28">mdi-heart-outline</v-icon>
+    </v-btn>
 
+    <!-- 購物車按鈕 -->
+    <v-menu v-model="cartMenuVisible" offset-y transition="slide-y-transition">
+      <template #activator="{ props }">
+        <v-badge
+          v-if="totalCartQty > 0"
+          :content="totalCartQty"
+          color="#FFED97"
+          offset-x="8"
+          offset-y="8"
+          bordered
+        >
+          <v-btn
+            icon
+            v-bind="props"
+            @hover="cartMenuVisible = !cartMenuVisible"
+          >
+            <i class="fas fa-cart-shopping fa-lg"></i>
+          </v-btn>
+        </v-badge>
+        <v-btn icon v-else v-bind="props">
+          <i class="fas fa-cart-shopping fa-lg"></i>
+        </v-btn>
+      </template>
+      <!-- 購物車預覽 -->
+      <CartPreview
+        v-if="totalCartQty > 0"
+        :items="cartItems"
+        @closeMenu="cartMenuVisible = false"
+      />
+    </v-menu>
+
+    <!-- 會員按鈕 -->
     <div v-if="authStore.isLoggedIn">
       <v-menu>
         <template v-slot:activator="{ props }">
-          <v-btn icon v-bind="props">
-            <v-avatar size="32">
-              <v-img
-                src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-              />
+          <v-btn icon v-bind="props" class="mx-1">
+            <v-avatar size="50">
+              <v-img :src="authStore.memberPhoto" />
             </v-avatar>
           </v-btn>
         </template>
         <v-list>
-          <v-list-item title="會員中心" to=""></v-list-item>
-          <v-list-item title="登出" @click="logout"></v-list-item>
+          <v-list-item
+            v-for="item in items"
+            :key="item.title"
+            :to="item.link"
+            @click="handleMenuClick(item)"
+            >{{ item.title }}</v-list-item
+          >
         </v-list>
       </v-menu>
     </div>
     <div v-else>
-      <v-btn @click="login"><v-icon>mdi-login</v-icon></v-btn>
+      <v-btn icon class="text-white mx-1" @click="login">
+        <v-icon size="28">mdi-login</v-icon>
+      </v-btn>
     </div>
     <div v-if="authStore.isAdmin && authStore.isLoggedIn">
-      <v-btn prepend-icon="mdi-shield-account" @click="goToAdmin">
+      <v-btn
+        prepend-icon="mdi-shield-account"
+        class="text-white border-white mx-3"
+        variant="outlined"
+        @click="goToAdmin"
+      >
         前往後臺
       </v-btn>
     </div>
@@ -86,23 +123,64 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
+import { memberRequest } from "@/member/api/api.js";
+import CartPreview from "@/order/components/frontsite/CartPreview.vue";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const cartItems = ref([{ name: "好吃的餅乾", qty: 5, price: 50 }]);
+const cartMenuVisible = ref(false);
 
 const search = ref("");
 const showSearch = ref(false);
 const showSearchIcon = ref(true);
 const searchContainer = ref(null);
 
+const items = ref([
+  {
+    title: "會員中心",
+    link: "/member",
+  },
+  {
+    title: "訂單管理",
+    link: "/",
+  },
+  {
+    title: "預約管理",
+    link: "/",
+  },
+  {
+    title: "論壇管理",
+    link: "/",
+  },
+  {
+    title: "登出",
+    link: null,
+  },
+]);
+
+// 針對登出按鈕判斷
+const handleMenuClick = (item) => {
+  if (item.title === "登出") {
+    logout();
+  } else {
+    router.push(item.link);
+  }
+};
+
 const toggleSearch = () => {
   showSearch.value = true;
   showSearchIcon.value = false;
 };
 
+const logout = () => {
+  authStore.logout();
+  router.push("/");
+}
 const closeSearch = () => {
   showSearch.value = false;
   setTimeout(() => {
@@ -124,6 +202,33 @@ const handleClickOutside = (e) => {
   }
 };
 
+const totalCartQty = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.qty, 0)
+);
+
+// 載入購物車資料
+const loadCart = async () => {
+  if (authStore.token) {
+    // ✅ 已登入 → 從後端拿購物車
+    try {
+      const res = await memberRequest.get("localhost:8080/shoppingcart");
+      cartItems.value = res.data;
+    } catch (err) {
+      console.error("後端購物車取得失敗", err);
+      cartItems.value = [];
+    }
+  } else {
+    // ✅ 未登入 → 從 localStorage 拿購物車
+    try {
+      const localCart = localStorage.getItem("cart");
+      cartItems.value = localCart ? JSON.parse(localCart) : [];
+    } catch (err) {
+      console.error("讀 localStorage cart 發生錯誤", err);
+      cartItems.value = [];
+    }
+  }
+};
+
 const handleSearch = () => {
   if (search.trim() !== "") {
     // router.push("/search?q=" + search);
@@ -134,6 +239,7 @@ const handleSearch = () => {
 const login = () => router.push("/login");
 const logout = () => authStore.logout();
 const goToAdmin = () => router.push("/admin");
+
 </script>
 
 <style scoped>

@@ -11,6 +11,7 @@ const routes = [
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
+      { path: "", component: () => import("@/pages/FrontHome.vue") },
       {
         path: "",
         redirect: "home",
@@ -19,23 +20,32 @@ const routes = [
         path: "home",
         component: () => import("@/pages/FrontHome.vue"),
       },
-      // { path: "xx", component:  },
       {
-        path: 'toappointments',
-        component: () => import("@/appointment/components/AppointmentFrontPage.vue")
+        path: "toappointments",
+        component: () =>
+          import("@/appointment/components/AppointmentFrontPage.vue"),
       },
       {
-        path: 'toappointments/reserve',
-        component: () => import("@/appointment/components/AppointmentReserve.vue")
+        path: "toappointments/reserve",
+        component: () =>
+          import("@/appointment/components/AppointmentReserve.vue"),
       },
       {
-        path: 'toappointments/hendlereserve',
-        component: () => import("@/appointment/components/AppointmentHendlePage.vue")
+        path: "toappointments/hendlereserve",
+        component: () =>
+          import("@/appointment/components/AppointmentHendlePage.vue"),
       },
       {
-        path: 'toappointments/queryreserve',
-        component: () => import("@/appointment/components/AppointmentQueryPage.vue")
-      }
+        path: "toappointments/queryreserve",
+        component: () =>
+          import("@/appointment/components/AppointmentQueryPage.vue"),
+      },
+
+      {
+        path: "checkout",
+        component: () => import("@/order/pages/Checkout.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {
@@ -60,18 +70,24 @@ const routes = [
         component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
+<<<<<<< HEAD
         path: 'products',
         component: () => import('@/product/backsite/ProductListPage.vue')
       },
       {
         path: 'appointments',
         component: () => import("@/appointment/components/AppointmentList.vue")
+=======
+        path: "appointments",
+        component: () => import("@/appointment/components/AppointmentList.vue"),
+>>>>>>> upstream/develop
       },
       {
-        path: '/appointments/edit/:id',
-        name: 'AppointmentEdit',
-        component: () => import('@/appointment/components/AppointmentEditPage.vue')
-      }
+        path: "/appointments/edit/:id",
+        name: "AppointmentEdit",
+        component: () =>
+          import("@/appointment/components/AppointmentEditPage.vue"),
+      },
     ],
   },
 ];
@@ -92,6 +108,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresGuest && authStore.isLoggedIn) {
     // 已登入卻想進登入頁，導回首頁
     return next("/");
+<<<<<<< HEAD
   }
 
   if (to.meta.requiresAdmin) {
@@ -103,6 +120,19 @@ router.beforeEach((to, from, next) => {
     }
   }
 
+=======
+  }
+
+  if (to.meta.requiresAdmin) {
+    if (!authStore.isLoggedIn) {
+      return next("/login");
+    }
+    if (authStore.role !== "ADMIN") {
+      return next("/403"); // 沒權限
+    }
+  }
+
+>>>>>>> upstream/develop
   return next();
 });
 

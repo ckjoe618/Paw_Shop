@@ -32,7 +32,7 @@ public class MemberBean {
 	private String email;
 	private String phone;
 	private LocalDate birthDate;
-	private byte[] memberPhoto;
+	private String memberPhoto;
 	private String account;
 	private String password;
 	private LocalDateTime createAccountDate = LocalDateTime.now();

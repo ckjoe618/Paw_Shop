@@ -19,7 +19,7 @@ public class MemberDto {
 	private String email;
 	private String phone;
 	private LocalDate birthDate;
-	private String photo;
+	private String memberPhoto;
 	private String role;
 	private LocalDateTime createAccountDate;
 	private boolean activeStatus;

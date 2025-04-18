@@ -17,11 +17,9 @@ public class JwtUtil {
 	 * @param memberId 使用者的唯一識別碼，將作為 JWT Token 的 subject。
 	 * @return 生成的 JWT Token 字串。
 	 */
-	public static String generateToken(String memberId, String role, String name) {
+	public static String generateToken(String memberId) {
 		return Jwts.builder() // 使用 builder 模式設定 token
 				.subject(memberId) // 設定 token 主題 (Subject)，用以標識使用者
-				.claim("role", role) // 自訂欄位：角色（如 admin/user）
-				.claim("name", name) // 自訂欄位：名字
 				.issuedAt(new Date()) // 設定 token 發行時間
 				.expiration(new Date(System.currentTimeMillis() + EXPIRATION_IN_SECONDS * 1000)) // 設定 token 到期日期
 				.signWith(SECRET_KEY) // 使用密鑰對 token 進行簽名

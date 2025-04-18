@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.topics.member.model.entity.MemberBean;
+import com.topics.member.model.repository.MemberRepository;
 import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.repository.OrderRepository;
 
@@ -16,6 +18,9 @@ public class OrderService {
 
 	@Autowired
 	private OrderRepository orderRepository;
+	
+	@Autowired
+	private MemberRepository memberRepository;
 
 	// 查詢
 	public List<OrderBean> findAllActiveOrders() {
@@ -53,6 +58,9 @@ public class OrderService {
 	};
 	@Transactional
 	public OrderBean updateOrderByOrderId(OrderBean orderBean) {
+		Integer memberId = orderBean.getMember().getMemberId();
+		MemberBean member = memberRepository.findById(memberId).get();
+		orderBean.setMember(member);
 		orderBean.setUpdateTime(LocalDateTime.now().withNano(0));
 		return orderRepository.save(orderBean);
 	};

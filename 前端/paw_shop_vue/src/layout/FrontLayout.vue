@@ -14,7 +14,7 @@
 
     <!-- Main content -->
     <v-main class="pt-10">
-      <v-container class="mt-8">
+      <v-container class="mt-3">
         <router-view />
       </v-container>
 
