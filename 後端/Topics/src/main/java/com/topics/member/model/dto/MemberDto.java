@@ -20,10 +20,8 @@ public class MemberDto {
 	private String phone;
 	private LocalDate birthDate;
 	private String photo;
-	private String account;
-	private String password;
-	private LocalDateTime createAccountDate;
 	private String role;
+	private LocalDateTime createAccountDate;
 	private boolean activeStatus;
 
 	public MemberDto(MemberBean entity) {
