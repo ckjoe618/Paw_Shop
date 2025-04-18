@@ -1,21 +1,16 @@
 <template>
-  <div>
-    <v-img class="mx-auto my-6" max-width="150" :src="PawShopLogo"></v-img>
+  <v-container fluid class="fill-height d-flex justify-center align-center">
+    <v-card class="pa-6" elevation="8" max-width="448" rounded="lg">
+      <v-img class="mx-auto mb-6" max-width="120" :src="PawShopLogo"></v-img>
 
-    <v-card
-      class="mx-auto pa-12 pb-8"
-      elevation="8"
-      max-width="448"
-      rounded="lg"
-    >
       <div class="text-subtitle-1 text-medium-emphasis">帳號</div>
 
       <v-text-field
         density="compact"
-        placeholder="Email address"
+        placeholder="Email、account、phone"
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
-        v-model="account"
+        v-model="loginId"
       ></v-text-field>
 
       <div
@@ -61,6 +56,26 @@
       >
         登入
       </v-btn>
+      <v-btn
+        class="mb-2"
+        color="blue"
+        size="large"
+        variant="tonal"
+        block
+        @click="handlerAdminLogin"
+      >
+        管理員一鍵登入
+      </v-btn>
+      <v-btn
+        class="mb-8"
+        color="blue"
+        size="large"
+        variant="tonal"
+        block
+        @click="handlerUserLogin"
+      >
+        使用者一鍵登入
+      </v-btn>
 
       <v-card-text class="text-center">
         <a
@@ -73,17 +88,17 @@
         </a>
       </v-card-text>
     </v-card>
-  </div>
+  </v-container>
 </template>
 <script setup>
-import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
+import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { ref } from "vue";
 import { apiLogin } from "@/member/api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 
 const visible = ref(false);
-const account = ref("");
+const loginId = ref("");
 const password = ref("");
 const route = useRoute();
 const router = useRouter();
@@ -91,22 +106,63 @@ const authStore = useAuthStore();
 
 const redirectPath = route.query.redirect || "/";
 
+// 一般登入
 const handlerLogin = async () => {
-  console.log("登入資料", {
-    account: account.value,
-    password: password.value,
-  });
-
   const response = await apiLogin({
-    account: account.value,
+    loginId: loginId.value,
     password: password.value,
   });
   if (response.data.success) {
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
-      role: response.data.role,
       memberName: response.data.memberName,
+      role: response.data.role,
+      memberPhoto: response.data.memberPhoto,
+    });
+    router.push("/");
+  } else {
+    alert("登入失敗：" + response.data.message);
+  }
+};
+
+// 管理者快速登入
+const handlerAdminLogin = async () => {
+  const response = await apiLogin({
+    loginId: "lzx5",
+    password: "123456",
+  });
+  if (response.data.success) {
+    console.log(response.data);
+
+    authStore.login({
+      token: response.data.token,
+      memberId: response.data.memberId,
+      memberName: response.data.memberName,
+      role: response.data.role,
+      memberPhoto: response.data.memberPhoto,
+    });
+    router.push("/");
+  } else {
+    alert("登入失敗：" + response.data.message);
+  }
+};
+
+// 使用者快速登入
+const handlerUserLogin = async () => {
+  const response = await apiLogin({
+    loginId: "wxm1",
+    password: "123456",
+  });
+  if (response.data.success) {
+    console.log(response.data);
+
+    authStore.login({
+      token: response.data.token,
+      memberId: response.data.memberId,
+      memberName: response.data.memberName,
+      role: response.data.role,
+      memberPhoto: response.data.memberPhoto,
     });
     router.push(redirectPath);
   } else {

@@ -23,15 +23,15 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> postMethodName(@RequestBody AuthDto info) {
 		MemberDto loginMember = authService.login(info);
-		String token = JwtUtil.generateToken(loginMember.getMemberId().toString(), 
-				loginMember.getRole(),
-				loginMember.getMemberName());
+		String token = JwtUtil.generateToken(loginMember.getMemberId().toString());
 
 		Map<String, Object> response = new HashMap<>();
 		response.put("success", true);
 		response.put("token", token);
 		response.put("memberId", loginMember.getMemberId());
 		response.put("memberName", loginMember.getMemberName());
+		response.put("role", loginMember.getRole());
+		response.put("memberPhoto", loginMember.getMemberPhoto());
 
 		return ResponseEntity.ok(response);
 	}

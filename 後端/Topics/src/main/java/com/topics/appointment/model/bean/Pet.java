@@ -1,5 +1,7 @@
 package com.topics.appointment.model.bean;
 
+import com.topics.member.model.entity.MemberBean;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
 
 @Entity
 @Table(name = "pets")
@@ -24,7 +27,7 @@ public class Pet {
 
 	@ManyToOne
 	@JoinColumn(name = "member_id", nullable = false)
-	private Owner owner;
+	private MemberBean member;
 
 	@Column(name = "pet_name")
 	private String petName;
@@ -44,8 +47,8 @@ public class Pet {
 	public Pet() {
 	}
 
-	public Pet(Owner owner, int petId, String petName, String petType, String petSize, String petFur, int petStatus) {
-		this.owner = owner;
+	public Pet(MemberBean member, int petId, String petName, String petType, String petSize, String petFur, int petStatus) {
+		this.member = member;
 		this.petId = petId;
 		this.petName = petName;
 		this.petType = petType;
