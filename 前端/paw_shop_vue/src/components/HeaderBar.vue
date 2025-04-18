@@ -70,15 +70,15 @@
         >
           <v-btn
             icon
+            class="text-white mx-1"
             v-bind="props"
             @hover="cartMenuVisible = !cartMenuVisible"
-            class="text-white mx-1"
           >
-            <v-icon size="28">mdi-cart-outline</v-icon>
+            <v-icon size="28">mdi-cart</v-icon>
           </v-btn>
         </v-badge>
         <v-btn icon v-else v-bind="props">
-          <v-icon size="28">mdi-cart-outline</v-icon>
+          <v-icon size="28">mdi-cart</v-icon>
         </v-btn>
       </template>
       <!-- 購物車預覽 -->
@@ -131,6 +131,7 @@
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 import { memberRequest } from "@/member/api/api.js";
@@ -207,11 +208,11 @@ onBeforeUnmount(() =>
   document.removeEventListener("click", handleClickOutside)
 );
 
+// 載入購物車資料
 const totalCartQty = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.qty, 0)
 );
 
-// 載入購物車資料
 const loadCart = async () => {
   if (authStore.isLoggedIn) {
     // ✅ 已登入 → 從後端拿購物車
