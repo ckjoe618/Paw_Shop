@@ -7,10 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,20 +19,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.topics.appointment.model.bean.Appointment;
 import com.topics.appointment.model.bean.ItemDetails;
-import com.topics.appointment.model.bean.Owner;
 import com.topics.appointment.model.bean.PackageDetails;
 import com.topics.appointment.model.bean.Pet;
 import com.topics.appointment.model.service.AppointmentService;
 import com.topics.appointment.model.service.PetService;
 import com.topics.appointment.model.service.PricingService;
+import com.topics.member.model.entity.MemberBean;
 
-@CrossOrigin(origins = "http://localhost:8080")
-@Controller
-@RequestMapping("/api/appointment")
+import jakarta.servlet.http.HttpSession;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AppointmentController {
 
 	@Autowired
@@ -39,69 +46,53 @@ public class AppointmentController {
 
 	@Autowired
 	private PetService petService;
-
+	
 	@Autowired
 	private PricingService pricingService;
 
-	@GetMapping("/appointment_home")
-	public String showAppointmentPage(Model model) {
+	@GetMapping("/appointment")
+	public List<Appointment> showAppointmentPage(Model model) {
 		List<Appointment> appointments = appointmentService.getAllAppointments();
-		for (Appointment appointment : appointments) {
-			Set<String> uniqueServices = new HashSet<>();
-			String serviceNames = appointment.getServiceNames();
-
-			if (serviceNames != null && !serviceNames.isEmpty()) {
-				String[] services = serviceNames.split(",");
-				for (String service : services) {
-					uniqueServices.add(service.trim());
-				}
-				appointment.setServiceNames(String.join(", ", uniqueServices));
-			} else {
-				appointment.setServiceNames("無服務資料");
-			}
-		}
-		if (appointments == null || appointments.isEmpty()) {
-			System.out.println("沒有找到任何預約資料");
-		}
-		model.addAttribute("appointments", appointments);
-		return "appointment/home/Appointment";
+		return appointments;
 	}
 
-	@GetMapping("/appointment_query")
-	public String selectAppointmentByPhoneNum(@RequestParam(name = "phone_number", required = false) String phoneNumber,
-			Model model) {
-		List<Appointment> appointments = appointmentService.searchAppointmentsByPhoneNumber(phoneNumber);
-		for (Appointment appointment : appointments) {
-			Set<String> uniqueServices = new HashSet<>();
-			String serviceNames = appointment.getServiceNames();
-			if (serviceNames != null && !serviceNames.isEmpty()) {
-				String[] services = serviceNames.split(",");
-				for (String service : services) {
-					uniqueServices.add(service.trim());
-				}
-				appointment.setServiceNames(String.join(", ", uniqueServices));
-			} else {
-				appointment.setServiceNames("無服務資料");
-			}
-		}
-		if (appointments == null || appointments.isEmpty()) {
-			System.out.println("沒有找到任何預約資料");
-		}
-		model.addAttribute("phoneNumber", phoneNumber);
-		model.addAttribute("appointments", appointments);
-		return "appointment/query/Appointment";
+	@GetMapping("/appointment/phone/{Phone}")
+	@ResponseBody
+	public List<Appointment> selectAppointmentByPhoneNum(@PathVariable(name = "Phone", required = false) String phoneNumber) {
+	    List<Appointment> appointments = appointmentService.searchAppointmentsByPhoneNumber(phoneNumber);
+	    
+	    for (Appointment appointment : appointments) {
+	        Set<String> uniqueServices = new HashSet<>();
+	        String serviceNames = appointment.getServiceNames();
+	        if (serviceNames != null && !serviceNames.isEmpty()) {
+	            String[] services = serviceNames.split(",");
+	            for (String service : services) {
+	                uniqueServices.add(service.trim());
+	            }
+	            appointment.setServiceNames(String.join(", ", uniqueServices));
+	        } else {
+	            appointment.setServiceNames("無服務資料");
+	        }
+	    }
+
+	    if (appointments == null || appointments.isEmpty()) {
+	        System.out.println("沒有找到任何預約資料");
+	    }
+
+	    return appointments; 
 	}
 
-	@GetMapping("/queryBookingTime")
-	public ResponseEntity<Map<String, Object>> handleQueryBookingTime(@RequestParam String appointmentDate) {
+
+	@GetMapping("/querybookingtime/{appointmentDate}")
+	public ResponseEntity<Map<String, Object>> handleQueryBookingTime(@PathVariable String appointmentDate) {
 		List<String> bookedTimeslots = appointmentService.getBookedTimeslots(appointmentDate);
 		Map<String, Object> responseData = new HashMap<>();
 		responseData.put("bookedTimeslots", bookedTimeslots);
 		return ResponseEntity.ok(responseData);
 	}
 
-	@GetMapping("/querypet")
-	public ResponseEntity<Object> handleQueryPetById(@RequestParam("memberId") String memberIdStr) {
+	@GetMapping("/querypet/{memberId}")
+	public ResponseEntity<Object> handleQueryPetById(@PathVariable("memberId") String memberIdStr) {
 		if (memberIdStr == null || memberIdStr.trim().isEmpty()) {
 			return ResponseEntity.badRequest().body("memberId 不能為空");
 		}
@@ -125,90 +116,91 @@ public class AppointmentController {
 		}
 		return ResponseEntity.ok(petList);
 	}
+	
+	@PostMapping("/appointment")
+	@ResponseBody
+	public ResponseEntity<?> insertAppointmentById(@RequestBody Map<String, Object> payload, HttpSession session) {
+	    String memberIdStr = String.valueOf(payload.get("memberId"));
+	    String petIdStr = String.valueOf(payload.get("petId"));
+	    String appointmentDate = (String) payload.get("appointmentDate");
+	    String appointmentTimeslot = (String) payload.get("appointmentTimeslot");
+	    String selectedService = String.valueOf(payload.get("services"));
+	    List<Object> selectedExtrasRaw = (List<Object>) payload.get("extraPackages");
+	    List<String> selectedExtras = selectedExtrasRaw.stream()
+	        .map(String::valueOf)
+	        .collect(Collectors.toList());
 
-	@PostMapping("/add")
-	public String insertAppointmentById(@RequestParam("memberId") String memberIdStr,
-			@RequestParam("appointmentpetId") String petIdStr, @RequestParam("appointmentDate") String appointmentDate,
-			@RequestParam("appointmentTimeslot") String appointmentTimeslot,
-			@RequestParam(value = "services", required = false) String selectedService,
-			@RequestParam(value = "extraPackages", required = false) String[] selectedExtras, Model model) {
+	    if (memberIdStr == null || memberIdStr.isBlank()) {
+	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "memberId 不能為空"));
+	    }
+	    if (petIdStr == null || petIdStr.isBlank()) {
+	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "petId 不能為空"));
+	    }
+	    if (appointmentDate == null || appointmentDate.isBlank() || appointmentTimeslot == null || appointmentTimeslot.isBlank()) {
+	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "日期或時段不能為空"));
+	    }
 
-		if (memberIdStr == null || memberIdStr.trim().isEmpty()) {
-			model.addAttribute("success", false);
-			model.addAttribute("message", "memberId 不能為空");
-			return "appointment/result/Appointment";
-		}
-		if (petIdStr == null || petIdStr.trim().isEmpty()) {
-			model.addAttribute("success", false);
-			model.addAttribute("message", "petId 不能為空");
-			return "appointment/result/Appointment";
-		}
-		if (appointmentDate == null || appointmentDate.trim().isEmpty() || appointmentTimeslot == null
-				|| appointmentTimeslot.trim().isEmpty()) {
-			model.addAttribute("success", false);
-			model.addAttribute("message", "日期或時段不能為空");
-			return "appointment/result/Appointment";
-		}
-		int memberId, petId;
-		try {
-			memberId = Integer.parseInt(memberIdStr);
-			petId = Integer.parseInt(petIdStr);
-		} catch (NumberFormatException e) {
-			model.addAttribute("success", false);
-			model.addAttribute("message", "memberId 或 petId 格式錯誤");
-			return "appointment/result/Appointment";
-		}
-		Owner owner = appointmentService.getOwnerById(memberId);
-		Pet pet = petService.getPetById(petId);
-		if (owner == null) {
-			model.addAttribute("success", false);
-			model.addAttribute("message", "找不到對應的會員");
-			return "appointment/result/Appointment";
-		}
-		if (appointmentService.isTimeslotBooked(appointmentDate, appointmentTimeslot)) {
-			model.addAttribute("success", false);
-			model.addAttribute("message", "該時段已被預約，請選擇其他時段！");
-			return "appointment/result/Appointment";
-		}
-		Appointment appointment = new Appointment(owner, pet, appointmentDate, appointmentTimeslot, 0, 0, 0);
-		int appointmentId = appointmentService.insertAppointment(appointment);
-		int totalPrice = 0;
+	    int memberId, petId;
+	    try {
+	        memberId = Integer.parseInt(memberIdStr);
+	        petId = Integer.parseInt(petIdStr);
+	    } catch (NumberFormatException e) {
+	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "memberId 或 petId 格式錯誤"));
+	    }
 
-		if (selectedService != null && !selectedService.isEmpty()) {
-			try {
-				int serviceId = Integer.parseInt(selectedService);
-				int servicePrice = pricingService.getServicePrice(serviceId);
-				totalPrice += servicePrice;
-				appointmentService.addServiceToAppointment(appointmentId, serviceId, 1);
-			} catch (NumberFormatException e) {
-				model.addAttribute("success", false);
-				model.addAttribute("message", "無效的服務 ID: " + selectedService);
-				return "appointment/result/Appointment";
-			}
-		}
-		if (selectedExtras != null) {
-			for (String extraIdStr : selectedExtras) {
-				try {
-					int extraId = Integer.parseInt(extraIdStr);
-					int extraPrice = pricingService.getExtraPackagePrice(extraId);
-					totalPrice += extraPrice;
-					appointmentService.addExtraPackageToAppointment(appointmentId, extraId, 1);
-				} catch (NumberFormatException e) {
-					model.addAttribute("success", false);
-					model.addAttribute("message", "無效的加購 ID: " + extraIdStr);
-					return "appointment/result/Appointment";
-				}
-			}
-		}
-		appointmentService.updateAppointmentPrice(appointmentId, totalPrice);
-		model.addAttribute("success", true);
-		model.addAttribute("appointmentId", appointmentId);
-		model.addAttribute("totalPrice", totalPrice);
-		model.addAttribute("message", "預約成功！總價為: " + totalPrice + "元");
-		return "appointment/result/Appointment";
+	    MemberBean member = appointmentService.getOwnerById(memberId);
+	    Pet pet = petService.getPetById(petId);
+	    if (member == null) {
+	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "找不到對應的會員"));
+	    }
+
+	    if (appointmentService.isTimeslotBooked(appointmentDate, appointmentTimeslot)) {
+	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "該時段已被預約，請選擇其他時段！"));
+	    }
+
+	    Appointment appointment = new Appointment(member, pet, appointmentDate, appointmentTimeslot, 0, 0, 0);
+	    int appointmentId = appointmentService.insertAppointment(appointment);
+	    int totalPrice = 0;
+
+	    if (selectedService != null && !selectedService.isEmpty()) {
+	        try {
+	            int serviceId = Integer.parseInt(selectedService);
+	            int servicePrice = pricingService.getServicePrice(serviceId);
+	            totalPrice += servicePrice;
+	            appointmentService.addServiceToAppointment(appointmentId, serviceId, 1);
+	        } catch (NumberFormatException e) {
+	            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "無效的服務 ID: " + selectedService));
+	        }
+	    }
+
+	    if (selectedExtras != null) {
+	        for (String extraIdStr : selectedExtras) {
+	            try {
+	                int extraId = Integer.parseInt(extraIdStr);
+	                int extraPrice = pricingService.getExtraPackagePrice(extraId);
+	                totalPrice += extraPrice;
+	                appointmentService.addExtraPackageToAppointment(appointmentId, extraId, 1);
+	            } catch (NumberFormatException e) {
+	                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "無效的加購 ID: " + extraIdStr));
+	            }
+	        }
+	    }
+
+	    appointmentService.updateAppointmentPrice(appointmentId, totalPrice);
+	    session.setAttribute("appointmentId", appointmentId);
+	    session.setAttribute("totalPrice", totalPrice);
+
+	    return ResponseEntity.ok(Map.of(
+	        "success", true,
+	        "appointmentId", appointmentId,
+	        "totalPrice", totalPrice,
+	        "message", "預約成功！總價為: " + totalPrice + "元"
+	    ));
 	}
 
-	@DeleteMapping("/delete/{appointmentId}")
+
+	@DeleteMapping("/appointment/{appointmentId}")
+	@ResponseBody
 	public ResponseEntity<Map<String, Object>> deleteAppointmentById(@PathVariable int appointmentId) {
 		Map<String, Object> response = new HashMap<>();
 		boolean isDeleted = appointmentService.deleteAppointment(appointmentId);
@@ -224,34 +216,35 @@ public class AppointmentController {
 		}
 	}
 
-	@GetMapping("/update/{appointmentId}")
-	public String showUpdatePage(@PathVariable int appointmentId, Model model) {
-		System.out.println("Received request for appointment with ID: " + appointmentId);
-		Appointment appointment = appointmentService.getAppointmentById(appointmentId);
-		ItemDetails itemdetails = appointmentService.getServiceById(appointmentId);
-		List<Integer> extrapackages = appointmentService.getSelectedExtraPackages(appointmentId);
-		if (appointment == null) {
-			System.out.println("Appointment not found for ID: " + appointmentId);
-		} else {
-			System.out.println("Appointment found: " + appointment);
-		}
-		model.addAttribute("appointment", appointment);
-		model.addAttribute("itemdetails", itemdetails);
-		model.addAttribute("extraPackages", extrapackages);
-		System.out.println("Services: " + model.getAttribute("itemdetails"));
+	@GetMapping("/appointment/{appointmentId}")
+	@ResponseBody
+	public Map<String, Object> getAppointmentDetails(@PathVariable int appointmentId) {
+		 Appointment appointment = appointmentService.getAppointmentById(appointmentId);
+		    List<Integer> extraPackageIds = appointmentService.getSelectedExtraPackages(appointmentId);
+		    ItemDetails itemDetail = appointmentService.getServiceById(appointmentId);
 
-		System.out.println("Extra Packages: " + model.getAttribute("extraPackages"));
+		    Map<String, Object> result = new HashMap<>();
+		    result.put("appointmentId", appointment.getAppointmentId());
+		    result.put("appointmentDate", appointment.getAppointmentDate());
+		    result.put("appointmentTimeslot", appointment.getAppointmentTimeslot());
+		    result.put("appointmentStatus", appointment.getAppointmentStatus());
+		    result.put("paymentStatus", appointment.getPaymentStatus());
+		    result.put("appointmentTotal", appointment.getAppointmentTotal());
 
-		return "appointment/update/Appointment";
+		    result.put("itemId", itemDetail.getItem().getItemId()); 
+		    result.put("extraPackageIds", extraPackageIds); 
+		    result.put("memberName", appointment.getMember().getMemberName());
+		    result.put("petName", appointment.getPet().getPetName());
+
+		    return result;
 	}
-
-	@PutMapping("/update/{appointmentId}")
+	@PutMapping("/appointment/{appointmentId}")
 	public String updateAppointmentById(@PathVariable int appointmentId,
 			@RequestParam(required = false) String appointmentStatus,
 			@RequestParam(required = false) String paymentStatus, @RequestParam String appointmentDate,
 			@RequestParam String appointmentTimeslot,
 			@RequestParam(value = "services", required = false) String[] services,
-			@RequestParam(value = "extraPackages", required = false) String[] extraPackages, Model model) {
+			@RequestParam(value = "extraPackages", required = false) String[] extraPackages, Model model,HttpSession session) {
 
 		try {
 			if (appointmentId <= 0) {
@@ -286,11 +279,13 @@ public class AppointmentController {
 			System.out.println("extraPackages: " + Arrays.toString(extraPackages));
 			boolean success = appointmentService.updateAppointment(updatedAppointment, itemDetails, packageDetails);
 			if (success) {
+				session.setAttribute("appointmentId", appointmentId);
+				session.setAttribute("totalPrice", totalPrice);
 				model.addAttribute("success", true);
 				model.addAttribute("appointmentId", appointmentId);
 				model.addAttribute("totalPrice", totalPrice);
 				model.addAttribute("message", "預約更新成功！總價為: " + totalPrice + "元");
-				return "appointment/result/Appointment";
+				return "appointment/result/Appointment"; 
 			} else {
 				model.addAttribute("errorMessage", "更新失敗，請檢查預約 ID 是否正確。");
 				return "appointment/error/Appointment";
@@ -302,26 +297,27 @@ public class AppointmentController {
 	}
 
 	private int calculateTotalPrice(String[] services, String[] extraPackages) {
-		int totalPrice = 0;
-		if (services != null) {
-			for (String serviceIdStr : services) {
-				try {
-					int serviceId = Integer.parseInt(serviceIdStr);
-					totalPrice += pricingService.getServicePrice(serviceId);
-				} catch (NumberFormatException e) {
-				}
-			}
-		}
-		if (extraPackages != null) {
-			for (String extraIdStr : extraPackages) {
-				try {
-					int extraId = Integer.parseInt(extraIdStr);
-					totalPrice += pricingService.getExtraPackagePrice(extraId);
-				} catch (NumberFormatException e) {
-				}
-			}
-		}
-		return totalPrice;
+	    int totalPrice = 0;
+	    if (services != null) {
+	        for (String serviceIdStr : services) {
+	            try {
+	                int serviceId = Integer.parseInt(serviceIdStr);
+	                totalPrice += pricingService.getServicePrice(serviceId);  
+	            } catch (NumberFormatException e) {
+	            }
+	        }
+	    }
+	    if (extraPackages != null) {
+	        for (String extraIdStr : extraPackages) {
+	            try {
+	                int extraId = Integer.parseInt(extraIdStr);
+	                totalPrice += pricingService.getExtraPackagePrice(extraId);  
+	            } catch (NumberFormatException e) {
+	            }
+	        }
+	    }
+	    return totalPrice;
 	}
+
 
 }
