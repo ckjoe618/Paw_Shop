@@ -11,6 +11,7 @@ const routes = [
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
+      { path: "", component: () => import("@/pages/FrontHome.vue") },
       {
         path: "",
         redirect: "home",
@@ -38,6 +39,12 @@ const routes = [
         path: "toappointments/queryreserve",
         component: () =>
           import("@/appointment/components/AppointmentQueryPage.vue"),
+      },
+
+      {
+        path: "checkout",
+        component: () => import("@/order/pages/Checkout.vue"),
+        meta: { requiresAuth: true },
       },
     ],
   },

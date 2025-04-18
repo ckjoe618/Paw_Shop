@@ -109,6 +109,7 @@
 </template>
 
 <script setup>
+
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";

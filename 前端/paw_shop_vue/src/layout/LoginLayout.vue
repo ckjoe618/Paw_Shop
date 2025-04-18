@@ -94,14 +94,17 @@
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { ref } from "vue";
 import { apiLogin } from "@/member/api/api";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 
 const visible = ref(false);
 const loginId = ref("");
 const password = ref("");
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+
+const redirectPath = route.query.redirect || "/";
 
 // 一般登入
 const handlerLogin = async () => {
@@ -161,7 +164,7 @@ const handlerUserLogin = async () => {
       role: response.data.role,
       memberPhoto: response.data.memberPhoto,
     });
-    router.push("/");
+    router.push(redirectPath);
   } else {
     alert("登入失敗：" + response.data.message);
   }
