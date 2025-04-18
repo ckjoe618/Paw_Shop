@@ -75,7 +75,12 @@
       </v-menu>
     </div>
     <div v-else>
-      <v-btn icon @click="login"> 登入 </v-btn>
+      <v-btn @click="login"><v-icon>mdi-login</v-icon></v-btn>
+    </div>
+    <div v-if="authStore.isAdmin && authStore.isLoggedIn">
+      <v-btn prepend-icon="mdi-shield-account" @click="goToAdmin">
+        前往後臺
+      </v-btn>
     </div>
   </v-app-bar>
 </template>
@@ -128,6 +133,7 @@ const handleSearch = () => {
 
 const login = () => router.push("/login");
 const logout = () => authStore.logout();
+const goToAdmin = () => router.push("/admin");
 </script>
 
 <style scoped>
