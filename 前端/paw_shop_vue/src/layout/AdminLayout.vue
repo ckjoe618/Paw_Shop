@@ -115,7 +115,7 @@ const items = ref([
     title: "使用者",
     icon: "mdi-account",
     children: [
-      { label: "用戶管理", link: "/member" },
+      { label: "用戶管理", link: "/admin/member" },
       { label: "角色權限", link: "/" },
     ],
   },
