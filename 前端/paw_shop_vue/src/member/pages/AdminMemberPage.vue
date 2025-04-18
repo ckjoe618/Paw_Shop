@@ -38,7 +38,6 @@ const fetchMembers = async () => {
   try {
     const response = await apiFindMemberAll();
     members.value = response.data;
-    console.log("載入會員成功", members.value);
   } catch (e) {
     console.error("載入會員失敗", e);
   } finally {

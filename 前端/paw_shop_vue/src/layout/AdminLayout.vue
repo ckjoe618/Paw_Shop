@@ -10,13 +10,15 @@
           class="mb-6"
         />
         <v-list v-model:opened="openedGroups">
-          <v-list-group v-for="item in items" class="mb-4">
+          <v-list-group
+            v-for="item in items"
+            :key="item.title"
+            :value="item.title"
+            :prepend-icon="item.icon"
+            class="mb-4"
+          >
             <template #activator="{ props }">
-              <v-list-item
-                v-bind="props"
-                :prepend-icon="item.icon"
-                :title="item.title"
-              ></v-list-item>
+              <v-list-item v-bind="props" :title="item.title"></v-list-item>
             </template>
 
             <v-list-item
@@ -29,15 +31,28 @@
           </v-list-group>
         </v-list>
       </div>
-
-      <div class="pa-8">
+      <div class="pa-8 d-flex flex-column ga-5">
         <v-card
           class="pa-2 d-flex align-center justify-center hover-scale"
           elevation="3"
           rounded="xl"
           color="white"
-          @click="goHome"
           style="cursor: pointer"
+          @click="router.push('/admin')"
+        >
+          <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
+          <span class="text-body-1 font-weight-medium text-primary"
+            >返回後台</span
+          >
+        </v-card>
+
+        <v-card
+          class="pa-2 d-flex align-center justify-center hover-scale"
+          elevation="3"
+          rounded="xl"
+          color="white"
+          style="cursor: pointer"
+          @click="router.push('/home')"
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
@@ -108,8 +123,6 @@ const logout = () => {
   router.push("/login");
 };
 
-const goHome = () => router.push("/home");
-
 const items = ref([
   {
     title: "使用者",
@@ -139,7 +152,7 @@ const items = ref([
     title: "論壇",
     icon: "mdi-forum",
     children: [
-      { label: "文章管理", link: "/f" },
+      { label: "文章管理", link: "/" },
       { label: "分類", link: "/" },
     ],
   },
