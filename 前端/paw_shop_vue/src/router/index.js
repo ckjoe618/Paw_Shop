@@ -11,10 +11,6 @@ const routes = [
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
-<<<<<<< HEAD
-      { path: "", component: () => import("@/pages/FrontHome.vue") },
-=======
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
       {
         path: "",
         redirect: "home",
@@ -43,14 +39,16 @@ const routes = [
         component: () =>
           import("@/appointment/components/AppointmentQueryPage.vue"),
       },
-<<<<<<< HEAD
       {
         path: "checkout",
         component: () => import("@/order/pages/Checkout.vue"),
         meta: { requiresAuth: true },
       },
-=======
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
+      {
+        path: "OrderingInfo",
+        component: () => import("@/order/pages/OrderingInfo.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {
@@ -98,7 +96,10 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
     // 未登入卻想進入需要登入的頁面
-    return next("/login");
+    return next({
+      path: "/login",
+      query: { redirect: to.fullPath },
+    });
   }
 
   if (to.meta.requiresGuest && authStore.isLoggedIn) {

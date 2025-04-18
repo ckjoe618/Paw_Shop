@@ -99,6 +99,9 @@ const router = useRouter();
 
 const headers = [
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 24072d3ee682da96e290bb88e3a286229f9079da
   { title: "訂單編號", key: "orderId", width: "110px" },
   { title: "會員編號", key: "memberId", width: "110px" },
   { title: "訂單金額", key: "priceTotal", width: "110px" },
@@ -109,6 +112,7 @@ const headers = [
   { title: "取貨方式", key: "pickupMethod" },
   { title: "物流編號", key: "trackingNum" },
   { title: "操作", key: "actions", sortable: false },
+<<<<<<< HEAD
 =======
   { title: "訂單編號", value: "orderId" },
   { title: "會員編號", value: "memberId" },
@@ -121,6 +125,8 @@ const headers = [
   { title: "物流編號", value: "trackingNum" },
   { title: "操作", value: "actions", sortable: false },
 >>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
+=======
+>>>>>>> 24072d3ee682da96e290bb88e3a286229f9079da
 ];
 
 //查詢所有訂單

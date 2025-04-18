@@ -80,7 +80,7 @@
               class="elevation-3"
               style="border: 2px solid #fff"
             >
-              <v-img :src="authStore.photo" alt="avatar" />
+              <v-img :src="authStore.memberPhoto" alt="avatar" />
             </v-avatar>
           </v-btn>
         </template>
@@ -110,6 +110,7 @@
 
 <script setup>
 <<<<<<< HEAD
+<<<<<<< HEAD
 import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
 import CardHover from "@/components/CardHover.vue";
 =======
@@ -117,6 +118,12 @@ import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";
 >>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
+=======
+
+import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
+import { useAuthStore } from "@/member/stores/auth";
+import router from "@/router";
+>>>>>>> 24072d3ee682da96e290bb88e3a286229f9079da
 import { ref } from "vue";
 
 const authStore = useAuthStore();
@@ -142,7 +149,7 @@ const items = ref([
     icon: "mdi-storefront",
     children: [
       { label: "商品管理", link: "/" },
-      { label: "訂單管理", link: "/" },
+      { label: "訂單管理", link: "/admin/orders" },
     ],
   },
   {

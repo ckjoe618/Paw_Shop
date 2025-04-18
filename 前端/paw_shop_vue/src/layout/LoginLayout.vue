@@ -103,29 +103,23 @@ const password = ref("");
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-
-<<<<<<< HEAD
 const redirectPath = route.query.redirect || "/";
 
-=======
 // 一般登入
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
 const handlerLogin = async () => {
   const response = await apiLogin({
     loginId: loginId.value,
     password: password.value,
   });
   if (response.data.success) {
-    console.log(response.data.photo);
-
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
       memberName: response.data.memberName,
       role: response.data.role,
-      photo: response.data.photo,
+      memberPhoto: response.data.memberPhoto,
     });
-    router.push("/");
+    router.push(redirectPath);
   } else {
     alert("登入失敗：" + response.data.message);
   }
@@ -138,12 +132,14 @@ const handlerAdminLogin = async () => {
     password: "123456",
   });
   if (response.data.success) {
+    console.log(response.data);
+
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
       memberName: response.data.memberName,
       role: response.data.role,
-      photo: response.data.photo,
+      memberPhoto: response.data.memberPhoto,
     });
     router.push("/");
   } else {
@@ -158,12 +154,14 @@ const handlerUserLogin = async () => {
     password: "123456",
   });
   if (response.data.success) {
+    console.log(response.data);
+
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
       memberName: response.data.memberName,
       role: response.data.role,
-      photo: response.data.photo,
+      memberPhoto: response.data.memberPhoto,
     });
     router.push(redirectPath);
   } else {

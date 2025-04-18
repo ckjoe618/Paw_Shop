@@ -18,9 +18,9 @@
         <v-skeleton-loader type="table-row@10" />
       </template>
 
-      <template #item.photo="{ item }">
+      <template #item.memberPhoto="{ item }">
         <v-avatar size="36">
-          <v-img :src="item.photo" />
+          <v-img :src="item.memberPhoto" />
         </v-avatar>
       </template>
 
@@ -62,7 +62,7 @@ const props = defineProps({
 
 const headers = [
   { title: "ID", value: "memberId" },
-  { title: "頭像", value: "photo" },
+  { title: "頭像", value: "memberPhoto" },
   { title: "姓名", value: "memberName" },
   { title: "性別", value: "gender" },
   { title: "身分證", value: "idno" },

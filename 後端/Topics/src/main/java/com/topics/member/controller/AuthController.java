@@ -31,7 +31,7 @@ public class AuthController {
 		response.put("memberId", loginMember.getMemberId());
 		response.put("memberName", loginMember.getMemberName());
 		response.put("role", loginMember.getRole());
-		response.put("photo", loginMember.getMemberPhoto());
+		response.put("memberPhoto", loginMember.getMemberPhoto());
 
 		return ResponseEntity.ok(response);
 	}

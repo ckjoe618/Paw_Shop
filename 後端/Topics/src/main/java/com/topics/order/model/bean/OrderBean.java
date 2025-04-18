@@ -5,10 +5,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.topics.member.model.entity.MemberBean;
-<<<<<<< HEAD
-
-=======
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

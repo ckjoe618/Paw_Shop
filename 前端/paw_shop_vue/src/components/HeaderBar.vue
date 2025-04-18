@@ -2,37 +2,21 @@
   <v-app-bar app color="#215d1e" dark height="80" class="pe-6">
     <v-toolbar-title class="text-h5">
       <router-link to="/" style="text-decoration: none">
-<<<<<<< HEAD
         <img
-          src="@/member/assets/images/ChatGPT Image 2025年4月16日 上午10_53_06.png"
+          :src="PawShopLogo"
           alt="PawShop"
           style="height: 80px"
           class="ml-6"
         />
-=======
-        <img :src="PawShopLogo" alt="PawShop" style="height: 80px" />
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
       </router-link>
     </v-toolbar-title>
 
     <v-spacer />
-
-<<<<<<< HEAD
-    <v-text-field
-      v-model="search"
-      label="Search the store"
-      single-line
-      hide-details
-      dense
-      outlined
-      @keyup.enter="handleSearch"
-=======
     <!-- 搜尋欄 -->
     <div
       class="d-flex align-center search-container"
       ref="searchContainer"
       @keyup.esc="closeSearch"
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
     >
       <!-- 搜尋圖示按鈕 -->
       <v-btn
@@ -69,17 +53,9 @@
     </div>
 
     <!-- 收藏按鈕 -->
-<<<<<<< HEAD
-    <v-btn icon><i class="fas fa-heart fa-lg"></i></v-btn>
-=======
     <v-btn icon class="text-white mx-1">
       <v-icon size="28">mdi-heart-outline</v-icon>
     </v-btn>
-    <!-- 購物車按鈕 -->
-    <v-btn icon class="text-white mx-1">
-      <v-icon size="28">mdi-cart-outline</v-icon>
-    </v-btn>
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
 
     <!-- 購物車按鈕 -->
     <v-menu v-model="cartMenuVisible" offset-y transition="slide-y-transition">
@@ -94,10 +70,11 @@
         >
           <v-btn
             icon
+            class="text-white mx-1"
             v-bind="props"
             @hover="cartMenuVisible = !cartMenuVisible"
           >
-            <i class="fas fa-cart-shopping fa-lg"></i>
+            <v-icon size="28">mdi-cart</v-icon>
           </v-btn>
         </v-badge>
         <v-btn icon v-else v-bind="props">
@@ -118,7 +95,7 @@
         <template v-slot:activator="{ props }">
           <v-btn icon v-bind="props" class="mx-1">
             <v-avatar size="50">
-              <v-img :src="authStore.photo" />
+              <v-img :src="authStore.memberPhoto" />
             </v-avatar>
           </v-btn>
         </template>
@@ -152,12 +129,9 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { ref, computed } from "vue";
-=======
 import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
-import { ref, onMounted, onBeforeUnmount } from "vue";
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 import { memberRequest } from "@/member/api/api.js";
@@ -238,25 +212,15 @@ const handleSearch = () => {
   }
 };
 
-<<<<<<< HEAD
-const login = () => {
-  router.push("/login");
-};
+const login = () => router.push("/login");
+const logout = () => authStore.logout();
+const goToAdmin = () => router.push("/admin");
 
-const logout = () => {
-  authStore.logout();
-  router.push("/");
-};
-
-const goToMember = () => {
-  // router.push("/member");
-};
-
+// 載入購物車資料
 const totalCartQty = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.qty, 0)
 );
 
-// 載入購物車資料
 const loadCart = async () => {
   if (authStore.token) {
     // ✅ 已登入 → 從後端拿購物車
@@ -278,11 +242,6 @@ const loadCart = async () => {
     }
   }
 };
-=======
-const login = () => router.push("/login");
-const logout = () => authStore.logout();
-const goToAdmin = () => router.push("/admin");
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
 </script>
 
 <style scoped>
