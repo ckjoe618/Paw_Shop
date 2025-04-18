@@ -56,7 +56,7 @@
 
         <v-list density="compact" nav>
           <v-list-item title="Settings" />
-          <v-list-item title="Logout" @click="authStore.logout()" />
+          <v-list-item title="Logout" @click="logout" />
         </v-list>
       </v-menu>
     </v-app-bar>
@@ -80,11 +80,17 @@
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { useAuthStore } from "@/member/stores/auth";
+import router from "@/router";
 import { ref } from "vue";
 
 const authStore = useAuthStore();
 const drawer = ref(true);
 const openedGroups = ref(["使用者"]);
+
+const logout = () => {
+  authStore.logout();
+  router.push("/login");
+};
 
 const items = ref([
   {
