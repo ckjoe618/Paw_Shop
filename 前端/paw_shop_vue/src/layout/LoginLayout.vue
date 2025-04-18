@@ -79,14 +79,17 @@
 import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
 import { ref } from "vue";
 import { apiLogin } from "@/member/api/api";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 
 const visible = ref(false);
 const account = ref("");
 const password = ref("");
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+
+const redirectPath = route.query.redirect || "/";
 
 const handlerLogin = async () => {
   console.log("登入資料", {
@@ -105,7 +108,7 @@ const handlerLogin = async () => {
       role: response.data.role,
       memberName: response.data.memberName,
     });
-    router.push("/");
+    router.push(redirectPath);
   } else {
     alert("登入失敗：" + response.data.message);
   }

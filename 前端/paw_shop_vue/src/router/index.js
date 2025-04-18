@@ -4,15 +4,19 @@ import { useAuthStore } from "@/member/stores/auth";
 const routes = [
   {
     path: "/",
-    component: () => import("@/layout/AdminLayout.vue"),
+    component: () => import("@/layout/FrontLayout.vue"),
     children: [
-      { path: "", component: () => import("@/layout/FrontLayout.vue") },
+      { path: "", component: () => import("@/pages/FrontHome.vue") },
       {
         path: "login",
         component: () => import("@/layout/LoginLayout.vue"),
         meta: { requiresGuest: true },
       },
-      // { path: "xx", component:  },
+      {
+        path: "checkout",
+        component: () => import("@/order/pages/Checkout.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {

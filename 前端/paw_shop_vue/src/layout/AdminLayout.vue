@@ -77,7 +77,7 @@
 
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
-import CardHover from "@/member/components/CardHover.vue";
+import CardHover from "@/components/CardHover.vue";
 import { ref } from "vue";
 
 const drawer = ref(true);

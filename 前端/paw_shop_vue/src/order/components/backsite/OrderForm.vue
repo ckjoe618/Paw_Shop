@@ -144,9 +144,8 @@ const submitForm = async () => {
       // 編輯
       const newData = {
         ...form.value,
-        member: { memberId: form.value.memberId },
+        member: { memberId: form.value.member.memberId },
       };
-      console.log("送出資料:", JSON.stringify(form.value));
       const response = await axios.put(
         `http://localhost:8080/order/update/${props.orderId}`,
         newData
