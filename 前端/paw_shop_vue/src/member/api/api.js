@@ -25,7 +25,8 @@ const apiFindMember = (data) => memberRequest.get(`/api/member/${data}`);
 // 新增會員
 const apiAddMember = (data) => memberRequest.post("/api/member", data);
 // 全部會員修改
-const apiUpdateMemberAll = (data) => memberRequest.put("/api/member", data);
+const apiUpdateMemberAll = (data) =>
+  memberRequest.put(`/api/member/${data.memberId}`, data);
 // 單筆會員修改
 const apiUpdateMember = (data) => memberRequest.put(`/api/member/${data}`);
 // 單筆會員刪除
@@ -59,7 +60,6 @@ const apihandleQueryAppointmentPet = (data) =>
 // 查詢已預約時段
 const apihandleQueryBookingTime = (data) =>
   memberRequest.get(`/api/querybookingtime/${data}`);
-
 //購物車內容
 const apiFindShoppingCartItem = () => memberRequest.get(`/api/shoppingcart`);
 const apiUpdateShoppingCartItem = (data) =>
