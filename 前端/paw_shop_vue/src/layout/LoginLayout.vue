@@ -130,8 +130,6 @@ const handlerAdminLogin = async () => {
     password: "123456",
   });
   if (response.data.success) {
-    console.log(response.data);
-
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
@@ -152,8 +150,6 @@ const handlerUserLogin = async () => {
     password: "123456",
   });
   if (response.data.success) {
-    console.log(response.data);
-
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
