@@ -32,14 +32,15 @@ import NavTabs from "@/components/NavTabs.vue";
 import FooterBar from "@/components/FooterBar.vue";
 
 const navItems = [
+  "Product",
   "Dog",
   "Cat",
   "Small Pet",
-  "Bird",
-  "Aquatic",
   "+ Vet",
   "Top Brands",
   "Special Offers",
+  "Appointment",
+  "Forum",
 ];
 </script>
 

@@ -29,6 +29,10 @@ const routes = [
         path: "member",
         component: () => import("@/member/components/MemberTable.vue"),
       },
+      {
+        path: '/admin/products',
+        component: () => import('@/product/backsite/ProductListPage.vue')
+      },
     ],
   },
 ];
