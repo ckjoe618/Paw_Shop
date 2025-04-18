@@ -7,11 +7,11 @@
         cols="12"
         sm="6"
         md="4"
-        lg="3"
+        lg="4"
       >
         <v-card
           class="mx-auto hover-scale"
-          max-width="344"
+          max-width="400"
           elevation="6"
           rounded="xl"
         >

@@ -21,11 +21,11 @@
       <!-- 搜尋圖示按鈕 -->
       <v-btn
         icon
+        class="text-white mx-1"
         @click.stop="toggleSearch"
-        class="search-icon-btn"
         v-if="showSearchIcon"
       >
-        <i class="fas fa-search"></i>
+        <v-icon size="28">mdi-magnify</v-icon>
       </v-btn>
 
       <!-- 展開搜尋欄 -->
@@ -43,8 +43,8 @@
             @keyup.enter="handleSearch"
           >
             <template #append-inner>
-              <v-btn icon @click="handleSearch">
-                <i class="fas fa-search"></i>
+              <v-btn icon @click.stop="handleSearch">
+                <v-icon size="28">mdi-magnify</v-icon>
               </v-btn>
             </template>
           </v-text-field>
@@ -53,30 +53,41 @@
     </div>
 
     <!-- 收藏按鈕 -->
-    <v-btn><i class="fas fa-heart"></i></v-btn>
+    <v-btn icon class="text-white mx-1">
+      <v-icon size="28">mdi-heart-outline</v-icon>
+    </v-btn>
     <!-- 購物車按鈕 -->
-    <v-btn><i class="fas fa-cart-shopping"></i></v-btn>
+    <v-btn icon class="text-white mx-1">
+      <v-icon size="28">mdi-cart-outline</v-icon>
+    </v-btn>
 
     <div v-if="authStore.isLoggedIn">
       <v-menu>
         <template v-slot:activator="{ props }">
-          <v-btn icon v-bind="props">
-            <v-avatar size="32">
+          <v-btn icon v-bind="props" class="mx-1">
+            <v-avatar size="50">
               <v-img :src="authStore.photo" />
             </v-avatar>
           </v-btn>
         </template>
         <v-list>
-          <v-list-item title="會員中心" to=""></v-list-item>
-          <v-list-item title="登出" @click="logout"></v-list-item>
+          <v-list-item title="會員中心"></v-list-item>
+          <v-list-item title="登出" @click="authStore.logout()"></v-list-item>
         </v-list>
       </v-menu>
     </div>
     <div v-else>
-      <v-btn @click="login"><v-icon>mdi-login</v-icon></v-btn>
+      <v-btn icon class="text-white mx-1" @click="login">
+        <v-icon size="28">mdi-login</v-icon>
+      </v-btn>
     </div>
     <div v-if="authStore.isAdmin && authStore.isLoggedIn">
-      <v-btn prepend-icon="mdi-shield-account" @click="goToAdmin">
+      <v-btn
+        prepend-icon="mdi-shield-account"
+        class="text-white border-white mx-3"
+        variant="outlined"
+        @click="goToAdmin"
+      >
         前往後臺
       </v-btn>
     </div>
@@ -130,7 +141,6 @@ const handleSearch = () => {
 };
 
 const login = () => router.push("/login");
-const logout = () => authStore.logout();
 const goToAdmin = () => router.push("/admin");
 </script>
 

@@ -110,6 +110,8 @@ const handlerLogin = async () => {
     password: password.value,
   });
   if (response.data.success) {
+    console.log(response.data.photo);
+
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
@@ -133,8 +135,9 @@ const handlerAdminLogin = async () => {
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
-      role: response.data.role,
       memberName: response.data.memberName,
+      role: response.data.role,
+      photo: response.data.photo,
     });
     router.push("/");
   } else {
@@ -152,8 +155,9 @@ const handlerUserLogin = async () => {
     authStore.login({
       token: response.data.token,
       memberId: response.data.memberId,
-      role: response.data.role,
       memberName: response.data.memberName,
+      role: response.data.role,
+      photo: response.data.photo,
     });
     router.push("/");
   } else {

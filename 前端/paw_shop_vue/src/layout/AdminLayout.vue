@@ -2,39 +2,63 @@
   <v-layout>
     <v-navigation-drawer v-model="drawer" width="220">
       <div class="d-flex flex-column align-center">
-        <v-img :src="PawShopLogo" width="120" height="120" alt="logo" style="margin-bottom: 50px" />
+        <v-img
+          :src="PawShopLogo"
+          width="120"
+          height="120"
+          alt="logo"
+          class="mb-6"
+        />
         <v-list v-model:opened="openedGroups">
-          <v-list-group v-for="item in items">
+          <v-list-group v-for="item in items" class="mb-4">
             <template #activator="{ props }">
-              <v-list-item v-bind="props" :prepend-icon="item.icon" :title="item.title"></v-list-item>
+              <v-list-item
+                v-bind="props"
+                :prepend-icon="item.icon"
+                :title="item.title"
+              ></v-list-item>
             </template>
 
-            <v-list-item v-for="(child, index) in item.children" :key="index" :title="child.label" :value="child.label"
-              :to="child.link"></v-list-item>
+            <v-list-item
+              v-for="(child, index) in item.children"
+              :key="index"
+              :title="child.label"
+              :value="child.label"
+              :to="child.link"
+            ></v-list-item>
           </v-list-group>
         </v-list>
       </div>
     </v-navigation-drawer>
 
     <v-app-bar border="b" class="ps-4" flat>
-      <v-app-bar-nav-icon v-if="$vuetify.display.smAndDown" @click="drawer = !drawer">
-        <i class="fas fa-bars" />
+      <v-app-bar-nav-icon
+        v-if="$vuetify.display.smAndDown"
+        @click="drawer = !drawer"
+      >
+        <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
 
       <v-app-bar-title class="text-h5">PawShop後臺</v-app-bar-title>
 
-      <template #append>
-        <v-btn class="text-none me-2" height="48" icon slim>
-          <v-avatar color="surface-light" image="https://cdn.vuetifyjs.com/images/john.png" size="50" />
+      <v-menu>
+        <template #activator="{ props }">
+          <v-btn icon v-bind="props" class="me-10">
+            <v-avatar
+              size="50"
+              class="elevation-3"
+              style="border: 2px solid #fff"
+            >
+              <v-img :src="authStore.photo" alt="avatar" />
+            </v-avatar>
+          </v-btn>
+        </template>
 
-          <v-menu activator="parent">
-            <v-list density="compact" nav>
-              <v-list-item link title="Settings"> </v-list-item>
-              <v-list-item link title="Logout"> </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-btn>
-      </template>
+        <v-list density="compact" nav>
+          <v-list-item title="Settings" />
+          <v-list-item title="Logout" @click="authStore.logout()" />
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <v-main>
@@ -55,10 +79,10 @@
 
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
-import CardHover from "@/components/CardHover.vue";
+import { useAuthStore } from "@/member/stores/auth";
 import { ref } from "vue";
-import router from "@/router";
 
+const authStore = useAuthStore();
 const drawer = ref(true);
 const openedGroups = ref(["使用者"]);
 
@@ -67,11 +91,7 @@ const items = ref([
     title: "使用者",
     icon: "mdi-account",
     children: [
-      {
-        label: "用戶管理",
-        link: "/user/manage",
-        icon: "mdi-account-multiple-outline",
-      },
+      { label: "用戶管理", link: "/user/manage" },
       { label: "角色權限", link: "/user/roles" },
     ],
   },
@@ -79,10 +99,7 @@ const items = ref([
     title: "賣場",
     icon: "mdi-storefront",
     children: [
-      {
-        label: "商品管理",
-        link: "/shop/products",
-      },
+      { label: "商品管理", link: "/shop/products" },
       { label: "訂單管理", link: "/shop/orders" },
     ],
   },
@@ -90,24 +107,15 @@ const items = ref([
     title: "美容預約",
     icon: "mdi-calendar-account",
     children: [
-      {
-        label: "預約紀錄",
-        link: "/admin/appointments",
-      },
-      {
-        label: "服務項目資訊",
-        link: "/reservation/services",
-      },
+      { label: "預約紀錄", link: "/admin/appointments" },
+      { label: "服務項目資訊", link: "/reservation/services" },
     ],
   },
   {
     title: "論壇",
     icon: "mdi-forum",
     children: [
-      {
-        label: "文章管理",
-        link: "/forum/posts",
-      },
+      { label: "文章管理", link: "/forum/posts" },
       { label: "分類", link: "/forum/categories" },
     ],
   },
@@ -117,10 +125,7 @@ const items = ref([
     children: [
       { label: "最新活動", link: "/home/events" },
       { label: "公司資訊", link: "/home/about" },
-      {
-        label: "常見問答",
-        link: "/home/faq",
-      },
+      { label: "常見問答", link: "/home/faq" },
     ],
   },
 ]);
