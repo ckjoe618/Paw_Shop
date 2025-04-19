@@ -46,6 +46,17 @@ const routes = [
         component: () => import("@/order/pages/Checkout.vue"),
         meta: { requiresAuth: true },
       },
+
+      {
+        path: 'products',
+        name: 'ProductListView',
+        component: () => import('@/product/frontsite/ProductListView.vue'),
+      },
+      {
+        path: '/products/:id',
+        name: 'ProductDetailPage',
+        component: () => import('@/product/frontsite/ProductDetailPage.vue'),
+      },
       {
         path: "OrderingInfo",
         component: () => import("@/order/pages/OrderingInfo.vue"),

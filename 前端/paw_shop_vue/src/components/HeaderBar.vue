@@ -240,6 +240,10 @@ const handleSearch = () => {
     closeSearch();
   }
 };
+
+const login = () => router.push("/login");
+const goToAdmin = () => router.push("/admin");
+
 </script>
 
 <style scoped>

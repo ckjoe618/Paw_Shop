@@ -2,11 +2,13 @@
   <v-tabs background-color="grey lighten-4" grow>
     <v-tab
       v-for="item in items"
-      :key="item"
+      :key="item.label"
       class="text-subtitle-2 text-capitalize"
+      :to="item.link"
+      replace
     >
-      <i v-if="iconMap[item]" :class="iconMap[item] + ' mr-2'"></i>
-      {{ item }}
+      <i v-if="iconMap[item.label]" :class="iconMap[item.label] + ' mr-2'"></i>
+      {{ item.label }}
     </v-tab>
   </v-tabs>
 </template>
@@ -26,8 +28,6 @@ const iconMap = {
   Dog: "fas fa-dog",
   Cat: "fas fa-cat",
   "Small Pet": "fas fa-otter",
-  // Bird: "fas fa-dove",
-  // Aquatic: "fas fa-fish",
   "+ Vet": "fas fa-user-md",
   "Top Brands": "fas fa-star",
   "Special Offers": "fas fa-tags",
@@ -43,3 +43,4 @@ i {
   color: #444;
 }
 </style>
+
