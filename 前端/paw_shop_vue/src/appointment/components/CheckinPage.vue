@@ -13,7 +13,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  apiAppointmentsByStatus,
+    apiAppointmentcheckIn,
 } from "@/member/api/api";
 import QrCodeDisplay from '@/components/QrCodeDisplay.vue'
 
