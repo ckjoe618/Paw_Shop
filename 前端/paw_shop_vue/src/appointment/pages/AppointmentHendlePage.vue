@@ -29,7 +29,7 @@
 
 <script setup>
 import { watch, ref } from 'vue'
-import QrCodeDisplay from '@/components/QrCodeDisplay.vue'
+import QrCodeDisplay from '@/appointment/components/QrCodeDisplay.vue'
 import { useRoute } from 'vue-router'
 const router = useRoute()
 

@@ -33,18 +33,18 @@
           <p><strong>支付狀態:</strong> {{ getPaymentStatus(appointment.paymentStatus) }}</p>
         </div>
 
-        <!-- QR Code 顯示按鈕 -->
-        <div v-if="appointment.appointmentStatus === 0">
-          <button class="btn btn-success" @click="showQRCode(appointment.appointmentId)">
-            顯示 QR Code
-          </button>
-        </div>
+       <!-- QR Code 顯示按鈕 -->
+<button class="btn"
+  :class="showQRCodeForAppointment === appointment.appointmentId ? 'btn-danger' : 'btn-success'"
+  @click="toggleQRCode(appointment.appointmentId)">
+  {{ showQRCodeForAppointment === appointment.appointmentId ? '關閉 QR Code' : '顯示 QR Code' }}
+</button>
 
-        <!-- QR Code 顯示區 -->
-        <div v-if="showQRCodeForAppointment === appointment.appointmentId" class="mt-3">
-          <QrCodeDisplay :appointment-id="appointment.appointmentId" />
-          <button class="btn btn-danger mt-2" @click="closeQRCode">關閉 QR Code</button>
-        </div>
+<!-- QR Code 顯示區 -->
+<div v-if="showQRCodeForAppointment === appointment.appointmentId" class="mt-3">
+  <QrCodeDisplay :appointment-id="appointment.appointmentId" />
+</div>
+
       </li>
     </ul>
 
@@ -62,8 +62,15 @@ import { ref, onMounted, computed } from "vue";
 import {
   apiAppointmentsByStatus,
 } from "@/member/api/api";
+import QrCodeDisplay from '@/appointment/components/QrCodeDisplay.vue';
 
-import QrCodeDisplay from '@/appointment/components/QrCodeDisplay.vue'; 
+const toggleQRCode = (appointmentId) => {
+  if (showQRCodeForAppointment.value === appointmentId) {
+    showQRCodeForAppointment.value = null; // 再按一次就關閉
+  } else {
+    showQRCodeForAppointment.value = appointmentId; // 顯示該筆
+  }
+};
 
 const memberId = ref(2);
 const selectedStatus = ref(0);
@@ -86,13 +93,6 @@ onMounted(() => {
   fetchAppointments();
 });
 
-const showQRCode = (appointmentId) => {
-  showQRCodeForAppointment.value = appointmentId;
-};
-
-const closeQRCode = () => {
-  showQRCodeForAppointment.value = null;
-};
 
 const getAppointmentStatus = (status) => {
   const statusMapping = {
