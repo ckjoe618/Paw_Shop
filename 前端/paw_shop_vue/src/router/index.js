@@ -22,22 +22,22 @@ const routes = [
       {
         path: "toappointments",
         component: () =>
-          import("@/appointment/components/AppointmentFrontPage.vue"),
+          import("@/appointment/pages/AppointmentFrontPage.vue"),
       },
       {
         path: "toappointments/reserve",
         component: () =>
-          import("@/appointment/components/AppointmentReserve.vue"),
+          import("@/appointment/pages/AppointmentReserve.vue"),
       },
       {
         path: "toappointments/hendlereserve",
         component: () =>
-          import("@/appointment/components/AppointmentHendlePage.vue"),
+          import("@/appointment/pages/AppointmentHendlePage.vue"),
       },
       {
         path: "toappointments/queryreserve",
         component: () =>
-          import("@/appointment/components/AppointmentQueryPage.vue"),
+          import("@/appointment/pages/AppointmentQueryPage.vue"),
       },
       {
         path: "checkout",
@@ -48,6 +48,11 @@ const routes = [
         path: "OrderingInfo",
         component: () => import("@/order/pages/OrderingInfo.vue"),
         meta: { requiresAuth: true },
+      },
+      {
+        path: '/checkin',
+        name: 'CheckinPage',
+        component: () => import('@/appointment/components/CheckinPage.vue')
       },
     ],
   },
@@ -78,13 +83,13 @@ const routes = [
       },
       {
         path: 'appointments',
-        component: () => import("@/appointment/components/AppointmentList.vue")
+        component: () => import("@/appointment/pages/AppointmentList.vue")
       },
       {
         path: "/appointments/edit/:id",
         name: "AppointmentEdit",
         component: () =>
-          import("@/appointment/components/AppointmentEditPage.vue"),
+          import("@/appointment/pages/AppointmentEditPage.vue"),
       },
     ],
   },

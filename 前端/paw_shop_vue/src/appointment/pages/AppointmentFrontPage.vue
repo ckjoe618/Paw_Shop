@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  
     <div class="grooming-wrapper">
 
       <div class="text-center mb-4 text-dark">
@@ -36,7 +36,7 @@
           <div class="info-card">
             <h4 v-if="selectedService">{{ selectedService.title }}</h4>
             <p v-if="selectedService">{{ selectedService.description }}</p>
-            <p v-else class="text-muted">請選擇上方服務，或觀看幻燈片了解內容</p>
+            <p v-else class="text-muted">爪娃專業洗護你家毛小孩！</p>
             <div class="text-end mt-3">
               <button class="btn btn-success px-4 py-2 rounded-pill" :disabled="!selectedService"
                 @click="goToAppointment">
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-  </div>
+ 
 </template>
 
 <script setup>
@@ -61,36 +61,33 @@ const services = [
   {
     id: 1,
     title: '基礎洗護',
-    img: new URL('@/assets/imags/basicgrooming02.png', import.meta.url).href,
-    description: '使用溫和洗劑，包含洗澡、吹乾、簡單梳理。',
+    img: new URL('@/appointment/assets/imags/basicgrooming02.png', import.meta.url).href,
+    description: '此服務使用溫和無刺激的洗劑，專為寵物肌膚設計，能夠有效清潔寵物的皮毛。服務內容包含洗澡、吹乾，並進行簡單梳理，幫助保持毛發的乾淨與順滑。這是最基本的洗護方案，適合需要常規清潔保養的毛孩。',
   },
   {
     id: 2,
     title: '基礎洗護含美容修剪',
-    img: new URL('@/assets/imags/basicgrooming01.png', import.meta.url).href,
-    description: '除了洗澡外，包含基本剪毛、腳底清理、修臉等。',
+    img: new URL('@/appointment/assets/imags/basicgrooming01.png', import.meta.url).href,
+    description: '在基礎洗護的基礎上，我們提供額外的美容修剪服務，讓您的毛孩不僅乾淨，還能保持整齊美觀。此服務包含基本剪毛、腳底清理、修整臉部毛髮等，特別適合長毛或需要定期修剪的毛孩，讓牠們看起來更加精緻，並保持清爽。 ',
   },
   {
     id: 3,
     title: '專業洗護',
-    img: new URL('@/assets/imags/grooming02.png', import.meta.url).href,
-    description: '使用專業洗劑與深層護理，含全身修剪與造型。',
+    img: new URL('@/appointment/assets/imags/grooming02.png', import.meta.url).href,
+    description: '專業洗護使用高品質的洗劑和深層護理配方，能夠提供寵物毛發與皮膚更為深入的清潔與保養。這項服務不僅包括全身洗澡，還包含全身修剪與造型設計，讓毛孩更顯美麗。無論是短毛或長毛犬貓，都能從專業洗護中獲得舒適的洗護體驗，毛髮質地會變得更加柔順光滑。',
   },
   {
     id: 4,
     title: '專業洗護含美容修剪',
-    img: new URL('@/assets/imags/grooming01.png', import.meta.url).href,
-    description: '提供精油按摩、護毛護膚，讓毛孩徹底放鬆。',
-  },
+    img: new URL('@/appointment/assets/imags/grooming01.png', import.meta.url).href,
+    description: '此服務將專業洗護和美容修剪結合，讓您的毛孩在徹底清潔的同時，還能獲得美容修剪服務。我們將使用精油按摩與護毛護膚的技術，讓毛孩在洗護過程中放鬆，舒緩壓力，並促進毛發的健康生長。此方案特別適合需要全方位護理的毛孩，讓牠們不僅外觀靚麗，還能獲得身心的放鬆。',
+  }
 ]
 
 const goToAppointment = () => {
   if (selectedService.value) {
     router.push({
       path: '/toappointments/reserve',
-      query: {
-        service: selectedService.value.title,
-      },
     })
   }
 }
