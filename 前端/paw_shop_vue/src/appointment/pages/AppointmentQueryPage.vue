@@ -72,7 +72,7 @@ const toggleQRCode = (appointmentId) => {
   }
 };
 
-const memberId = ref(2);
+const memberId = ref();
 const selectedStatus = ref(0);
 const appointments = ref([]);
 const currentPage = ref(1);
@@ -90,8 +90,15 @@ const fetchAppointments = async () => {
 };
 
 onMounted(() => {
-  fetchAppointments();
+  const storedId = localStorage.getItem('memberId');
+  if (storedId) {
+    memberId.value = storedId;
+    fetchAppointments(); // 此時 memberId 已經有值
+  } else {
+    alert('尚未登入，請先登入會員');
+  }
 });
+
 
 
 const getAppointmentStatus = (status) => {

@@ -109,7 +109,7 @@ const totalPrice = computed(() => {
 })
 
 const form = ref({
-  memberId: 3,
+  memberId: '',
   petId: '',
   date: '',
   timeslot: '',
@@ -202,6 +202,7 @@ const submitForm = async () => {
 }
 onMounted(() => {
   fetchPetsByMember()
+  form.value.memberId = localStorage.getItem('memberId');
 })
 </script>
 

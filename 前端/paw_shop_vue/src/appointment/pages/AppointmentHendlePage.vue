@@ -22,7 +22,7 @@
 
       <QrCodeDisplay :appointment-id="appointmentId" />
 
-      <router-link to="/" class="btn btn-success mt-3">返回首頁</router-link>
+      <router-link to="/toappointments/queryreserve" class="btn btn-success mt-3">返回首頁</router-link>
     </div>
   </div>
 </template>
