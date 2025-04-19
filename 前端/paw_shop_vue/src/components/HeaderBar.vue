@@ -237,7 +237,6 @@ const handleSearch = () => {
 };
 
 const login = () => router.push("/login");
-const logout = () => authStore.logout();
 const goToAdmin = () => router.push("/admin");
 
 </script>
