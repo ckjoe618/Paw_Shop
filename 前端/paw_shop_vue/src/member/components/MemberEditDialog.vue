@@ -76,13 +76,11 @@ watch(
 // 父層 editDialog → 傳入 props.dialog → dialog.get() 讀取
 // 子層 dialog.value = false → 呼叫 emit → 父層 editDialog 也改變
 const emit = defineEmits(["update:dialog", "updated"]);
-const useDialogModel = (props, emit) => {
-  return computed({
-    get: () => props.dialog,
-    set: (val) => emit("update:dialog", val),
-  });
-};
-const dialog = useDialogModel(props, emit);
+
+const dialog = computed({
+  get: () => props.dialog,
+  set: (val) => emit("update:dialog", val),
+});
 
 const rules = {
   required: (v) => !!v || "必填項目",
@@ -105,6 +103,7 @@ const close = () => {
 
 const submit = async () => {
   if (!form.value.validate()) {
+    console.log(form.value.validate());
     return; // 表單驗證失敗就中止
   }
   try {

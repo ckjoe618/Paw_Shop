@@ -42,7 +42,7 @@
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
-            >返回後台</span
+            >返回首頁</span
           >
         </v-card>
 
@@ -56,7 +56,7 @@
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
-            >返回首頁</span
+            >前往前台</span
           >
         </v-card>
       </div>
@@ -109,22 +109,10 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-<<<<<<< HEAD
-import PawShopLogo from "@/member/assets/images/PawShop_logo.png";
-import CardHover from "@/components/CardHover.vue";
-=======
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
-import { useAuthStore } from "@/member/stores/auth";
-import router from "@/router";
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
-=======
-
-import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
-import { useAuthStore } from "@/member/stores/auth";
-import router from "@/router";
->>>>>>> 24072d3ee682da96e290bb88e3a286229f9079da
 import { ref } from "vue";
+import { useAuthStore } from "@/member/stores/auth";
+import router from "@/router";
 
 const authStore = useAuthStore();
 const drawer = ref(true);

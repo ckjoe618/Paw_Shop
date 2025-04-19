@@ -35,7 +35,7 @@ public class MemberService {
 		return new MemberDto(memberNew);
 	}
 
-	public MemberDto selectMemberById(Integer id) {
+	public MemberDto findMemberById(Integer id) {
 		Optional<MemberBean> op = memberRepository.findById(id);
 		if (op.isPresent()) {
 			return new MemberDto(op.get());
@@ -43,7 +43,7 @@ public class MemberService {
 		return null;
 	}
 	
-	public MemberBean selectMembeEntityrById(Integer id) {
+	public MemberBean findMembeEntityrById(Integer id) {
 		Optional<MemberBean> op = memberRepository.findById(id);
 		if (op.isPresent()) {
 			return op.get();
@@ -51,7 +51,7 @@ public class MemberService {
 		return null;
 	}
 
-	public List<MemberDto> selectMember() {
+	public List<MemberDto> findMember() {
 		List<MemberDto> members = memberRepository.findAll().stream()
 				.map(m -> new MemberDto(m))
 				.toList();

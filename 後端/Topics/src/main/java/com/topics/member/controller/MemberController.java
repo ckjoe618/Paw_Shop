@@ -25,7 +25,7 @@ public class MemberController {
 
 	@GetMapping("/member")
 	public List<MemberDto> selectMemberAll() {
-		return memberService.selectMember();
+		return memberService.findMember();
 	}
 
 	@PutMapping("/member/{id}")
@@ -37,7 +37,7 @@ public class MemberController {
 		if (!memberDto.getRole().equals("ADMIN")) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("沒有權限");
 		}
-		MemberBean memberBean = memberService.selectMembeEntityrById(id);
+		MemberBean memberBean = memberService.findMembeEntityrById(id);
 		entity.setAccount(memberBean.getAccount());
 		entity.setPassword(memberBean.getPassword());
 		memberService.updateMember(entity);

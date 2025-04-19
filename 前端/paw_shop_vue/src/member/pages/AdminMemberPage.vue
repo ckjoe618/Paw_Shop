@@ -1,7 +1,13 @@
 <template>
-  <v-container>
+  <v-container fluid>
+    <MemberSearchPanel
+      @search="handleSearch"
+      @clear="clearSearch"
+      class="mb-4"
+    />
+
     <MemberTable
-      :members="members"
+      :members="filteredMembers"
       :loading="loading"
       @refresh="fetchMembers"
       @edit="openEditDialog"
@@ -18,12 +24,13 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { apiFindMemberAll } from "@/member/api/api.js";
+import { apiFindMemberAll, apiDeleteMember } from "@/member/api/api.js";
 import MemberTable from "@/member/components/MemberTable.vue";
 import MemberEditDialog from "@/member/components/MemberEditDialog.vue";
-import { apiDeleteMember } from "@/member/api/api.js";
+import MemberSearchPanel from "@/member/components/MemberSearchPanel.vue";
 
 const members = ref([]);
+const filteredMembers = ref([]);
 const loading = ref(false);
 const editDialog = ref(false);
 const selectedMember = ref(null);
@@ -34,12 +41,46 @@ const fetchMembers = async () => {
   try {
     const response = await apiFindMemberAll();
     members.value = response.data;
-    console.log(members.value);
+    filteredMembers.value = response.data;
   } catch (e) {
     console.error("載入會員失敗", e);
   } finally {
     loading.value = false;
   }
+};
+
+// 處理搜尋事件
+const handleSearch = async ({ keyword, role, status }) => {
+  const response = await apiFindMemberAll();
+  members.value = response.data;
+
+  let matchKey = "";
+
+  filteredMembers.value = members.value.filter((member) => {
+    if (/^\d+$/.test(keyword)) {
+      matchKey =
+        String(member.memberId) === keyword ||
+        (keyword.length >= 4 && String(member.phone).includes(keyword));
+    } else {
+      matchKey = [member.memberName, member.email].some((value) =>
+        String(value || "")
+          .toLowerCase()
+          .includes(keyword)
+      );
+    }
+    const matchRole = role ? member.role === role : true;
+    const matchStatus =
+      status !== null && status !== undefined
+        ? member.activeStatus === status
+        : true;
+    return matchKey && matchRole && matchStatus;
+  });
+};
+
+// 處理清除搜尋事件
+const clearSearch = () => {
+  // 建立一份淺拷貝
+  filteredMembers.value = [...members.value];
 };
 
 // 處理編輯事件
