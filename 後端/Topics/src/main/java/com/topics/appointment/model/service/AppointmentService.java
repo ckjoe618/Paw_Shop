@@ -1,7 +1,9 @@
 package com.topics.appointment.model.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -139,6 +141,36 @@ public class AppointmentService {
 	}
 
 	@Transactional
+	public List<Appointment> searchAppointmentById(int appointmentId){
+		List<Object[]> result = appointmentRepository. findAppointmentById(appointmentId);
+		List<Appointment> appointments = new ArrayList<>();
+		for (Object[] row : result) {
+			Appointment appointment = new Appointment();
+			appointment.setAppointmentId((Integer) row[0]);
+			MemberBean member = new MemberBean();
+			member.setMemberId((Integer) row[1]);
+			appointment.setMember(member);
+			Pet pet = new Pet();
+			pet.setPetId((Integer) row[2]);
+			appointment.setPet(pet);
+			appointment.setAppointmentDate(row[3] != null ? row[3].toString() : null);
+			appointment.setAppointmentTimeslot((String) row[4]);
+			appointment.setAppointmentTotal((Integer) row[5]);
+			appointment.setAppointmentStatus(((Number) row[6]).intValue());
+			appointment.setPaymentStatus(((Number) row[7]).intValue());
+			appointment.setServiceNames((String) row[8]);
+			String additionalPackages = (String) row[9];
+			appointment.setAdditionalPackages(StringUtils.isBlank(additionalPackages) ? "無加購服務" : additionalPackages);
+			appointments.add(appointment);
+		}
+		return appointments;
+	}
+	
+	 public void save(Appointment appointment) {
+	        appointmentRepository.save(appointment);
+	    }
+	 
+	@Transactional
 	public boolean deleteAppointment(int appointmentId) {
 		if (!appointmentRepository.existsById(appointmentId)) {
 			throw new IllegalArgumentException("No appointment found with ID: " + appointmentId);
@@ -273,4 +305,36 @@ public class AppointmentService {
 				appointmentTimeslot);
 	}
 
+	public String getAppointmentStatus(int appointmentStatus) {
+        if (appointmentStatus == 0) {
+            return "未完成";
+        } else if (appointmentStatus == 1) {
+            return "已完成";
+        } else {
+            return "已取消";
+        }
+    }
+	 public List<Map<String, Object>> getAppointmentsDetails(int memberId, int appointmentStatus) {
+	        List<Object[]> results = appointmentRepository.findAppointmentDetailsByOwner_MemberIdAndAppointmentStatus(memberId, appointmentStatus);
+	        
+	        List<Map<String, Object>> appointments = new ArrayList<>();
+	        
+	        for (Object[] result : results) {
+	            Map<String, Object> appointmentMap = new LinkedHashMap<>();
+
+	            appointmentMap.put("appointmentId", result[0]);
+	            appointmentMap.put("petName", result[1]);
+	            appointmentMap.put("appointmentDate", result[2]);
+	            appointmentMap.put("appointmentTimeslot", result[3]);
+	            appointmentMap.put("appointmentTotal", result[4]);
+	            appointmentMap.put("paymentStatus", result[6]);
+	            appointmentMap.put("serviceNames", result[7]);
+	            appointmentMap.put("additionalPackages", result[8]);
+	            appointmentMap.put("appointmentStatus", result[5]);
+	            
+	            appointments.add(appointmentMap);
+	        }
+	        
+	        return appointments;
+	    }
 }

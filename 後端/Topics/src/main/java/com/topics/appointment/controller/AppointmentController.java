@@ -318,6 +318,30 @@ public class AppointmentController {
 	    }
 	    return totalPrice;
 	}
+	@PutMapping("/appointment/checkin/{id}")
+	public ResponseEntity<String> checkIn(@PathVariable int id) {
+	    List<Appointment> appointments = appointmentService.searchAppointmentById(id);
+
+	    if (!appointments.isEmpty()) {
+	        Appointment appt = appointments.get(0);
+
+	        if (appt.getAppointmentStatus() == 1) {
+	            return ResponseEntity.ok("已經報到過囉！");
+	        }
+
+	        appt.setAppointmentStatus(1); 
+	        appointmentService.save(appt);
+
+	        return ResponseEntity.ok("報到成功！");
+	    }
+
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("查無此預約");
+	}
+	 @GetMapping("/appointment/{memberId}/{appointmentStatus}")
+	    public List<Map<String, Object>> getAppointmentsWithStatu(@PathVariable int memberId, 
+	                                                     @PathVariable int appointmentStatus) {
+	        return appointmentService.getAppointmentsDetails(memberId, appointmentStatus);
+	    }
 
 
 }
