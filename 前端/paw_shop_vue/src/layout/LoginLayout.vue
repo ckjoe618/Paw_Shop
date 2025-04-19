@@ -134,7 +134,6 @@ const performLogin = async (loginId, password) => {
   cursor: pointer;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
-
 .logo-hover:hover {
   transform: scale(1.08);
   opacity: 0.85;
