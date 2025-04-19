@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app color="#215d1e" dark height="80" class="pe-6">
     <v-toolbar-title class="text-h5">
-      <router-link to="/" style="text-decoration: none">
+      <router-link to="/home" style="text-decoration: none">
         <img
           :src="PawShopLogo"
           alt="PawShop"
@@ -131,7 +131,6 @@
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 import { memberRequest } from "@/member/api/api.js";
@@ -158,7 +157,7 @@ const items = ref([
   },
   {
     title: "預約管理",
-    link: "/",
+    link: "/appointments/queryreserve",
   },
   {
     title: "論壇管理",

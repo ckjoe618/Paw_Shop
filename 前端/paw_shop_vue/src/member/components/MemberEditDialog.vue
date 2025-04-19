@@ -103,8 +103,7 @@ const close = () => {
 
 const submit = async () => {
   if (!form.value.validate()) {
-    console.log(form.value.validate());
-    return; // 表單驗證失敗就中止
+    return;
   }
   try {
     console.log("送出資料：", localMember.value);

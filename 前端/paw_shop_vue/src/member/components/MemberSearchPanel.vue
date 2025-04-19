@@ -1,7 +1,6 @@
 <template>
   <v-card class="pa-4 mb-4" elevation="2" rounded="lg">
     <v-row dense>
-      <!-- 關鍵字搜尋 -->
       <v-col cols="12" md="4">
         <v-text-field
           v-model="keyword"
@@ -16,7 +15,6 @@
         />
       </v-col>
 
-      <!-- 角色 -->
       <v-col cols="12" md="3">
         <v-select
           v-model="role"
@@ -26,7 +24,6 @@
         />
       </v-col>
 
-      <!-- 狀態 -->
       <v-col cols="12" md="3">
         <v-select
           v-model="status"
@@ -41,7 +38,6 @@
         />
       </v-col>
 
-      <!-- 查詢按鈕 -->
       <v-col cols="12" md="2" class="d-flex align-end">
         <div class="w-100" style="padding-bottom: 20px">
           <v-btn

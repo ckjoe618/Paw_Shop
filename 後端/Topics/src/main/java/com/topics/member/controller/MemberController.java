@@ -15,6 +15,8 @@ import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.service.MemberService;
 import com.topics.member.security.AuthHolder;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
 @RequestMapping("/api")
@@ -61,4 +63,11 @@ public class MemberController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("會員停用失敗");
 		}
 	}
+	
+	@PostMapping("/member")
+	public ResponseEntity<MemberDto> insertMember(@RequestBody MemberBean entity) {
+		MemberDto member = memberService.insertMember(entity);		
+		return ResponseEntity.status(HttpStatus.CREATED).body(member);
+	}
+	
 }

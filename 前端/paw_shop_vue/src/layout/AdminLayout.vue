@@ -136,7 +136,7 @@ const items = ref([
     title: "賣場",
     icon: "mdi-storefront",
     children: [
-      { label: "商品管理", link: "/" },
+      { label: "商品管理", link: "/admin/products" },
       { label: "訂單管理", link: "/admin/orders" },
     ],
   },
