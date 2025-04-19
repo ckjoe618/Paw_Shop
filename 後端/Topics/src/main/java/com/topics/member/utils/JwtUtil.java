@@ -9,7 +9,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
 	private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("DoNotGoGentleIntoThatGoodSecurityKey".getBytes());
-	private static final int EXPIRATION_IN_SECONDS = 60 * 60;
+	private static final int EXPIRATION_IN_SECONDS = 60 * 60; // 1小時
 
 	/**
 	 * 產生 JWT Token。

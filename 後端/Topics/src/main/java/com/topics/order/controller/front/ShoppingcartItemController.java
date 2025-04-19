@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ import com.topics.order.model.bean.ShoppingcartItemBean;
 import com.topics.order.model.service.ShoppingcartItemService;
 
 @RestController
-@RequestMapping("/shoppingcart")
+@RequestMapping("/api/shoppingcart")
 public class ShoppingcartItemController {
 	
 	@Autowired
@@ -39,7 +40,7 @@ public class ShoppingcartItemController {
 	
 	//刪除
 	@DeleteMapping("/{cartItemId}")
-	public void deleteShoppingcart(Integer cartItemId) {
+	public void deleteShoppingcart(@PathVariable Integer cartItemId) {
 		shoppingcartItemService.deleteShoppingcartById(cartItemId);
 	}
 	
@@ -60,6 +61,7 @@ public class ShoppingcartItemController {
 	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登入");
 	    }
 		Integer memberId = member.getMemberId();
+		
 		return shoppingcartItemService.findItemsByMemberId(memberId);
 	}
 	

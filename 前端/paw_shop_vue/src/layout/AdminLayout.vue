@@ -42,7 +42,7 @@
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
-            >返回後台</span
+            >返回首頁</span
           >
         </v-card>
 
@@ -56,7 +56,7 @@
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
-            >返回首頁</span
+            >前往前台</span
           >
         </v-card>
       </div>
@@ -109,11 +109,10 @@
 </template>
 
 <script setup>
-
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
+import { ref } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";
-import { ref } from "vue";
 
 const authStore = useAuthStore();
 const drawer = ref(true);

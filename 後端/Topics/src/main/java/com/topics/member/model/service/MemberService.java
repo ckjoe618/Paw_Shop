@@ -26,22 +26,33 @@ public class MemberService {
 
 	public MemberDto deleteMemberById(Integer id) {
 		Optional<MemberBean> op = memberRepository.findById(id);
+		if (op.isEmpty()) {
+			throw new IllegalArgumentException("查無此會員");
+		}
 		MemberBean member = op.get();
 		member.setActiveStatus(false);
 		MemberBean memberNew = memberRepository.save(member);
 		return new MemberDto(memberNew);
 	}
 
-	public MemberDto selectMemberById(Integer id) {
+	public MemberDto findMemberById(Integer id) {
 		Optional<MemberBean> op = memberRepository.findById(id);
 		if (op.isPresent()) {
 			return new MemberDto(op.get());
 		}
 		return null;
 	}
+	
+	public MemberBean findMembeEntityrById(Integer id) {
+		Optional<MemberBean> op = memberRepository.findById(id);
+		if (op.isPresent()) {
+			return op.get();
+		}
+		return null;
+	}
 
-	public List<MemberDto> selectMember() {
-		List<MemberDto> members = memberRepository.findByActive().stream()
+	public List<MemberDto> findMember() {
+		List<MemberDto> members = memberRepository.findAll().stream()
 				.map(m -> new MemberDto(m))
 				.toList();
 		return members;

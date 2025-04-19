@@ -8,10 +8,14 @@ const routes = [
     meta: { requiresGuest: true },
   },
   {
+    path: "/register",
+    component: () => import("@/layout/RegisterLayout.vue"),
+    meta: { requiresGuest: true },
+  },
+  {
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
-      { path: "", component: () => import("@/pages/FrontHome.vue") },
       {
         path: "",
         redirect: "home",
@@ -21,26 +25,22 @@ const routes = [
         component: () => import("@/pages/FrontHome.vue"),
       },
       {
-        path: "toappointments",
-        component: () =>
-          import("@/appointment/components/AppointmentFrontPage.vue"),
+        path: "appointments",
+        component: () => import("@/appointment/pages/AppointmentFrontPage.vue"),
       },
       {
-        path: "toappointments/reserve",
-        component: () =>
-          import("@/appointment/components/AppointmentReserve.vue"),
+        path: "appointments/reserve",
+        component: () => import("@/appointment/pages/AppointmentReserve.vue"),
       },
       {
-        path: "toappointments/hendlereserve",
+        path: "appointments/hendlereserve",
         component: () =>
-          import("@/appointment/components/AppointmentHendlePage.vue"),
+          import("@/appointment/pages/AppointmentHendlePage.vue"),
       },
       {
-        path: "toappointments/queryreserve",
-        component: () =>
-          import("@/appointment/components/AppointmentQueryPage.vue"),
+        path: "appointments/queryreserve",
+        component: () => import("@/appointment/pages/AppointmentQueryPage.vue"),
       },
-
       {
         path: "checkout",
         component: () => import("@/order/pages/Checkout.vue"),
@@ -56,7 +56,16 @@ const routes = [
         path: '/products/:id',
         name: 'ProductDetailPage',
         component: () => import('@/product/frontsite/ProductDetailPage.vue'),
-      }
+      },
+      {
+        path: "OrderingInfo",
+        component: () => import("@/order/pages/OrderingInfo.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "checkin",
+        component: () => import("@/appointment/components/CheckinPage.vue"),
+      },
     ],
   },
   {
@@ -81,18 +90,16 @@ const routes = [
         component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
-        path: 'products',
-        component: () => import('@/product/backsite/ProductListPage.vue')
+        path: "products",
+        component: () => import("@/product/backsite/ProductListPage.vue"),
       },
       {
         path: "appointments",
-        component: () => import("@/appointment/components/AppointmentList.vue"),
+        component: () => import("@/appointment/pages/AppointmentList.vue"),
       },
       {
-        path: "/appointments/edit/:id",
-        name: "AppointmentEdit",
-        component: () =>
-          import("@/appointment/components/AppointmentEditPage.vue"),
+        path: "appointments/edit/:id",
+        component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
       },
     ],
   },
@@ -108,7 +115,10 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
     // 未登入卻想進入需要登入的頁面
-    return next("/login");
+    return next({
+      path: "/login",
+      query: { redirect: to.fullPath },
+    });
   }
 
   if (to.meta.requiresGuest && authStore.isLoggedIn) {

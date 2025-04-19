@@ -1,10 +1,16 @@
 <template>
-  <v-card>
-    <v-card-title>
+  <v-card elevation="4" rounded="lg">
+    <v-card-title class="d-flex align-center">
       <v-icon class="mr-2">mdi-account-multiple</v-icon>
       會員列表
-      <!-- <v-spacer></v-spacer> -->
-      <!-- <v-btn color="primary" @click="$emit('refresh')">重新整理</v-btn> -->
+      <v-spacer></v-spacer>
+      <v-btn
+        color="primary"
+        variant="elevated"
+        @click="$emit('refresh')"
+        prepend-icon="mdi-refresh"
+        >重新整理</v-btn
+      >
     </v-card-title>
 
     <v-data-table
@@ -13,6 +19,7 @@
       :loading="loading"
       class="elevation-1"
       item-value="memberId"
+      no-data-text="目前沒有會員資料"
     >
       <template #loading>
         <v-skeleton-loader type="table-row@10" />
@@ -25,8 +32,8 @@
       </template>
 
       <template #item.activeStatus="{ item }">
-        <v-chip :color="item.activeStatus === true ? 'green' : 'grey'" dark>
-          {{ item.activeStatus === true ? "啟用" : "停用" }}
+        <v-chip :color="item.activeStatus ? 'green' : 'grey'" dark>
+          {{ item.activeStatus ? "啟用" : "停用" }}
         </v-chip>
       </template>
 
@@ -45,7 +52,7 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn icon color="red" @click="$emit('deactivate', item)">
-          <v-icon>mdi-close-circle</v-icon>
+          <v-icon>mdi-delete</v-icon>
         </v-btn>
       </template>
     </v-data-table>

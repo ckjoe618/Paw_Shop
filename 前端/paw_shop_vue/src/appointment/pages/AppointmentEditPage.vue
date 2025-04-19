@@ -203,13 +203,11 @@
   formData.append('appointmentDate', appointment.value.appointmentDate);
   formData.append('appointmentTimeslot', appointment.value.appointmentTimeslot);
 
-  // 加入多個 service
   if (selectedService.value) {
   formData.append('services', selectedService.value);
 }
 
 
-  // 加入多個 extraPackages
   if (selectedPackages.value && selectedPackages.value.length > 0) {
     selectedPackages.value.forEach(pkg => {
       formData.append('extraPackages', pkg);
