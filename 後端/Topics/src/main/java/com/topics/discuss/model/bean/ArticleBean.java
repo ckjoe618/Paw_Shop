@@ -1,6 +1,7 @@
 package com.topics.discuss.model.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.topics.member.model.entity.MemberBean;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,7 +46,6 @@ public class ArticleBean {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(columnDefinition = "datetime2")
-	@UpdateTimestamp
 	private LocalDateTime updatedDate;
 
 	private boolean deleted;
@@ -54,5 +54,9 @@ public class ArticleBean {
 
 	@Column(columnDefinition = "datetime2")
 	private LocalDateTime lastCommentDate;
+
+	@ManyToOne
+	@JoinColumn(name = "member_id", insertable = false, updatable = false)
+	private MemberBean member;
 
 }

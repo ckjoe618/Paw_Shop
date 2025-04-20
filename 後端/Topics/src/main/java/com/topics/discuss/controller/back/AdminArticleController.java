@@ -16,20 +16,20 @@ public class AdminArticleController {
     @Autowired
     private AdminArticleService adminArticleService;
 
-    // ✅ HTML頁面導向用（例如將來接 DataTables）
+    // HTML頁面導向用（例如將來接 DataTables）
     @GetMapping
     public String articlePage() {
         return "discuss"; // resources/templates/articles.html
     }
 
-    // ✅ RESTful API：取得所有文章
+    // RESTful API：取得所有文章
     @GetMapping("/article")
     @ResponseBody
     public List<ArticleBean> getAllArticles() {
         return adminArticleService.getAllArticles();
     }
 
-    // ✅ RESTful API：取得單篇文章
+    // RESTful API：取得單篇文章
     @GetMapping("/article/{id}")
     @ResponseBody
     public ResponseEntity<ArticleBean> getArticle(@PathVariable Integer id) {
@@ -37,14 +37,14 @@ public class AdminArticleController {
         return article != null ? ResponseEntity.ok(article) : ResponseEntity.notFound().build();
     }
 
-    // ✅ RESTful API：新增文章
+    // RESTful API：新增文章
     @PostMapping("/article")
     @ResponseBody
     public ArticleBean createArticle(@RequestBody ArticleBean article) {
         return adminArticleService.insertArticle(article);
     }
 
-    // ✅ RESTful API：更新文章
+    // RESTful API：更新文章
     @PutMapping("/article/{id}")
     @ResponseBody
     public ResponseEntity<ArticleBean> updateArticle(@PathVariable Integer id, @RequestBody ArticleBean updated) {
@@ -53,7 +53,7 @@ public class AdminArticleController {
         return ResponseEntity.ok(result);
     }
 
-    // ✅ RESTful API：刪除文章
+    // RESTful API：刪除文章
     @DeleteMapping("/article/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteArticle(@PathVariable Integer id) {

@@ -1,10 +1,17 @@
 package com.topics.discuss.model.service.front;
 
 import com.topics.discuss.model.bean.ArticleBean;
+import com.topics.discuss.model.bean.ArticleCategory;
+import com.topics.discuss.model.dto.request.ArticleRequestDto;
+import com.topics.discuss.model.dto.response.ArticleCategoryDto;
+import com.topics.discuss.model.dto.response.ArticleListDto;
+import com.topics.discuss.model.repository.ArticleCategoryRepository;
 import com.topics.discuss.model.repository.ArticleRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -12,11 +19,81 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    private final ArticleCategoryRepository articleCategoryRepository;
+
+    public ArticleService(ArticleRepository articleRepository, ArticleCategoryRepository articleCategoryRepository) {
         this.articleRepository = articleRepository;
+        this.articleCategoryRepository = articleCategoryRepository;
+    }
+// 查全部文章
+//    public List<ArticleBean> getAllArticles() {
+//        return articleRepository.findByDeletedFalseOrderByCreatedDateDesc();
+//    }
+
+    // 查全部文章(含分類)
+    public List<ArticleListDto> getAllArticlesWithCategoryName() {
+        List<ArticleBean> articles = articleRepository.findByDeletedFalseOrderByCreatedDateDesc();
+
+        List<ArticleListDto> result = new ArrayList<>();
+
+        for (ArticleBean article : articles) {
+            //查分類名稱
+            String categoryName = articleCategoryRepository
+                    .findById(article.getCategoryId())
+                    .map(ArticleCategory::getCategoryName)
+                    .orElse("未知分類");
+
+            ArticleListDto dto = new ArticleListDto();
+
+            dto.setArticleId(article.getArticleId());
+            dto.setMemberId(article.getMemberId());
+            dto.setTitle(article.getTitle());
+            dto.setContent(article.getContent());
+            dto.setCategoryId(article.getCategoryId());
+            dto.setCategoryName(categoryName);
+            dto.setViewCount(article.getViewCount());
+            dto.setCommentCount(article.getCommentCount());
+            dto.setCreatedDate(article.getCreatedDate());
+            dto.setUpdatedDate(article.getUpdatedDate());
+            dto.setPinned(article.isPinned());
+            dto.setFeatured(article.isFeatured());
+
+            result.add(dto);
+        }
+        return result;
     }
 
-    public List<ArticleBean> getAllArticles() {
-        return articleRepository.findByDeletedFalseOrderByCreatedDateDesc();
+    // 查詢所有分類
+    public List<ArticleCategoryDto> getAllCategories() {
+        List<ArticleCategory> categories = articleCategoryRepository.findAll();
+
+        List<ArticleCategoryDto> result = new ArrayList<>();
+
+        for (ArticleCategory category : categories) {
+            ArticleCategoryDto dto = new ArticleCategoryDto();
+            dto.setCategoryId(category.getCategoryId());
+            dto.setCategoryName(category.getCategoryName());
+            result.add(dto);
+        }
+        return result;
+    }
+
+    // 新增文章
+    public ArticleBean addArticle(@Valid ArticleRequestDto articleRequestDto) {
+        ArticleBean article = new ArticleBean();
+
+        article.setTitle(articleRequestDto.getTitle());
+        article.setContent(articleRequestDto.getContent());
+        article.setCategoryId(articleRequestDto.getCategoryId());
+        article.setMemberId(articleRequestDto.getMemberId());
+
+        article.setViewCount(0);
+        article.setDeleted(false);
+        article.setPinned(false);
+        article.setFeatured(false);
+        article.setCommentCount(0);
+        article.setLastCommentDate(null);
+
+        return articleRepository.save(article);
     }
 }

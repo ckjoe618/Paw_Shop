@@ -1,11 +1,12 @@
 package com.topics.discuss.controller.front;
 
 import com.topics.discuss.model.bean.ArticleBean;
+import com.topics.discuss.model.dto.request.ArticleRequestDto;
+import com.topics.discuss.model.dto.response.ArticleListDto;
 import com.topics.discuss.model.service.front.ArticleService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,7 +21,13 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ArticleBean>> getAllArticles() {
-        return ResponseEntity.ok(articleService.getAllArticles());
+    public ResponseEntity<List<ArticleListDto>> getAllArticles() {
+        return ResponseEntity.ok(articleService.getAllArticlesWithCategoryName());
+    }
+
+    @PostMapping
+    public ResponseEntity<ArticleBean> addArticle(@Valid @RequestBody ArticleRequestDto articleRequestDto) {
+        ArticleBean saved = articleService.addArticle(articleRequestDto);
+        return ResponseEntity.status(201).body(saved);
     }
 }
