@@ -217,7 +217,7 @@
     try {
         await apiUpdateAppointment(appointment.value.appointmentId, formData);
   alert('預約更新成功');
-  router.push('/api/appointments');
+  router.push('/admin/appointments');
 } catch (error) {
   alert('更新失敗，請稍後再試');
   console.error(error);

@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <h2 class="text-center mb-4">預約查詢</h2>
+    <h2 class="text-center mb-4">預約訂單查詢</h2>
 
     <!-- 狀態選擇下拉選單 -->
     <div class="mb-3">
@@ -27,21 +27,22 @@
           <p><strong>寵物名稱:</strong> {{ appointment.petName || '無提供寵物名稱' }}</p>
           <p><strong>預約日期:</strong> {{ formatDate(appointment.appointmentDate) }}</p>
           <p><strong>時段:</strong> {{ appointment.appointmentTimeslot || '無提供時段' }}</p>
-          <p><strong>基本服務:</strong> {{ appointment.serviceNames || '無服務項' }}</p>
+          <p><strong>基本服務:</strong> {{ uniqueServices(appointment.serviceNames) || '無服務項' }}</p>
           <p><strong>加購服務:</strong> {{ appointment.additionalPackages || '無加購服務' }}</p>
           <p><strong>總費用:</strong> ${{ appointment.appointmentTotal || '未提供費用' }}</p>
           <p><strong>支付狀態:</strong> {{ getPaymentStatus(appointment.paymentStatus) }}</p>
         </div>
 
        <!-- QR Code 顯示按鈕 -->
+       <div v-if="appointment.appointmentStatus === 0">
 <button class="btn"
   :class="showQRCodeForAppointment === appointment.appointmentId ? 'btn-danger' : 'btn-success'"
   @click="toggleQRCode(appointment.appointmentId)">
   {{ showQRCodeForAppointment === appointment.appointmentId ? '關閉 QR Code' : '顯示 QR Code' }}
 </button>
-
+</div>
 <!-- QR Code 顯示區 -->
-<div v-if="showQRCodeForAppointment === appointment.appointmentId" class="mt-3">
+<div v-if="showQRCodeForAppointment === appointment.appointmentId && appointment.appointmentStatus === 0" class="mt-3">
   <QrCodeDisplay :appointment-id="appointment.appointmentId" />
 </div>
 
@@ -66,9 +67,9 @@ import QrCodeDisplay from '@/appointment/components/QrCodeDisplay.vue';
 
 const toggleQRCode = (appointmentId) => {
   if (showQRCodeForAppointment.value === appointmentId) {
-    showQRCodeForAppointment.value = null; // 再按一次就關閉
+    showQRCodeForAppointment.value = null; 
   } else {
-    showQRCodeForAppointment.value = appointmentId; // 顯示該筆
+    showQRCodeForAppointment.value = appointmentId; 
   }
 };
 
@@ -88,12 +89,22 @@ const fetchAppointments = async () => {
     alert(`無法加載預約資料，錯誤訊息: ${error.message}`);
   }
 };
+const uniqueServices = (serviceNames) => {
+  if (!serviceNames) return "無服務項";  
+
+  const names = serviceNames
+    .split(/[\s,]+/) 
+    .map((s) => s.trim()) 
+    .filter((s) => s.length > 0); 
+  
+  return [...new Set(names)].join(", ");
+};
 
 onMounted(() => {
   const storedId = localStorage.getItem('memberId');
   if (storedId) {
     memberId.value = storedId;
-    fetchAppointments(); // 此時 memberId 已經有值
+    fetchAppointments(); 
   } else {
     alert('尚未登入，請先登入會員');
   }

@@ -28,7 +28,7 @@
       <QrCodeDisplay :appointment-id="appointmentId" />
 
       <router-link to="/appointments/queryreserve" class="btn btn-success mt-3"
-        >返回首頁</router-link
+        >前往預約訂單頁面</router-link
       >
     </div>
   </div>
