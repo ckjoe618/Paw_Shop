@@ -330,6 +330,7 @@ public class AppointmentController {
 	        }
 
 	        appt.setAppointmentStatus(1); 
+	        appt.setPaymentStatus(1);
 	        appointmentService.save(appt);
 
 	        return ResponseEntity.ok("報到成功！");
