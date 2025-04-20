@@ -1,12 +1,12 @@
 <template>
-    <div class="checkin-container">
-        <div class="card">
-            <h2>報到中...</h2>
-            <p :class="messageClass">{{ message }}</p>
-            <!-- QR Code Display -->
-            <QrCodeDisplay :appointment-id="appointmentId" />
-        </div>
+  <div class="checkin-container">
+    <div class="card">
+      <h2>報到中...</h2>
+      <p :class="messageClass">{{ message }}</p>
+      <!-- QR Code Display -->
+      <QrCodeDisplay :appointment-id="appointmentId" />
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -17,10 +17,10 @@ import {
 } from "@/member/api/api";
 import QrCodeDisplay from '@/appointment/components/QrCodeDisplay.vue'
 
-const route = useRoute()
-const appointmentId = route.query.appointmentId
-const message = ref('處理中...')
-const messageClass = ref('')
+const route = useRoute();
+const appointmentId = route.query.appointmentId;
+const message = ref("處理中...");
+const messageClass = ref("");
 
 const checkIn = (appointmentId) => {
     return apiAppointmentcheckIn(appointmentId)
@@ -38,39 +38,39 @@ const checkIn = (appointmentId) => {
 }
 
 onMounted(() => {
-    if (!appointmentId) {
-        message.value = '無效的報到連結'
-        messageClass.value = 'error'
-        return
-    }
-    checkIn(appointmentId)
-})
+  if (!appointmentId) {
+    message.value = "無效的報到連結";
+    messageClass.value = "error";
+    return;
+  }
+  checkIn(appointmentId);
+});
 </script>
 
 <style scoped>
 .checkin-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f2f2f2;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
 }
 
 .card {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .success {
-    color: green;
-    font-size: 1.2rem;
+  color: green;
+  font-size: 1.2rem;
 }
 
 .error {
-    color: red;
-    font-size: 1.2rem;
+  color: red;
+  font-size: 1.2rem;
 }
 </style>

@@ -1,7 +1,12 @@
 <template>
   <v-container fluid class="fill-height d-flex justify-center align-center">
     <v-card class="pa-6" elevation="8" max-width="448" rounded="lg">
-      <v-img class="mx-auto mb-6" max-width="120" :src="PawShopLogo"></v-img>
+      <v-img
+        class="mx-auto mb-6 logo-hover"
+        max-width="120"
+        :src="PawShopLogo"
+        @click="router.push('/')"
+      ></v-img>
 
       <div class="text-subtitle-1 text-medium-emphasis">帳號</div>
 
@@ -77,15 +82,10 @@
         使用者一鍵登入
       </v-btn>
 
-      <v-card-text class="text-center">
-        <a
-          class="text-blue text-decoration-none"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          註冊 <v-icon icon="mdi-chevron-right"></v-icon>
-        </a>
+      <v-card-text class="text-center mt-4">
+        <span class="register-link" @click="router.push('/register')">
+          註冊 <v-icon class="register-icon">mdi-chevron-right</v-icon>
+        </span>
       </v-card-text>
     </v-card>
   </v-container>
@@ -129,4 +129,34 @@ const performLogin = async (loginId, password) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.logo-hover {
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.logo-hover:hover {
+  transform: scale(1.08);
+  opacity: 0.85;
+}
+.register-link {
+  color: #1976d2;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.register-link:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+.register-icon {
+  transition: transform 0.3s ease;
+}
+
+.register-link:hover .register-icon {
+  transform: translateX(4px);
+}
+</style>

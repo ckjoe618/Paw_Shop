@@ -60,7 +60,7 @@ const items = ref([
     icon: "fas fa-store",
     image: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
     button: [
-      { label: "商品管理", link: "" },
+      { label: "商品管理", link: "/admin/products" },
       { label: "訂單管理", link: "/admin/orders" },
     ],
   },

@@ -42,7 +42,7 @@
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
-            >返回後台</span
+            >返回首頁</span
           >
         </v-card>
 
@@ -56,7 +56,7 @@
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
-            >返回首頁</span
+            >前往前台</span
           >
         </v-card>
       </div>
@@ -136,7 +136,7 @@ const items = ref([
     title: "賣場",
     icon: "mdi-storefront",
     children: [
-      { label: "商品管理", link: "/" },
+      { label: "商品管理", link: "/admin/products" },
       { label: "訂單管理", link: "/admin/orders" },
     ],
   },

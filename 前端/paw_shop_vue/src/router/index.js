@@ -8,6 +8,11 @@ const routes = [
     meta: { requiresGuest: true },
   },
   {
+    path: "/register",
+    component: () => import("@/layout/RegisterLayout.vue"),
+    meta: { requiresGuest: true },
+  },
+  {
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
@@ -20,29 +25,37 @@ const routes = [
         component: () => import("@/pages/FrontHome.vue"),
       },
       {
-        path: "toappointments",
-        component: () =>
-          import("@/appointment/pages/AppointmentFrontPage.vue"),
+        path: "appointments",
+        component: () => import("@/appointment/pages/AppointmentFrontPage.vue"),
       },
       {
-        path: "toappointments/reserve",
-        component: () =>
-          import("@/appointment/pages/AppointmentReserve.vue"),
+        path: "appointments/reserve",
+        component: () => import("@/appointment/pages/AppointmentReserve.vue"),
       },
       {
-        path: "toappointments/hendlereserve",
+        path: "appointments/hendlereserve",
         component: () =>
           import("@/appointment/pages/AppointmentHendlePage.vue"),
       },
       {
-        path: "toappointments/queryreserve",
-        component: () =>
-          import("@/appointment/pages/AppointmentQueryPage.vue"),
+        path: "appointments/queryreserve",
+        component: () => import("@/appointment/pages/AppointmentQueryPage.vue"),
       },
       {
         path: "checkout",
         component: () => import("@/order/pages/Checkout.vue"),
         meta: { requiresAuth: true },
+      },
+
+      {
+        path: 'products',
+        name: 'ProductListView',
+        component: () => import('@/product/frontsite/ProductListView.vue'),
+      },
+      {
+        path: '/products/:id',
+        name: 'ProductDetailPage',
+        component: () => import('@/product/frontsite/ProductDetailPage.vue'),
       },
       {
         path: "OrderingInfo",
@@ -50,9 +63,8 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: '/checkin',
-        name: 'CheckinPage',
-        component: () => import('@/appointment/components/CheckinPage.vue')
+        path: "checkin",
+        component: () => import("@/appointment/components/CheckinPage.vue"),
       },
     ],
   },
@@ -78,18 +90,16 @@ const routes = [
         component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
-        path: 'products',
-        component: () => import('@/product/backsite/ProductListPage.vue')
+        path: "products",
+        component: () => import("@/product/backsite/ProductListPage.vue"),
       },
       {
-        path: 'appointments',
-        component: () => import("@/appointment/pages/AppointmentList.vue")
+        path: "appointments",
+        component: () => import("@/appointment/pages/AppointmentList.vue"),
       },
       {
-        path: "/appointments/edit/:id",
-        name: "AppointmentEdit",
-        component: () =>
-          import("@/appointment/pages/AppointmentEditPage.vue"),
+        path: "appointments/edit/:id",
+        component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
       },
     ],
   },
