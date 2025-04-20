@@ -6,6 +6,8 @@ import com.topics.member.model.dto.AuthDto;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.service.AuthService;
 import com.topics.member.utils.JwtUtil;
+import com.topics.member.utils.ResponseUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,13 @@ public class AuthController {
 		response.put("token", token);
 		response.put("memberId", loginMember.getMemberId());
 		response.put("memberName", loginMember.getMemberName());
+		response.put("email", loginMember.getEmail());
+		response.put("phone", loginMember.getPhone());
 		response.put("role", loginMember.getRole());
 		response.put("memberPhoto", loginMember.getMemberPhoto());
+		response.put("address", loginMember.getAddresses());
 
-		return ResponseEntity.ok(response);
+		return ResponseUtil.success(response);
 	}
 
 }

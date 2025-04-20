@@ -133,7 +133,7 @@ import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
-import { memberRequest } from "@/member/api/api.js";
+import * as api from "@/member/api/api.js";
 import CartPreview from "@/order/components/frontsite/CartPreview.vue";
 
 const router = useRouter();
@@ -187,6 +187,7 @@ const logout = () => {
   authStore.logout();
   router.push("/");
 };
+
 const closeSearch = () => {
   showSearch.value = false;
   setTimeout(() => {
@@ -216,7 +217,7 @@ const loadCart = async () => {
   if (authStore.isLoggedIn) {
     // ✅ 已登入 → 從後端拿購物車
     try {
-      const res = await memberRequest.get("localhost:8080/shoppingcart");
+      const res = await api.api.get("localhost:8080/shoppingcart");
       cartItems.value = res.data;
     } catch (err) {
       console.error("後端購物車取得失敗", err);
@@ -240,10 +241,6 @@ const handleSearch = () => {
     closeSearch();
   }
 };
-
-const login = () => router.push("/login");
-const goToAdmin = () => router.push("/admin");
-
 </script>
 
 <style scoped>

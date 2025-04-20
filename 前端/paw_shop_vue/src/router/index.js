@@ -48,14 +48,14 @@ const routes = [
       },
 
       {
-        path: 'products',
-        name: 'ProductListView',
-        component: () => import('@/product/frontsite/ProductListView.vue'),
+        path: "products",
+        name: "ProductListView",
+        component: () => import("@/product/frontsite/ProductListView.vue"),
       },
       {
-        path: '/products/:id',
-        name: 'ProductDetailPage',
-        component: () => import('@/product/frontsite/ProductDetailPage.vue'),
+        path: "/products/:id",
+        name: "ProductDetailPage",
+        component: () => import("@/product/frontsite/ProductDetailPage.vue"),
       },
       {
         path: "OrderingInfo",
@@ -102,6 +102,22 @@ const routes = [
         component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
       },
     ],
+  },
+  {
+    path: "/unauthorized",
+    component: () => import("@/components/error/UnauthorizedPage.vue"),
+  },
+  {
+    path: "/not-found",
+    component: () => import("@/components/error/NotFoundPage.vue"),
+  },
+  {
+    path: "/server-error",
+    component: () => import("@/components/error/ServerErrorPage.vue"),
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/not-found",
   },
 ];
 

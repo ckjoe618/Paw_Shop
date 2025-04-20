@@ -1,99 +1,58 @@
-import axios from "axios";
-import { useAuthStore } from "@/member/stores/auth";
+import api from "@/member/api/axiosInterceptor";
+import { handleResponse } from "./handleResponse";
 
-const memberRequest = axios.create({
-  baseURL: "http://localhost:8080", // 預設localhost
-  timeout: 5000,
-});
-
-memberRequest.interceptors.request.use(
-  (config) => {
-    const authStore = useAuthStore();
-    if (authStore.token) {
-      config.headers.Authorization = `Bearer ${authStore.token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// CRUD
+// 會員
 // 全部會員查詢
-const apiFindMemberAll = () => memberRequest.get("/api/member");
+export const apiFindMemberAll = () => handleResponse(api.get("/api/member"));
 // 單筆會員查詢
-const apiFindMember = (data) => memberRequest.get(`/api/member/${data}`);
+export const apiFindMember = (data) =>
+  handleResponse(api.get(`/api/member/${data}`));
 // 新增會員
-const apiAddMember = (data) => memberRequest.post("/api/member", data);
-// 全部會員修改
-const apiUpdateMemberAll = (data) =>
-  memberRequest.put(`/api/member/${data.memberId}`, data);
+export const apiAddMember = (data) =>
+  handleResponse(api.post("/api/member", data));
 // 單筆會員修改
-const apiUpdateMember = (data) =>
-  memberRequest.put(`/api/member/${data.memberId}`, data);
+export const apiUpdateMember = (data) =>
+  handleResponse(api.put(`/api/member/${data.memberId}`, data));
 // 單筆會員刪除
-const apiDeleteMember = (data) => memberRequest.delete(`/api/member/${data}`);
-// 全部會員刪除
-const apiDeleteMemberAll = () => memberRequest.delete("/api/member");
-
+export const apiDeleteMember = (data) =>
+  handleResponse(api.delete(`/api/member/${data}`));
 // Login
-const apiLogin = (data) => memberRequest.post("/api/auth/login", data);
+export const apiLogin = (data) =>
+  handleResponse(api.post("/api/auth/login", data));
 
+// 預約
 // 全部預約查詢
-const apiFindAppointmentAll = () => memberRequest.get("/api/appointment");
+export const apiFindAppointmentAll = () => api.get("/api/appointment");
 // 單筆預約查詢
-const apiFindAppointment = (data) =>
-  memberRequest.get(`/api/appointment/phone/${data}`);
+export const apiFindAppointment = (data) =>
+  api.get(`/api/appointment/phone/${data}`);
 // 新增預約
-const apiaddAppointment = (data) =>
-  memberRequest.post("/api/appointment", data);
+export const apiaddAppointment = (data) => api.post("/api/appointment", data);
 // 顯示單筆預約修改頁面
-const apishowUpdateAppointment = (appointmentId) =>
-  memberRequest.get(`/api/appointment/${appointmentId}`);
+export const apishowUpdateAppointment = (appointmentId) =>
+  api.get(`/api/appointment/${appointmentId}`);
 // 單筆預約修改
-const apiUpdateAppointment = (appointmentId, data) =>
-  memberRequest.put(`/api/appointment/${appointmentId}`, data);
+export const apiUpdateAppointment = (appointmentId, data) =>
+  api.put(`/api/appointment/${appointmentId}`, data);
 // 刪除單筆預約
-const apiDeleteAppointment = (appointmentId) =>
-  memberRequest.delete(`/api/appointment/${appointmentId}`);
+export const apiDeleteAppointment = (appointmentId) =>
+  api.delete(`/api/appointment/${appointmentId}`);
 // 查詢單筆會員寵物
-const apihandleQueryAppointmentPet = (data) =>
-  memberRequest.get(`/api/querypet/${data}`);
+export const apihandleQueryAppointmentPet = (data) =>
+  api.get(`/api/querypet/${data}`);
 // 查詢已預約時段
-const apihandleQueryBookingTime = (data) =>
-  memberRequest.get(`/api/querybookingtime/${data}`);
+export const apihandleQueryBookingTime = (data) =>
+  api.get(`/api/querybookingtime/${data}`);
 // 預約報到
-const apiAppointmentcheckIn = (id) =>
-  memberRequest.put(`/api/appointment/checkin/${id}`)
+export const apiAppointmentcheckIn = (id) =>
+  api.put(`/api/appointment/checkin/${id}`);
 // 顯示預約狀態
-const apiAppointmentsByStatus = (memberId, status) =>
-  memberRequest.get(`/api/appointment/${memberId}/${status}`);
+export const apiAppointmentsByStatus = (memberId, status) =>
+  api.get(`/api/appointment/${memberId}/${status}`);
 
 //購物車內容
-const apiFindShoppingCartItem = () => memberRequest.get(`/api/shoppingcart`);
-const apiUpdateShoppingCartItem = (data) =>
-  memberRequest.put(`/api/shoppingcart`, data);
-const apiDeleteShoppingCartItem = (data) =>
-  memberRequest.delete(`/api/shoppingcart/${data}`);
-
-export {
-  memberRequest,
-  apiLogin,
-  apiFindMemberAll,
-  apiFindMember,
-  apiAddMember,
-  apiUpdateMember,
-  apiDeleteMember,
-  apiFindAppointmentAll,
-  apiFindAppointment,
-  apiaddAppointment,
-  apishowUpdateAppointment,
-  apiUpdateAppointment,
-  apiDeleteAppointment,
-  apihandleQueryAppointmentPet,
-  apihandleQueryBookingTime,
-  apiAppointmentcheckIn,
-  apiAppointmentsByStatus,
-  apiFindShoppingCartItem,
-  apiUpdateShoppingCartItem,
-  apiDeleteShoppingCartItem,
-};
+export const apiFindShoppingCartItem = () => api.get(`/api/shoppingcart`);
+export const apiUpdateShoppingCartItem = (data) =>
+  api.put(`/api/shoppingcart`, data);
+export const apiDeleteShoppingCartItem = (data) =>
+  api.delete(`/api/shoppingcart/${data}`);

@@ -57,6 +57,7 @@
         size="large"
         variant="tonal"
         block
+        :loading="loading"
         @click="handlerLogin"
       >
         登入
@@ -65,7 +66,7 @@
         class="mb-2"
         color="blue"
         size="large"
-        variant="tonal"
+        variant="outlined"
         block
         @click="handlerAdminLogin"
       >
@@ -75,7 +76,7 @@
         class="mb-8"
         color="blue"
         size="large"
-        variant="tonal"
+        variant="outlined"
         block
         @click="handlerUserLogin"
       >
@@ -93,7 +94,7 @@
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { ref } from "vue";
-import { apiLogin } from "@/member/api/api";
+import * as api from "@/member/api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 
@@ -103,6 +104,7 @@ const password = ref("");
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const loading = ref(false);
 
 // 一般登入
 const handlerLogin = () => performLogin(loginId.value, password.value);
@@ -115,16 +117,14 @@ const handlerUserLogin = () => performLogin("wxm1", "123456");
 
 // 統一登入模式
 const performLogin = async (loginId, password) => {
+  loading.value = true;
   try {
-    const response = await apiLogin({ loginId, password });
-    if (response.data.success) {
-      authStore.login({ ...response.data });
-      router.push(route.query.redirect || "/");
-    } else {
-      alert("登入失敗：" + response.data.message);
-    }
-  } catch (error) {
-    console.error("登入失敗", error);
+    const data = await api.apiLogin({ loginId, password });
+    // console.log(data);
+    authStore.login({ ...data });
+    router.push(route.query.redirect || "/");
+  } finally {
+    loading.value = false;
   }
 };
 </script>

@@ -117,6 +117,7 @@ public class AppointmentController {
 		return ResponseEntity.ok(petList);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@PostMapping("/appointment")
 	@ResponseBody
 	public ResponseEntity<?> insertAppointmentById(@RequestBody Map<String, Object> payload, HttpSession session) {

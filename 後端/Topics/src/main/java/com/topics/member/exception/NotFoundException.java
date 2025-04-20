@@ -1,9 +1,9 @@
 package com.topics.member.exception;
 
-public class LoginFailException extends RuntimeException {
+public class NotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public LoginFailException(String msg) {
+	public NotFoundException(String msg) {
 		super(msg);
 	}
 }

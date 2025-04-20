@@ -20,8 +20,9 @@ public class AddressDto {
 	private String city;
 	private String district;
 	private String addressDetail;
-	private LocalDateTime createdDate = LocalDateTime.now();
-	private boolean defaultStatus = true;
+	private LocalDateTime createdDate;
+	private boolean defaultStatus;
+	private boolean activeStatus;
 
 	public AddressDto(AddressBean entity) {
 		BeanUtils.copyProperties(entity, this);

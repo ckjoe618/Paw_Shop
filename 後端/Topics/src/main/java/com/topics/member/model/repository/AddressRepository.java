@@ -12,5 +12,8 @@ public interface AddressRepository extends JpaRepository<AddressBean, Integer> {
 
 	@Query("from AddressBean WHERE member.memberId = :id")
 	List<AddressBean> findAddressById(@Param("id") Integer id);
-	
+
+	@Query("from AddressBean WHERE member.memberId = :memberId AND activeStatus = true")
+	List<AddressBean> findActiveAddressByMemberId(@Param("memberId") Integer memberId);
+
 }

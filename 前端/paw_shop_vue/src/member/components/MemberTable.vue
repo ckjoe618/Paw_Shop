@@ -32,13 +32,19 @@
       </template>
 
       <template #item.activeStatus="{ item }">
-        <v-chip :color="item.activeStatus ? 'green' : 'grey'" dark>
+        <v-chip
+          :color="item.activeStatus ? 'green' : 'grey'"
+          text-color="white"
+        >
           {{ item.activeStatus ? "啟用" : "停用" }}
         </v-chip>
       </template>
 
       <template #item.role="{ item }">
-        <v-chip :color="item.role === 'ADMIN' ? 'red' : 'blue'" dark>
+        <v-chip
+          :color="item.role === 'ADMIN' ? 'red' : 'blue'"
+          text-color="white"
+        >
           {{ item.role }}
         </v-chip>
       </template>

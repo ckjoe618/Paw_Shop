@@ -10,12 +10,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import {
-    apiAppointmentcheckIn,
-} from "@/member/api/api";
-import QrCodeDisplay from '@/appointment/components/QrCodeDisplay.vue'
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { apiAppointmentcheckIn } from "@/member/api/api";
+import QrCodeDisplay from "@/appointment/components/QrCodeDisplay.vue";
 
 const route = useRoute();
 const appointmentId = route.query.appointmentId;
@@ -23,19 +21,20 @@ const message = ref("處理中...");
 const messageClass = ref("");
 
 const checkIn = (appointmentId) => {
-    return apiAppointmentcheckIn(appointmentId)
-        .then(res => {
-            message.value = res.data
-            messageClass.value = 'success'
-        })
-        .catch(err => {
-            const errorMsg = err.response?.data && typeof err.response.data === 'string'
-                ? err.response.data
-                : err.message || JSON.stringify(err.response?.data || {})
-            message.value = '報到失敗：' + errorMsg
-            messageClass.value = 'error'
-        })
-}
+  return apiAppointmentcheckIn(appointmentId)
+    .then((res) => {
+      message.value = res.data;
+      messageClass.value = "success";
+    })
+    .catch((err) => {
+      const errorMsg =
+        err.response?.data && typeof err.response.data === "string"
+          ? err.response.data
+          : err.message || JSON.stringify(err.response?.data || {});
+      message.value = "報到失敗：" + errorMsg;
+      messageClass.value = "error";
+    });
+};
 
 onMounted(() => {
   if (!appointmentId) {
