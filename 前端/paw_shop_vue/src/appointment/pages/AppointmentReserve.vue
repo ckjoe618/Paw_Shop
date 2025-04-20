@@ -31,6 +31,7 @@
           id="appointmentDate"
           class="form-control"
           @change="onDateChange"
+          :min="minDate"
           required
         />
       </div>
@@ -179,7 +180,13 @@ watch(
     }
   }
 );
-
+const minDate = computed(() => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, '0');
+  const day = today.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+});
 //查到預約時段
 const onDateChange = async () => {
   const data = form.value.date;
