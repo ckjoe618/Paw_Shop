@@ -49,6 +49,9 @@ export const apiAppointmentcheckIn = (id) =>
 // 顯示預約狀態
 export const apiAppointmentsByStatus = (memberId, status) =>
   api.get(`/api/appointment/${memberId}/${status}`);
+//取消預約
+export const apiAppointmentCancel = (id) =>
+  api.put(`/api/appointment/cancel/${id}`);
 
 //購物車內容
 export const apiFindShoppingCartItem = () => api.get(`/api/shoppingcart`);

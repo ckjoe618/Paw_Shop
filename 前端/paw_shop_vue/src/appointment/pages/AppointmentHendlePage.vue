@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5 text-center">
-    <h2 class="text-success mb-4">🎉 預約成功！</h2>
+    <h2 class="text-success mb-4"> 預約成功！</h2>
 
     <div class="card shadow-sm p-4 mx-auto" style="max-width: 500px">
       <h5 class="mb-3">
