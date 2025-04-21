@@ -176,7 +176,7 @@ import cat01 from "@/member/assets/images/註冊_貓01.png";
 import dog02 from "@/member/assets/images/註冊_狗02.png";
 import cat02 from "@/member/assets/images/註冊_貓02.png";
 import { ref, onMounted } from "vue";
-import * as api from "@/member/api/api";
+import * as api from "@/member/api/memberApi/UserApi.js";
 import router from "@/router";
 
 const today = new Date().toISOString().split("T")[0];

@@ -70,7 +70,8 @@
         </div>
 
         <!-- QR Code 顯示按鈕 -->
-        <div v-if="appointment.appointmentStatus === 0">
+        <div v-if="appointment.appointmentStatus === 0"
+        class="d-flex align-items-center gap-2">
           <button
             class="btn"
             :class="
@@ -86,6 +87,14 @@
                 : "顯示 QR Code"
             }}
           </button>
+          <v-btn
+            variant="outlined"
+            color="error"
+            class="custom-cancel-btn"
+            @click="openCancelModal(appointment.appointmentId)"
+          >
+            取消預約
+          </v-btn>
         </div>
         <!-- QR Code 顯示區 -->
         <div
@@ -126,12 +135,28 @@
         下一頁
       </button>
     </div>
+    <!-- 取消確認 Modal -->
+    <v-dialog v-model="showCancelModal" max-width="400">
+      <v-card>
+        <v-card-title class="text-h6">確認取消預約</v-card-title>
+        <v-card-text>您確定要取消此預約嗎？</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" @click="showCancelModal = false">返回</v-btn>
+          <v-btn color="error" @click="confirmCancel" class="no-hover-green" style="box-shadow: none;">確認取消預約</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar v-model="showSnackbar" :timeout="3000" color="success" top>
+    {{ snackbarMessage }}
+  </v-snackbar>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { apiAppointmentsByStatus } from "@/member/api/api";
+import { apiAppointmentsByStatus,apiAppointmentCancel } from "@/member/api/api";
 import QrCodeDisplay from "@/appointment/components/QrCodeDisplay.vue";
 
 const toggleQRCode = (appointmentId) => {
@@ -171,6 +196,31 @@ const uniqueServices = (serviceNames) => {
 
   return [...new Set(names)].join(", ");
 };
+
+const props = defineProps({
+  appointmentId: Number
+})
+const showSnackbar = ref(false);
+const snackbarMessage = ref('');
+const showCancelModal = ref(false)
+const currentCancelId = ref(null)
+const openCancelModal = (id) => {
+  currentCancelId.value = id
+  showCancelModal.value = true
+}
+const confirmCancel = async () => {
+  try {
+    const res = await apiAppointmentCancel(currentCancelId.value)
+    snackbarMessage.value = res.data;
+    showCancelModal.value = false
+    showSnackbar.value = true;
+    emit('appointmentCancelled', currentCancelId.value)
+    window.location.reload();
+  } catch (err) {
+    snackbarMessage.value = '取消預約失敗，請稍後再試';
+  }
+}
+const emit = defineEmits(['appointmentCancelled'])
 
 onMounted(() => {
   const storedId = localStorage.getItem("memberId");
@@ -289,5 +339,28 @@ button:hover {
 button:disabled {
   background-color: #c0c0c0;
   cursor: not-allowed;
+}
+.custom-cancel-btn {
+  border: 1px solid #e53935; 
+  color: #e53935;
+  background-color: transparent;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: 0.2s ease;
+}
+
+.custom-cancel-btn:hover {
+  background-color: #ffe6e6; 
+  color: #b71c1c; 
+}
+.no-hover-green {
+  background-color: #f44336 !important; 
+  color: white !important;
+  transition: none !important;
+}
+
+.no-hover-green:hover {
+  background-color: #f44336 !important; 
+  color: white !important;
 }
 </style>

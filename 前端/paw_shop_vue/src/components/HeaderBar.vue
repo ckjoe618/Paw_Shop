@@ -148,7 +148,7 @@ const searchContainer = ref(null);
 const items = ref([
   {
     title: "會員中心",
-    link: "/member",
+    link: "/member/memberinfo",
   },
   {
     title: "訂單查詢",

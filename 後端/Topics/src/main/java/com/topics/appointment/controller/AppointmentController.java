@@ -204,6 +204,7 @@ public class AppointmentController {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> deleteAppointmentById(@PathVariable int appointmentId) {
 		Map<String, Object> response = new HashMap<>();
+		
 		boolean isDeleted = appointmentService.deleteAppointment(appointmentId);
 
 		if (isDeleted) {
@@ -344,6 +345,24 @@ public class AppointmentController {
 	                                                     @PathVariable int appointmentStatus) {
 	        return appointmentService.getAppointmentsDetails(memberId, appointmentStatus);
 	    }
+	 @PutMapping("/appointment/cancel/{id}")
+		public ResponseEntity<String> CancelAppointment(@PathVariable int id) {
+		    List<Appointment> appointments = appointmentService.searchAppointmentById(id);
+
+		    if (!appointments.isEmpty()) {
+		        Appointment appt = appointments.get(0);
+		        if (appt.getAppointmentStatus() == 2) {
+		            return ResponseEntity.ok("已經取消預約！");
+		        }
+
+		        appt.setAppointmentStatus(2); 
+		        appointmentService.save(appt);
+		        System.out.println("Updated Appointment Status: " + appt.getAppointmentStatus());
+		        return ResponseEntity.ok("預約已取消！");
+		    }
+
+		    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("查無此預約");
+		}
 
 
 }

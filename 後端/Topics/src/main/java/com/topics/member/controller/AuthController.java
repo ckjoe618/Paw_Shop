@@ -36,7 +36,7 @@ public class AuthController {
 		response.put("phone", loginMember.getPhone());
 		response.put("role", loginMember.getRole());
 		response.put("memberPhoto", loginMember.getMemberPhoto());
-		response.put("address", loginMember.getAddresses());
+		response.put("address", loginMember.getAddress());
 
 		return ResponseUtil.success(response);
 	}

@@ -56,7 +56,7 @@
         >
           <v-icon class="me-2" color="primary">mdi-arrow-left</v-icon>
           <span class="text-body-1 font-weight-medium text-primary"
-            >前往前台</span
+            >前往前臺</span
           >
         </v-card>
       </div>
