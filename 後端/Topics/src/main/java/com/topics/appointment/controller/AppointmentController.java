@@ -246,7 +246,7 @@ public class AppointmentController {
 	@GetMapping("/appointment/{appointmentId}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getAppointmentDetails(@PathVariable int appointmentId) {
-		SecurityUtil.checkUserLogin();
+		SecurityUtil.checkAdminPermission();
 		MemberDto tokenUser = AuthHolder.getMember();
 
 	    Appointment appointment = appointmentService.getAppointmentById(appointmentId);
