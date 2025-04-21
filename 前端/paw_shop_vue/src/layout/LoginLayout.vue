@@ -97,6 +97,7 @@ import { ref } from "vue";
 import * as api from "@/member/api/memberApi/UserApi.js";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
+import { syncCartToBackend } from "@/order/components/frontsite/useCart";
 
 const visible = ref(false);
 const loginId = ref("");
@@ -122,8 +123,8 @@ const performLogin = async (loginId, password) => {
     const data = await api.apiLogin({ loginId, password });
     console.log(data);
     authStore.login({ ...data });
+    await syncCartToBackend();
     console.log(authStore.fullAddress);
-
     router.push(route.query.redirect || "/");
   } finally {
     loading.value = false;

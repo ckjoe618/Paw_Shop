@@ -283,9 +283,9 @@ const headers = [
 
 const getAppointmentStatus = (status) => {
   switch (status) {
-    case 0: return '已取消'
+    case 0: return '未完成'
     case 1: return '已完成'
-    default: return '預約中'
+    default: return '已取消'
   }
 }
 

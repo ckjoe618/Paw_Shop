@@ -67,6 +67,16 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "OrderFinish",
+        component: () => import("@/order/pages/OrderFinish.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "OrderManagement",
+        component: () => import("@/order/pages/OrderManagement.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "checkin",
         component: () => import("@/appointment/components/CheckinPage.vue"),
       },
@@ -100,10 +110,12 @@ const routes = [
       {
         path: "appointments",
         component: () => import("@/appointment/pages/AppointmentList.vue"),
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
       {
         path: "appointments/edit/:id",
         component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
     ],
   },
