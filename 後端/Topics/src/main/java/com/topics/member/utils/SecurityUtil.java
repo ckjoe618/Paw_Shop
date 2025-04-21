@@ -16,9 +16,13 @@ public class SecurityUtil {
 		}
 	}
 
-	public static void checkUserLogin() {
-		if (AuthHolder.getMember() == null) {
+	public static void checkUserLogin(Integer id) {
+		MemberDto member = AuthHolder.getMember();
+		if (member == null) {
 			throw new ForbiddenException("尚未登入");
+		}
+		if(!id.equals(member.getMemberId())) {
+			throw new ForbiddenException("無權限修改其他會員的資料");
 		}
 	}
 

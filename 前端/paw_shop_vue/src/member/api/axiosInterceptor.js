@@ -7,6 +7,9 @@ const api = axios.create({
   timeout: 5000,
 });
 
+// ✅ 防止 token 錯誤重複跳轉用的旗標
+let isHandlingTokenError = false;
+
 // 加入 request interceptor：自動加上 token
 api.interceptors.request.use(
   (config) => {
@@ -27,21 +30,30 @@ api.interceptors.response.use(
     const message =
       error?.response?.data?.message || error.message || "系統錯誤";
 
-    // ✅ 顯示錯誤訊息
-    alert(message);
-
     // ✅ 根據錯誤狀態碼做不同處理
     const authStore = useAuthStore();
+
+    // ✅ 401 未授權處理（避免重複彈窗與跳轉）
+    if (status === 401 && !isHandlingTokenError) {
+      isHandlingTokenError = true;
+      authStore.logout();
+      router.push("/login");
+      return;
+    }
+
+    if (status != 401) {
+      alert(message);
+    }
 
     switch (status) {
       case 400:
         // 錯誤參數
         break;
-      case 401:
-        // 未授權，強制登出
-        authStore.logout();
-        router.push("/login");
-        break;
+      // case 401:
+      //   // 未授權，強制登出
+      //   authStore.logout();
+      //   router.push("/login");
+      //   break;
       case 403:
         // 沒有權限，導到無權限提示頁
         router.push("/unauthorized");

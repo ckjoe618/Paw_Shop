@@ -151,7 +151,7 @@ router.beforeEach((to, from, next) => {
       return next("/login");
     }
     if (authStore.role !== "ADMIN") {
-      // return next("/403"); // 沒權限
+      return next("/");
     }
   }
 

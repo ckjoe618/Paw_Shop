@@ -9,7 +9,7 @@
       <!-- 🖼️ 頭像區塊 -->
       <div class="text-center mb-6">
         <v-avatar size="120" class="mx-auto">
-          <v-img :src="form.memberPhoto" cover />
+          <v-img :src="previewPhoto" cover />
         </v-avatar>
         <v-btn class="mt-3" color="primary" @click="$refs.fileInput.click()">
           上傳頭像
@@ -52,6 +52,7 @@
           prepend-icon="mdi-content-save"
           class="mt-4"
           :disabled="!isValid"
+          :loading="loading"
           @click="saveProfile"
         >
           儲存變更
@@ -69,16 +70,53 @@ import * as api from "@/member/api/memberApi/UserApi.js";
 const authStore = useAuthStore();
 const formRef = ref(null);
 const isValid = ref(false);
+const loading = ref(false);
+const uploadFile = ref(null);
+const previewPhoto = ref(null);
+
 const form = ref({
   memberId: authStore.memberId,
   memberName: authStore.memberName,
   email: authStore.email,
   phone: authStore.phone,
   gender: authStore.gender,
-  memberPhoto: authStore.memberPhoto,
 });
 
 const rules = {
   required: (v) => !!v || "欄位為必填",
 };
+
+const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    previewPhoto = URL.createObjectURL(file);
+    uploadFile.value = file;
+  }
+};
+
+const saveProfile = async () => {
+  const valid = await formRef.value.validate();
+  if (!valid) {
+    return;
+  }
+  loading.value = true;
+  try {
+    const data = await api.apiUpdateMember(form.value, uploadFile.value);
+    // 更新 Pinia 內容
+    authStore.memberName = data.memberName;
+    authStore.phone = data.phone;
+    if (data.memberPhoto) {
+      authStore.memberPhoto = data.memberPhoto;
+      form.value.memberPhoto = data.memberPhoto;
+      previewPhoto.value = data.memberPhoto;
+    }
+    uploadFile.value = null;
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  previewPhoto.value = authStore.memberPhoto;
+});
 </script>
