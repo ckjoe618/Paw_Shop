@@ -18,7 +18,11 @@
     <v-row class="ma-0 pa-0">
       <!-- 左側分類欄 -->
       <v-col cols="12" sm="2" md="2" class="pa-0">
-        <CategorySidebar @filter-change="handleFilterChange" />
+        <CategorySidebar
+          v-model:modelValueCategory="filters.category"
+          v-model:modelValuePrice="filters.price"
+          @filter-change="handleFilterChange"
+        />
       </v-col>
 
       <!-- 商品卡片與分頁 -->
@@ -155,6 +159,18 @@ function updateQuery() {
     }
   })
 }
+
+watch(() => route.query, (newQuery) => {
+  currentPage.value = Number(newQuery.page) || 1
+  sortOption.value = newQuery.sort || 'top'
+  filters.value = {
+    category: newQuery.category || null,
+    price: [
+      Number(newQuery.priceMin) || 0,
+      Number(newQuery.priceMax) || 5000
+    ]
+  }
+})
 </script>
 
 
