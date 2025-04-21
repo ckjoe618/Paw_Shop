@@ -89,7 +89,7 @@ const rules = {
 const handleFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
-    previewPhoto = URL.createObjectURL(file);
+    previewPhoto.value = URL.createObjectURL(file);
     uploadFile.value = file;
   }
 };

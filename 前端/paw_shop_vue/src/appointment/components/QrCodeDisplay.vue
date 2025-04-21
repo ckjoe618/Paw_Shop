@@ -6,7 +6,7 @@
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
-// import QRCode from 'qrcode'
+import QRCode from "qrcode";
 
 const props = defineProps({
   appointmentId: {
