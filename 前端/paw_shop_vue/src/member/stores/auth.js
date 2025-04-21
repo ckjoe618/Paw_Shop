@@ -20,7 +20,7 @@ export const useAuthStore = defineStore("auth", {
         try {
           return [key, JSON.parse(raw)];
         } catch {
-          return [key, raw || ""];
+          return [key, key === "address" ? {} : raw || ""];
         }
       })
     ),
@@ -45,5 +45,9 @@ export const useAuthStore = defineStore("auth", {
   getters: {
     isLoggedIn: (state) => !!state.token,
     isAdmin: (state) => state.role === "ADMIN",
+    fullAddress: (state) =>
+      `${state.address.zipcode || ""}${state.address.city || ""}${
+        state.address.district || ""
+      }${state.address.addressDetail || ""}`,
   },
 });

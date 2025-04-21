@@ -25,6 +25,11 @@ const routes = [
         component: () => import("@/pages/FrontHome.vue"),
       },
       {
+        path: "member/profile",
+        component: () => import("@/member/pages/FrontMemberPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "appointments",
         component: () => import("@/appointment/pages/AppointmentFrontPage.vue"),
       },
@@ -46,7 +51,6 @@ const routes = [
         component: () => import("@/order/pages/Checkout.vue"),
         meta: { requiresAuth: true },
       },
-
       {
         path: "products",
         name: "ProductListView",
@@ -147,7 +151,7 @@ router.beforeEach((to, from, next) => {
       return next("/login");
     }
     if (authStore.role !== "ADMIN") {
-      return next("/403"); // 沒權限
+      // return next("/403"); // 沒權限
     }
   }
 

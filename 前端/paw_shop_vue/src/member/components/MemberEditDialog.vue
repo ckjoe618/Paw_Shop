@@ -7,7 +7,7 @@
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="form" v-model="isValid">
+        <v-form ref="formRef" v-model="isValid">
           <v-text-field
             label="姓名"
             v-model="localMember.memberName"
@@ -62,7 +62,7 @@
 import { ref, watch, computed } from "vue";
 import * as api from "@/member/api/api";
 
-const form = ref();
+const formRef = ref(null);
 const isValid = ref(false);
 const localMember = ref({});
 const loading = ref(false);
@@ -96,7 +96,7 @@ const rules = {
 
 watch(dialog, (val) => {
   if (!val) {
-    form.value.reset();
+    formRef.value.resetValidation();
     localMember.value = {};
   } else {
     // 重新打開 dialog 時，把 props.member 值套進去
@@ -109,7 +109,7 @@ const close = () => {
 };
 
 const submit = async () => {
-  const valid = await form.value.validate();
+  const valid = await formRef.value.validate();
   if (!valid) {
     return;
   }
