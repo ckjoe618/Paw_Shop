@@ -120,7 +120,6 @@ const performLogin = async (loginId, password) => {
   loading.value = true;
   try {
     const data = await api.apiLogin({ loginId, password });
-    // console.log(data);
     authStore.login({ ...data });
     router.push(route.query.redirect || "/");
   } finally {

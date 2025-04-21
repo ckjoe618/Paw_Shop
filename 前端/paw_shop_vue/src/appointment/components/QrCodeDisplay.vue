@@ -1,69 +1,67 @@
 <template>
-    <div class="qrcode-container">
-        <div ref="qrcode"></div>
-    </div>
+  <div class="qrcode-container">
+    <div ref="qrcode"></div>
+  </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
-import QRCode from 'qrcode'
+import { onMounted, ref, watch } from "vue";
+// import QRCode from 'qrcode'
 
 const props = defineProps({
-    appointmentId: {
-        type: [String, Number],
-        required: true
-    }
-})
+  appointmentId: {
+    type: [String, Number],
+    required: true,
+  },
+});
 
-const qrcode = ref(null)
+const qrcode = ref(null);
 
-
-watch(() => props.appointmentId, (newValue) => {
-    if (newValue && String(newValue).trim() !== '') {
-        generateQRCode(newValue)
+watch(
+  () => props.appointmentId,
+  (newValue) => {
+    if (newValue && String(newValue).trim() !== "") {
+      generateQRCode(newValue);
     } else {
-        console.error('提供的 appointmentId無效，無法生成QRcode。')
+      console.error("提供的 appointmentId無效，無法生成QRcode。");
     }
-})
-
+  }
+);
 
 onMounted(() => {
-    if (props.appointmentId && String(props.appointmentId).trim() !== '') {
-        generateQRCode(props.appointmentId)
-    } else {
-        console.error('提供的 appointmentId無效，無法生成QRcode。')
-    }
-})
-
+  if (props.appointmentId && String(props.appointmentId).trim() !== "") {
+    generateQRCode(props.appointmentId);
+  } else {
+    console.error("提供的 appointmentId無效，無法生成QRcode。");
+  }
+});
 
 const generateQRCode = (appointmentId) => {
-  console.log("生成 QR code，appointmentId:", appointmentId); 
+  console.log("生成 QR code，appointmentId:", appointmentId);
   const idStr = String(appointmentId).trim();
   const url = `https://yourdomain.com/checkin?appointmentId=${idStr}`;
 
   if (!idStr) {
-    console.error('appointmentId 為空，無法生成 QR code');
+    console.error("appointmentId 為空，無法生成 QR code");
     return;
   }
 
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   QRCode.toCanvas(canvas, url, (error) => {
     if (error) {
-      console.error('QR code 生成失敗:', error);
+      console.error("QR code 生成失敗:", error);
     } else {
       qrcode.value.appendChild(canvas);
     }
   });
 };
-
-
 </script>
 
 <style scoped>
 .qrcode-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 </style>
