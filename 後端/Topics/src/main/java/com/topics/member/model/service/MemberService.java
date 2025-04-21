@@ -26,6 +26,10 @@ public class MemberService {
 		member.setPhone(entity.getPhone());
 		member.setRole(entity.getRole());
 		member.setActiveStatus(entity.isActiveStatus());
+		
+		if (entity.getMemberPhoto() != null) {
+	        member.setMemberPhoto(entity.getMemberPhoto());
+	    }
 		MemberBean memberNew = memberRepository.save(member);
 		return new MemberDto(memberNew);
 	}

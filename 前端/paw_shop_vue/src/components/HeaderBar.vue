@@ -160,11 +160,11 @@ const items = ref([
   },
   {
     title: "論壇管理",
-    link: "/",
+    link: "#",
   },
   {
     title: "登出",
-    link: "/",
+    link: "",
   },
 ]);
 
@@ -213,9 +213,9 @@ watch(cartMenuVisible, async (val) => {
     await loadCart();
   }
 });
-onMounted(() => {
-  loadCart();
-});
+// onMounted(() => {
+//   loadCart();
+// });
 
 const handleSearch = () => {
   if (search.trim() !== "") {
