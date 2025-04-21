@@ -54,6 +54,11 @@ const routes = [
         component: () => import("@/order/pages/OrderFinish.vue"),
         meta: { requiresAuth: true },
       },
+      {
+        path: "OrderManagement",
+        component: () => import("@/order/pages/OrderManagement.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {
