@@ -25,8 +25,7 @@ export const apiLogin = (data) =>
 // 全部預約查詢
 export const apiFindAppointmentAll = () => api.get("/api/appointment");
 // 單筆預約查詢
-export const apiFindAppointment = (data) =>
-  api.get(`/api/appointment/phone/${data}`);
+export const apiFindAppointment = (data) => api.get(`/api/appointment/phone/${data}`);
 // 新增預約
 export const apiaddAppointment = (data) => api.post("/api/appointment", data);
 // 顯示單筆預約修改頁面

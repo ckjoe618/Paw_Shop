@@ -110,10 +110,12 @@ const routes = [
       {
         path: "appointments",
         component: () => import("@/appointment/pages/AppointmentList.vue"),
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
       {
         path: "appointments/edit/:id",
         component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
     ],
   },
@@ -161,7 +163,7 @@ router.beforeEach((to, from, next) => {
       return next("/login");
     }
     if (authStore.role !== "ADMIN") {
-      // return next("/403"); // 沒權限
+      return next("/");
     }
   }
 
