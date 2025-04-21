@@ -58,7 +58,12 @@
     </v-btn>
 
     <!-- 購物車按鈕 -->
-    <v-menu v-model="cartMenuVisible" offset-y transition="slide-y-transition">
+    <v-menu
+      v-model="cartMenuVisible"
+      offset-y
+      transition="slide-y-transition"
+      :key="cartItems.length"
+    >
       <template #activator="{ props }">
         <v-badge
           v-if="totalCartQty > 0"
@@ -68,12 +73,7 @@
           offset-y="8"
           bordered
         >
-          <v-btn
-            icon
-            class="text-white mx-1"
-            v-bind="props"
-            @hover="cartMenuVisible = !cartMenuVisible"
-          >
+          <v-btn icon class="text-white mx-1" v-bind="props">
             <v-icon size="28">mdi-cart</v-icon>
           </v-btn>
         </v-badge>
@@ -82,11 +82,7 @@
         </v-btn>
       </template>
       <!-- 購物車預覽 -->
-      <CartPreview
-        v-if="totalCartQty > 0"
-        :items="cartItems"
-        @closeMenu="cartMenuVisible = false"
-      />
+      <CartPreview :items="cartItems" @closeMenu="cartMenuVisible = false" />
     </v-menu>
 
     <!-- 會員按鈕 -->
@@ -130,15 +126,18 @@
 
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_green_logo.png";
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
-import * as api from "@/member/api/api.js";
 import CartPreview from "@/order/components/frontsite/CartPreview.vue";
+import {
+  loadCart,
+  cartItems,
+  totalCartQty,
+} from "@/order/components/frontsite/useCart";
 
 const router = useRouter();
 const authStore = useAuthStore();
-const cartItems = ref([{ name: "好吃的餅乾", qty: 5, price: 50 }]);
 const cartMenuVisible = ref(false);
 
 const search = ref("");
@@ -152,8 +151,8 @@ const items = ref([
     link: "/member/memberinfo",
   },
   {
-    title: "訂單管理",
-    link: "/",
+    title: "訂單查詢",
+    link: "/OrderManagement",
   },
   {
     title: "預約管理",
@@ -165,7 +164,7 @@ const items = ref([
   },
   {
     title: "登出",
-    link: null,
+    link: "/",
   },
 ]);
 
@@ -209,31 +208,14 @@ onBeforeUnmount(() =>
 );
 
 // 載入購物車資料
-const totalCartQty = computed(() =>
-  cartItems.value.reduce((sum, item) => sum + item.qty, 0)
-);
-
-const loadCart = async () => {
-  if (authStore.isLoggedIn) {
-    // ✅ 已登入 → 從後端拿購物車
-    try {
-      const res = await api.api.get("localhost:8080/shoppingcart");
-      cartItems.value = res.data;
-    } catch (err) {
-      console.error("後端購物車取得失敗", err);
-      cartItems.value = [];
-    }
-  } else {
-    // ✅ 未登入 → 從 localStorage 拿購物車
-    try {
-      const localCart = localStorage.getItem("cart");
-      cartItems.value = localCart ? JSON.parse(localCart) : [];
-    } catch (err) {
-      console.error("讀 localStorage cart 發生錯誤", err);
-      cartItems.value = [];
-    }
+watch(cartMenuVisible, async (val) => {
+  if (val) {
+    await loadCart();
   }
-};
+});
+onMounted(() => {
+  loadCart();
+});
 
 const handleSearch = () => {
   if (search.trim() !== "") {

@@ -12,29 +12,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.topics.order.model.bean.OrderBean;
-import com.topics.order.model.service.OrderService;
+import com.topics.order.model.service.back.AdminOrderService;
 
 @RestController
-public class OrderController {
+@RequestMapping("/api/admin/order")
+public class AdminOrderController {
 
 	@Autowired
-	private OrderService orderService;
+	private AdminOrderService orderService;
 
 	// 查詢全部
-	@GetMapping("/order/allactiveorders")
+	@GetMapping("/allactiveorders")
 	public List<OrderBean> getAllActiveOrders() {
 		return orderService.findAllActiveOrders();
 	}
 	
-	@GetMapping("/order/allorders")
+	@GetMapping("/allorders")
 	public List<OrderBean> getAllOrders() {
 		return orderService.findAllOrders();
 	}
 
 	// 新增
-	@PostMapping("/order/add")
+	@PostMapping
 	public OrderBean insertOrder(@RequestBody OrderBean orderBean) {
 		String memberidrule = "^[0-9]{1,3}$";
 		String totalpricerule = "^[0-9]+$";
@@ -55,7 +57,7 @@ public class OrderController {
 	}
 
 	// 刪除
-	@DeleteMapping("/order/delete/{orderId}")
+	@DeleteMapping("/{orderId}")
 	public void deleteOrder(@PathVariable Integer orderId) {
 		if (orderId != null) {
 			orderService.deleteOrderByOrderId(orderId);
@@ -63,7 +65,7 @@ public class OrderController {
 	}
 
 	// 修改
-	@GetMapping("/order/queryone/{orderId}")
+	@GetMapping("/queryone/{orderId}")
 	public OrderBean findOrderByOrderId(@PathVariable Integer orderId) {
 		if (orderId != null) {
 			return orderService.findOrderByOrderId(orderId);
@@ -71,7 +73,7 @@ public class OrderController {
 		return null;
 	}
 
-	@PutMapping("/order/update/{orderId}")
+	@PutMapping("/update/{orderId}")
 	public OrderBean updateOrderByOrderId(@PathVariable Integer orderId, @RequestBody OrderBean orderBean) {
 		String memberidrule = "^[0-9]{1,3}$";
 		String totalpricerule = "^[0-9]+$";
@@ -92,7 +94,7 @@ public class OrderController {
 	
 
 	//總金額變動
-	@PutMapping("/order/updatePriceTotal")
+	@PutMapping("/updatePriceTotal")
 	public ResponseEntity<String> resetOrderPriceTotal(@RequestBody Map<String, Object> data) {
 		Integer orderId = (Integer) data.get("orderId");
 		Integer priceTotal = (Integer) data.get("priceTotal");

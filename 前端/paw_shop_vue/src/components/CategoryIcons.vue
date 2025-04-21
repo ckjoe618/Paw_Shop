@@ -1,48 +1,58 @@
 <template>
-  <v-container class="my-6">
+  <v-container class="text-start">
+    <h3 class="text-h6 font-weight-medium mb-1">
+      <v-icon>mdi-store-search</v-icon> Shop for your pet
+    </h3>
+
     <v-row justify="center">
       <v-col
-        v-for="category in categories"
-        :key="category.name"
-        cols="6"
-        sm="2"
+        v-for="pet in pets"
+        :key="pet.label"
+        cols="12"
+        sm="3"
         class="text-center"
       >
-        <v-avatar size="80" class="mb-2" color="grey lighten-4">
-          <i
-            :class="iconMap[category.name]"
-            class="fa-2x"
-            style="line-height: 80px"
-          ></i>
-        </v-avatar>
-        <div>{{ category.name }}</div>
+        <v-img
+          :src="pet.img"
+          width="100%"
+          height="180"
+          cover
+          class="rounded-lg mb-2"
+        />
+        <div class="text-subtitle-1 font-weight-medium">{{ pet.label }}</div>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import catImg from "@/order/assets/pictures/home_cat.webp";
+import dogImg from "@/order/assets/pictures/home_dog.webp";
+import smallpets from "@/order/assets/pictures/home_smallpets.webp";
+import bird from "@/order/assets/pictures/home_bird.webp";
 
-const props = defineProps({
-  categories: {
-    type: Array,
-    required: true,
+const pets = [
+  {
+    label: "Cat",
+    img: catImg,
+    bgColor: "#fde78b",
   },
-});
-
-const iconMap = {
-  Cat: "fas fa-cat",
-  Dog: "fas fa-dog",
-  "Small Pet": "fas fa-otter",
-  Fish: "fas fa-fish",
-  Bird: "fas fa-dove",
-};
+  {
+    label: "Dog",
+    img: dogImg,
+    bgColor: "#c8eafd",
+  },
+  {
+    label: "Small Pet",
+    img: smallpets,
+    bgColor: "#c7f5b0",
+  },
+  {
+    label: "Bird",
+    img: bird,
+    bgColor: "#fbd1d9",
+  },
+];
 </script>
 
-<style scoped>
-i {
-  color: #4caf50;
-  text-align: center;
-}
-</style>
+<style scoped></style>

@@ -1,4 +1,4 @@
-package com.topics.order.model.service;
+package com.topics.order.model.service.back;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +14,7 @@ import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.repository.OrderRepository;
 
 @Service
-public class OrderService {
+public class AdminOrderService {
 
 	@Autowired
 	private OrderRepository orderRepository;

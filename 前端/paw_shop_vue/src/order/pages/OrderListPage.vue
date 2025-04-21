@@ -121,12 +121,16 @@ const selectedOrderId = ref(null);
 const reloadOrders = async () => {
   if (invalidOrders.value) {
     // 載入所有訂單（含失效）
-    const res = await axios.get("http://localhost:8080/order/allorders");
+    const res = await axios.get(
+      "http://localhost:8080/api/admin/order/allorders"
+    );
     allOrders.value = res.data;
     filteredOrders.value = res.data;
   } else {
     // 載入active訂單
-    const res = await axios.get("http://localhost:8080/order/allactiveorders");
+    const res = await axios.get(
+      "http://localhost:8080/api/admin/order/allactiveorders"
+    );
     orders.value = res.data;
     filteredOrders.value = res.data;
   }
@@ -193,7 +197,7 @@ const confirmDelete = (id) => {
 const deleteOrder = async () => {
   try {
     await axios.delete(
-      `http://localhost:8080/order/delete/${deletingOrderId.value}`
+      `http://localhost:8080/api/admin/order/${deletingOrderId.value}`
     );
     showDeleteDialog.value = false;
     await reloadOrders();
@@ -213,7 +217,7 @@ const openDetailDialog = (order) => {
 const updatePriceTotal = (newTotal) => {
   if (selectedOrder.value) {
     selectedOrder.value.priceTotal = newTotal;
-    axios.put("http://localhost:8080/order/updatePriceTotal", {
+    axios.put("http://localhost:8080/api/admin/order/updatePriceTotal", {
       orderId: selectedOrder.value.orderId,
       priceTotal: newTotal,
     });

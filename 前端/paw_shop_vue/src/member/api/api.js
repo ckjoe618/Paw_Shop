@@ -60,3 +60,5 @@ export const apiUpdateShoppingCartItem = (data) =>
   api.put(`/api/shoppingcart`, data);
 export const apiDeleteShoppingCartItem = (data) =>
   api.delete(`/api/shoppingcart/${data}`);
+export const apiAddShoppingCartItem = (data) =>
+  api.post(`/api/shoppingcart`, data);

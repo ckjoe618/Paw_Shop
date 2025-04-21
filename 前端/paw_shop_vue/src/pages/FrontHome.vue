@@ -1,7 +1,7 @@
 <template>
+  <ad></ad>
   <v-container class="py-6">
-    <ad></ad>
-    <CategoryIcons :categories="petCategories" />
+    <CategoryIcons class="mt-10" />
     <ProductRecommendations class="mb-4" />
     <QA></QA>
   </v-container>
@@ -12,29 +12,6 @@ import QA from "@/components/QA.vue";
 import ad from "@/components/ad.vue";
 import CategoryIcons from "@/components/CategoryIcons.vue";
 import ProductRecommendations from "@/components/ProductRecommendations.vue";
-
-const petCategories = [
-  {
-    name: "Cat",
-    icon: "mdi-cat",
-  },
-  {
-    name: "Dog",
-    icon: "mdi-dog",
-  },
-  {
-    name: "Small Pet",
-    icon: "mdi-rabbit-variant",
-  },
-  {
-    name: "Fish",
-    icon: "mdi-fish",
-  },
-  {
-    name: "Bird",
-    icon: "mdi-bird",
-  },
-];
 </script>
 
 <style scoped></style>
