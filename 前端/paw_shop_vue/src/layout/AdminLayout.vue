@@ -110,11 +110,6 @@
 
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
-<<<<<<< HEAD
-import { useAuthStore } from "@/member/stores/auth";
-import router from "@/router";
-=======
->>>>>>> b80aa3c81410f7111a2c63c6ef4ef0609640b390
 import { ref } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";
