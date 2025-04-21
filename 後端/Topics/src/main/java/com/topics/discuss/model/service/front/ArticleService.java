@@ -4,15 +4,18 @@ import com.topics.discuss.model.bean.ArticleBean;
 import com.topics.discuss.model.bean.ArticleCategory;
 import com.topics.discuss.model.dto.request.ArticleRequestDto;
 import com.topics.discuss.model.dto.response.ArticleCategoryDto;
+import com.topics.discuss.model.dto.response.ArticleDetailDto;
 import com.topics.discuss.model.dto.response.ArticleListDto;
 import com.topics.discuss.model.repository.ArticleCategoryRepository;
 import com.topics.discuss.model.repository.ArticleRepository;
+import com.topics.member.model.entity.MemberBean;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -76,6 +79,26 @@ public class ArticleService {
             result.add(dto);
         }
         return result;
+    }
+
+    // 查詢單筆文章詳情
+    public ArticleDetailDto getArticleDetailById(int articleId) {
+        Optional<ArticleBean> optional = articleRepository.findById(articleId);
+
+        if (optional.isPresent() || optional.get().isDeleted()) {
+            throw new RuntimeException("文章不存在");
+        }
+
+        ArticleBean article = optional.get();
+
+        String categoryName = articleCategoryRepository
+                .findById(article.getCategoryId())
+                .map(ArticleCategory :: getCategoryName)
+                .orElse("未知分類");
+
+        MemberBean member = article.getMember();
+        String memberName = member.getMemberName();
+
     }
 
     // 新增文章

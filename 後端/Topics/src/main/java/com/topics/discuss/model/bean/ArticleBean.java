@@ -55,7 +55,7 @@ public class ArticleBean {
 	@Column(columnDefinition = "datetime2")
 	private LocalDateTime lastCommentDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id", insertable = false, updatable = false)
 	private MemberBean member;
 
