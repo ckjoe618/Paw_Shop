@@ -153,11 +153,11 @@ const items = ref([
     link: "/member",
   },
   {
-    title: "訂單管理",
+    title: "訂單查詢",
     link: "/",
   },
   {
-    title: "預約管理",
+    title: "預約查詢",
     link: "/",
   },
   {
@@ -166,7 +166,7 @@ const items = ref([
   },
   {
     title: "登出",
-    link: null,
+    link: "/",
   },
 ]);
 

@@ -1,4 +1,4 @@
-package com.topics.order.model.service;
+package com.topics.order.model.service.front;
 
 import java.time.LocalDateTime;
 import java.util.List;

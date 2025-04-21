@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.security.AuthHolder;
 import com.topics.order.model.bean.ShoppingcartItemBean;
-import com.topics.order.model.service.ShoppingcartItemService;
+import com.topics.order.model.service.front.ShoppingcartItemService;
 
 @RestController
 @RequestMapping("/api/shoppingcart")

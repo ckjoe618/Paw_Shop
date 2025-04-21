@@ -1,116 +1,37 @@
 <template>
-  <div style="width: 100%">
-    <div
-      id="carouselAds"
-      class="carousel slide"
-      data-bs-ride="carousel"
-      data-bs-interval="4000"
-    >
-      <div class="carousel-indicators">
-        <button
-          type="button"
-          data-bs-target="#carouselAds"
-          data-bs-slide-to="0"
-          class="active"
-          aria-current="true"
-          aria-label="Slide 1"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselAds"
-          data-bs-slide-to="1"
-          aria-label="Slide 2"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselAds"
-          data-bs-slide-to="2"
-          aria-label="Slide 3"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselAds"
-          data-bs-slide-to="3"
-          aria-label="Slide 4"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselAds"
-          data-bs-slide-to="4"
-          aria-label="Slide 5"
-        ></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img
-            src="../order/assets/pictures/messageImage_1744271934310.jpg"
-            class="d-block w-100"
-            alt="新開幕"
-          />
-        </div>
-        <div class="carousel-item">
-          <img
-            src="../order/assets/pictures/1_Carousel_Travel_Desktop.png"
-            class="d-block w-100"
-            alt="超划算"
-          />
-        </div>
-        <div class="carousel-item">
-          <img
-            src="../order/assets/pictures/2_Desktop_Carousel_IndoorToys.png"
-            class="d-block w-100"
-            alt="狗狗等你"
-          />
-        </div>
-        <div class="carousel-item">
-          <img
-            src="../order/assets/pictures/3_Desktop_Carousel_CalmingAids.png"
-            class="d-block w-100"
-            alt="貓貓毛"
-          />
-        </div>
-        <div class="carousel-item">
-          <img
-            src="../order/assets/pictures/4_Carousel_Desktop_HarryPotter.png"
-            class="d-block w-100"
-            alt="快來買"
-          />
-        </div>
-      </div>
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#carouselAds"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#carouselAds"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  </div>
+  <v-carousel
+    height="400"
+    cycle
+    show-arrows="hover"
+    hide-delimiter-background
+    class="rounded-0"
+  >
+    <v-carousel-item
+      v-for="(img, i) in carouselImages"
+      :key="i"
+      :src="img"
+      cover
+    />
+  </v-carousel>
 </template>
 
 <script setup>
-// import image1 from "../assets/pictures/1_Carousel_Travel_Desktop.png";
+import img1 from "@/order/assets/pictures/1_Carousel_Travel_Desktop.png";
+import img2 from "@/order/assets/pictures/2_Desktop_Carousel_IndoorToys.png";
+import img3 from "@/order/assets/pictures/3_Desktop_Carousel_CalmingAids.png";
+import img4 from "@/order/assets/pictures/4_Carousel_Desktop_HarryPotter.png";
+
+const carouselImages = [img1, img2, img3, img4];
 </script>
 
 <style scoped>
-.carousel-item img {
-  width: 100%;
-  object-fit: cover;
+.full-width-carousel {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
+.v-carousel__controls__prev,
+.v-carousel__controls__next {
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
 }
 </style>

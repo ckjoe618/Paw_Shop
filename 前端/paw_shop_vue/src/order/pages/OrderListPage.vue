@@ -98,10 +98,6 @@ import axios from "axios";
 const router = useRouter();
 
 const headers = [
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 24072d3ee682da96e290bb88e3a286229f9079da
   { title: "訂單編號", key: "orderId", width: "110px" },
   { title: "會員編號", key: "memberId", width: "110px" },
   { title: "訂單金額", key: "priceTotal", width: "110px" },
@@ -112,21 +108,6 @@ const headers = [
   { title: "取貨方式", key: "pickupMethod" },
   { title: "物流編號", key: "trackingNum" },
   { title: "操作", key: "actions", sortable: false },
-<<<<<<< HEAD
-=======
-  { title: "訂單編號", value: "orderId" },
-  { title: "會員編號", value: "memberId" },
-  { title: "訂單金額", value: "priceTotal" },
-  { title: "交易時間", value: "transactionTime" },
-  { title: "付款方式", value: "paymentMethod" },
-  { title: "付款狀態", value: "paymentStatus" },
-  { title: "訂單狀態", value: "orderStatus" },
-  { title: "取貨方式", value: "pickupMethod" },
-  { title: "物流編號", value: "trackingNum" },
-  { title: "操作", value: "actions", sortable: false },
->>>>>>> e35bf0476e36d90496b9da0de646acbce4ae3fd9
-=======
->>>>>>> 24072d3ee682da96e290bb88e3a286229f9079da
 ];
 
 //查詢所有訂單
@@ -140,12 +121,16 @@ const selectedOrderId = ref(null);
 const reloadOrders = async () => {
   if (invalidOrders.value) {
     // 載入所有訂單（含失效）
-    const res = await axios.get("http://localhost:8080/order/allorders");
+    const res = await axios.get(
+      "http://localhost:8080/api/admin/order/allorders"
+    );
     allOrders.value = res.data;
     filteredOrders.value = res.data;
   } else {
     // 載入active訂單
-    const res = await axios.get("http://localhost:8080/order/allactiveorders");
+    const res = await axios.get(
+      "http://localhost:8080/api/admin/order/allactiveorders"
+    );
     orders.value = res.data;
     filteredOrders.value = res.data;
   }
@@ -212,7 +197,7 @@ const confirmDelete = (id) => {
 const deleteOrder = async () => {
   try {
     await axios.delete(
-      `http://localhost:8080/order/delete/${deletingOrderId.value}`
+      `http://localhost:8080/api/admin/order/${deletingOrderId.value}`
     );
     showDeleteDialog.value = false;
     await reloadOrders();
@@ -232,7 +217,7 @@ const openDetailDialog = (order) => {
 const updatePriceTotal = (newTotal) => {
   if (selectedOrder.value) {
     selectedOrder.value.priceTotal = newTotal;
-    axios.put("http://localhost:8080/order/updatePriceTotal", {
+    axios.put("http://localhost:8080/api/admin/order/updatePriceTotal", {
       orderId: selectedOrder.value.orderId,
       priceTotal: newTotal,
     });

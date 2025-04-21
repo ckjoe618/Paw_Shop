@@ -49,6 +49,11 @@ const routes = [
         component: () => import("@/order/pages/OrderingInfo.vue"),
         meta: { requiresAuth: true },
       },
+      {
+        path: "OrderFinish",
+        component: () => import("@/order/pages/OrderFinish.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {
@@ -73,12 +78,12 @@ const routes = [
         component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
-        path: 'products',
-        component: () => import('@/product/backsite/ProductListPage.vue')
+        path: "products",
+        component: () => import("@/product/backsite/ProductListPage.vue"),
       },
       {
-        path: 'appointments',
-        component: () => import("@/appointment/components/AppointmentList.vue")
+        path: "appointments",
+        component: () => import("@/appointment/components/AppointmentList.vue"),
       },
       {
         path: "/appointments/edit/:id",
