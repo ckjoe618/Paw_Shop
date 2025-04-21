@@ -107,13 +107,7 @@
           <QrCodeDisplay :appointment-id="appointment.appointmentId" />
         </div>
 
-        <!-- QR Code 顯示區 -->
-        <div
-          v-if="showQRCodeForAppointment === appointment.appointmentId"
-          class="mt-3"
-        >
-          <QrCodeDisplay :appointment-id="appointment.appointmentId" />
-        </div>
+        
       </li>
     </ul>
 
