@@ -1,6 +1,6 @@
 package com.topics.discuss.model.service.back;
 
-import com.topics.discuss.model.bean.ArticleBean;
+import com.topics.discuss.model.entity.ArticleBean;
 import com.topics.discuss.model.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

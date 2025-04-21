@@ -1,4 +1,4 @@
-package com.topics.discuss.model.bean;
+package com.topics.discuss.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

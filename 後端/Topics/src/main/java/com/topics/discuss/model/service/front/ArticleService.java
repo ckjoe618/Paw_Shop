@@ -1,7 +1,7 @@
 package com.topics.discuss.model.service.front;
 
-import com.topics.discuss.model.bean.ArticleBean;
-import com.topics.discuss.model.bean.ArticleCategory;
+import com.topics.discuss.model.entity.ArticleBean;
+import com.topics.discuss.model.entity.ArticleCategory;
 import com.topics.discuss.model.dto.request.ArticleRequestDto;
 import com.topics.discuss.model.dto.response.ArticleCategoryDto;
 import com.topics.discuss.model.dto.response.ArticleDetailDto;
@@ -10,9 +10,9 @@ import com.topics.discuss.model.repository.ArticleCategoryRepository;
 import com.topics.discuss.model.repository.ArticleRepository;
 import com.topics.member.model.entity.MemberBean;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -85,7 +85,7 @@ public class ArticleService {
     public ArticleDetailDto getArticleDetailById(int articleId) {
         Optional<ArticleBean> optional = articleRepository.findById(articleId);
 
-        if (optional.isPresent() || optional.get().isDeleted()) {
+        if (optional.isEmpty() || optional.get().isDeleted()) {
             throw new RuntimeException("文章不存在");
         }
 
@@ -97,8 +97,28 @@ public class ArticleService {
                 .orElse("未知分類");
 
         MemberBean member = article.getMember();
-        String memberName = member.getMemberName();
+        String memberName = (member != null) ? member.getMemberName() : "未知會員";
+        String memberPhoto = (member != null && member.getMemberPhoto() != null)
+                ? new String(member.getMemberPhoto(), StandardCharsets.UTF_8)
+                : null;
 
+        ArticleDetailDto dto = new ArticleDetailDto();
+        dto.setArticleId(article.getArticleId());
+        dto.setTitle(article.getTitle());
+        dto.setContent(article.getContent());
+        dto.setCategoryId(article.getCategoryId());
+        dto.setCategoryName(categoryName);
+        dto.setMemberId(article.getMemberId());
+        dto.setMemberName(memberName);
+        dto.setMemberPhoto(memberPhoto);
+        dto.setCreatedDate(article.getCreatedDate());
+        dto.setUpdatedDate(article.getUpdatedDate());
+        dto.setViewCount(article.getViewCount());
+        dto.setCommentCount(article.getCommentCount());
+        dto.setPinned(article.isPinned());
+        dto.setFeatured(article.isFeatured());
+
+        return dto;
     }
 
     // 新增文章

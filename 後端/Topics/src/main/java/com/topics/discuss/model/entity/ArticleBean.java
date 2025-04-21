@@ -1,4 +1,4 @@
-package com.topics.discuss.model.bean;
+package com.topics.discuss.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.topics.member.model.entity.MemberBean;
@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +23,7 @@ public class ArticleBean {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int articleId;
 
+	@Column(name = "member_id")
 	private int memberId;
 
 	private String title;
