@@ -134,15 +134,18 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
+import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";
 import CityCountyData from "@/order/assets/data/CityCountyData.json";
 
+const auth = useAuthStore();
+
 //訂購資料
-const memberName = ref("王小明");
-const memberPhone = ref("0912345678");
-const memberEmail = ref("m@example.com");
-const memberAddress = ref("臺北市中正區仁愛路一段100號");
+const memberName = computed(() => auth.memberName);
+const memberPhone = computed(() => auth.phone);
+const memberEmail = computed(() => auth.email);
+const memberAddress = computed(() => auth.fullAddress);
 
 //收件資料
 const formRef = ref(null);
@@ -168,10 +171,10 @@ watch(sameAsBuyer, (val) => {
     recipientName.value = memberName.value;
     recipientPhone.value = memberPhone.value;
     address.value = {
-      city: memberAddress.value.slice(0, 3),
-      district: memberAddress.value.slice(3, 6),
+      city: memberAddress.value.slice(3, 6),
+      district: memberAddress.value.slice(6, 9),
       zipcode: "",
-      detail: memberAddress.value.slice(6),
+      detail: memberAddress.value.slice(9),
     };
   } else {
     recipientName.value = "";

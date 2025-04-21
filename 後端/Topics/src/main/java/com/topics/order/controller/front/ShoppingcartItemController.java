@@ -1,5 +1,6 @@
 package com.topics.order.controller.front;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,13 @@ public class ShoppingcartItemController {
 	@DeleteMapping("/{cartItemId}")
 	public void deleteShoppingcart(@PathVariable Integer cartItemId) {
 		shoppingcartItemService.deleteShoppingcartById(cartItemId);
+	}
+	
+	@DeleteMapping("/truncatecart")
+	public void deleteAllShoppingcart(@RequestBody List<Integer> cartItemIds) {
+		for(Integer id : cartItemIds){
+			shoppingcartItemService.deleteShoppingcartById(id);
+		}
 	}
 	
 	//修改

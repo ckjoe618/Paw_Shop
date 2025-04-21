@@ -34,6 +34,10 @@ public class OrderBean {
 	private String orderStatus;
 	private String pickupMethod;
 	private String trackingNum;
+	private String recipientName;
+	private String recipientAddress;
+	private String recipientPhone;
+	private Integer shippingFee;
 	private LocalDateTime updateTime;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

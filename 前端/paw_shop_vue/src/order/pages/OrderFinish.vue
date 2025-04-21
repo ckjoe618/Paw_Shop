@@ -7,8 +7,6 @@
       <h2 class="mb-2" style="font-weight: bold; color: #4caf50">訂單完成</h2>
       <p class="mb-6" style="font-size: 16px; color: #555">
         感謝您的訂購！我們已成功收到您的訂單。<br />
-        您的訂單編號為 <strong>{{ orderId }}</strong
-        ><br />
         請至「會員中心」可查詢您的訂單進度。
       </p>
 
@@ -26,10 +24,28 @@
 
 <script setup>
 import router from "@/router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import {
+  apiFindShoppingCartItem,
+  apiDeleteAllShoppingCartItem,
+} from "@/member/api/api";
+import { loadCart } from "@/order/components/frontsite/useCart";
+
+onMounted(async () => {
+  try {
+    const res = await apiFindShoppingCartItem();
+    const cartItemIds = res.data.map((item) => item.cartItemId);
+    console.log(cartItemIds);
+
+    await apiDeleteAllShoppingCartItem(cartItemIds);
+    await loadCart();
+    console.log("購物車已清空");
+  } catch (err) {
+    console.error("清空購物車失敗", err);
+  }
+});
 
 // 模擬訂單編號（實際應從後端回傳）
-const orderId = ref("PO202504190001");
 
 const goToOrders = () => {
   router.push("/");

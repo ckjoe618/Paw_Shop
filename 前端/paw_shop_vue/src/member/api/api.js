@@ -60,5 +60,13 @@ export const apiUpdateShoppingCartItem = (data) =>
   api.put(`/api/shoppingcart`, data);
 export const apiDeleteShoppingCartItem = (data) =>
   api.delete(`/api/shoppingcart/${data}`);
+export const apiDeleteAllShoppingCartItem = (data) => {
+  return api.delete(`/api/shoppingcart/truncatecart`, {
+    data,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
 export const apiAddShoppingCartItem = (data) =>
   api.post(`/api/shoppingcart`, data);
