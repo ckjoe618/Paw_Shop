@@ -3,6 +3,12 @@
         <v-row align="center" class="d-flex" style="gap: 16px">
             <h2 class="mb-0">所有商品</h2>
             <addbtn icon-size="25" @click="showCreateDialog = true" />
+            <v-btn icon color="green" @click="showDialog = true">
+                <v-icon>mdi-truck-delivery</v-icon>
+            </v-btn>  
+            <v-btn icon @click="batchDialog = true">
+                <v-icon>mdi-playlist-plus</v-icon>
+            </v-btn>
         </v-row>
 
         <v-row class="mt-4 align-center">
@@ -57,12 +63,15 @@
             @confirm="deleteProduct" />
         <ProductDetail :product="selectedProduct" v-model:visible="showDetailDialog" />
     </v-container>
+    <PurchaseDialog v-model:dialog="showDialog" @success="reloadProducts"/>
+    <BatchPurchaseDialog v-model="batchDialog" @success="reloadProducts" />
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
+import PurchaseDialog from '../components/PurchaseDialog.vue';
 import addbtn from '../../order/components/buttons/addbtn.vue';
 import formCheckbtn from '../../order/components/buttons/formCheckbtn.vue';
 import formEditbtn from '../../order/components/buttons/formEditbtn.vue';
@@ -71,6 +80,8 @@ import formDeletebtn from '../../order/components/buttons/formDeletebtn.vue';
 import ProductForm from "@/product/components/ProductForm.vue";
 import ProductDeleteDialog from "@/product/components/ProductDeleteDialog.vue";
 import ProductDetail from "@/product/components/ProductDetail.vue";
+import BatchPurchaseDialog from '@/product/components/BatchPurchaseDialog.vue';
+const batchDialog = ref(false);
 
 const headers = [
     { title: "商品編號", key: "productId", width: "110px" },
@@ -138,6 +149,7 @@ const deleteProduct = async () => {
     reloadProducts();
 };
 
+const showDialog = ref(false);
 const editingProductData = ref(null);
 const showDeleted = ref(false);
 const selectedProduct = ref(null);

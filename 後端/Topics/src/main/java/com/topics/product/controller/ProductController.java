@@ -2,9 +2,13 @@ package com.topics.product.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import com.topics.product.model.bean.ProductBean;
+import com.topics.product.model.dto.PurchaseItem;
 import com.topics.product.model.service.ProductService;
+import com.topics.product.model.service.PurchasingOrderService;
+
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -13,7 +17,10 @@ public class ProductController {
 
 	@Autowired
 	private ProductService pService;
-
+	
+	@Autowired
+	private PurchasingOrderService purchasingOrderService;
+	
 	// 查詢目前尚有庫存的商品（且未被刪除）
 	@GetMapping("/stock/available")
 	@ResponseBody
@@ -77,6 +84,17 @@ public class ProductController {
 	public String restoreProduct(@PathVariable Integer id) {
 		boolean result = pService.restoreProduct(id);
 		return result ? "產品已復原" : "查無此產品";
+	}
+	
+	// 批次進貨
+	@PostMapping("/batch-orders")
+	public ResponseEntity<String> batchPurchase(@RequestBody List<PurchaseItem> items) {
+	    for (PurchaseItem item : items) {
+	        if (item.getQuantity() != null && item.getQuantity() > 0) {
+	            purchasingOrderService.addPurchasingOrder(item.getProductId(), item.getQuantity());
+	        }
+	    }
+	    return ResponseEntity.ok("批次進貨成功");
 	}
 
 }
