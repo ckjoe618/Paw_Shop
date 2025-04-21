@@ -1,7 +1,12 @@
 <template>
   <v-container fluid class="fill-height d-flex justify-center align-center">
     <v-card class="pa-6" elevation="8" max-width="448" rounded="lg">
-      <v-img class="mx-auto mb-6" max-width="120" :src="PawShopLogo"></v-img>
+      <v-img
+        class="mx-auto mb-6 logo-hover"
+        max-width="120"
+        :src="PawShopLogo"
+        @click="router.push('/')"
+      ></v-img>
 
       <div class="text-subtitle-1 text-medium-emphasis">帳號</div>
 
@@ -52,6 +57,7 @@
         size="large"
         variant="tonal"
         block
+        :loading="loading"
         @click="handlerLogin"
       >
         登入
@@ -60,7 +66,7 @@
         class="mb-2"
         color="blue"
         size="large"
-        variant="tonal"
+        variant="outlined"
         block
         @click="handlerAdminLogin"
       >
@@ -70,22 +76,17 @@
         class="mb-8"
         color="blue"
         size="large"
-        variant="tonal"
+        variant="outlined"
         block
         @click="handlerUserLogin"
       >
         使用者一鍵登入
       </v-btn>
 
-      <v-card-text class="text-center">
-        <a
-          class="text-blue text-decoration-none"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          註冊 <v-icon icon="mdi-chevron-right"></v-icon>
-        </a>
+      <v-card-text class="text-center mt-4">
+        <span class="register-link" @click="router.push('/register')">
+          註冊 <v-icon class="register-icon">mdi-chevron-right</v-icon>
+        </span>
       </v-card-text>
     </v-card>
   </v-container>
@@ -93,9 +94,10 @@
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { ref } from "vue";
-import { apiLogin } from "@/member/api/api";
+import * as api from "@/member/api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
+import { syncCartToBackend } from "@/order/components/frontsite/useCart";
 
 const visible = ref(false);
 const loginId = ref("");
@@ -103,67 +105,60 @@ const password = ref("");
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-const redirectPath = route.query.redirect || "/";
+const loading = ref(false);
 
 // 一般登入
-const handlerLogin = async () => {
-  const response = await apiLogin({
-    loginId: loginId.value,
-    password: password.value,
-  });
-  if (response.data.success) {
-    authStore.login({
-      token: response.data.token,
-      memberId: response.data.memberId,
-      memberName: response.data.memberName,
-      role: response.data.role,
-      memberPhoto: response.data.memberPhoto,
-    });
-    router.push(redirectPath);
-  } else {
-    alert("登入失敗：" + response.data.message);
-  }
-};
+const handlerLogin = () => performLogin(loginId.value, password.value);
 
 // 管理者快速登入
-const handlerAdminLogin = async () => {
-  const response = await apiLogin({
-    loginId: "lzx5",
-    password: "123456",
-  });
-  if (response.data.success) {
-    authStore.login({
-      token: response.data.token,
-      memberId: response.data.memberId,
-      memberName: response.data.memberName,
-      role: response.data.role,
-      memberPhoto: response.data.memberPhoto,
-    });
-    router.push("/");
-  } else {
-    alert("登入失敗：" + response.data.message);
-  }
-};
+const handlerAdminLogin = () => performLogin("lzx5", "123456");
 
 // 使用者快速登入
-const handlerUserLogin = async () => {
-  const response = await apiLogin({
-    loginId: "wxm1",
-    password: "123456",
-  });
-  if (response.data.success) {
-    authStore.login({
-      token: response.data.token,
-      memberId: response.data.memberId,
-      memberName: response.data.memberName,
-      role: response.data.role,
-      memberPhoto: response.data.memberPhoto,
-    });
-    router.push(redirectPath);
-  } else {
-    alert("登入失敗：" + response.data.message);
+const handlerUserLogin = () => performLogin("wxm1", "123456");
+
+// 統一登入模式
+const performLogin = async (loginId, password) => {
+  loading.value = true;
+  try {
+    const data = await api.apiLogin({ loginId, password });
+    // console.log(data);
+    authStore.login({ ...data });
+    await syncCartToBackend();
+    router.push(route.query.redirect || "/");
+  } finally {
+    loading.value = false;
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.logo-hover {
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.logo-hover:hover {
+  transform: scale(1.08);
+  opacity: 0.85;
+}
+.register-link {
+  color: #1976d2;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.register-link:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+.register-icon {
+  transition: transform 0.3s ease;
+}
+
+.register-link:hover .register-icon {
+  transform: translateX(4px);
+}
+</style>

@@ -1,35 +1,45 @@
 import { defineStore } from "pinia";
 
-export const useAuthStore = defineStore("auth", {
-  state: () => ({
-    token: localStorage.getItem("token") || "",
-    memberId: localStorage.getItem("memberId") || "",
-    memberName: localStorage.getItem("memberName") || "",
-    role: localStorage.getItem("role") || "",
-    memberPhoto: localStorage.getItem("memberPhoto") || "",
-  }),
-  actions: {
-    login({ token, memberId, memberName, role, memberPhoto }) {
-      this.token = token;
-      this.memberId = memberId;
-      this.memberName = memberName;
-      this.role = role;
-      this.memberPhoto = memberPhoto;
+// 設定 pinia 的全域變數
+const keys = [
+  "token",
+  "memberId",
+  "memberName",
+  "email",
+  "phone",
+  "role",
+  "memberPhoto",
+  "address",
+];
 
-      // 儲存到 localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("memberId", memberId);
-      localStorage.setItem("memberName", memberName);
-      localStorage.setItem("role", role);
-      localStorage.setItem("memberPhoto", memberPhoto);
+export const useAuthStore = defineStore("auth", {
+  state: () =>
+    Object.fromEntries(
+      keys.map((key) => {
+        const raw = localStorage.getItem(key);
+        try {
+          return [key, JSON.parse(raw)];
+        } catch {
+          return [key, raw || ""];
+        }
+      })
+    ),
+  actions: {
+    login(data) {
+      keys.forEach((key) => {
+        this[key] = data[key];
+        const isObject = typeof data[key] === "object";
+        localStorage.setItem(
+          key,
+          isObject ? JSON.stringify(data[key]) : data[key]
+        );
+      });
     },
     logout() {
-      this.token = "";
-      this.memberId = "";
-      this.role = "";
-      this.memberName = "";
-      this.memberPhoto = "";
-      localStorage.clear();
+      keys.forEach((key) => {
+        this[key] = "";
+        localStorage.removeItem(key);
+      });
     },
   },
   getters: {

@@ -10,9 +10,11 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in items" :key="index">
-          <td>{{ item.name }}</td>
-          <td>{{ item.qty }}</td>
-          <td class="text-right">${{ item.price * item.qty }}</td>
+          <td>{{ item.product.productName }}</td>
+          <td>{{ item.quantity }}</td>
+          <td class="text-right">
+            ${{ item.product.productPrice * item.quantity }}
+          </td>
         </tr>
       </tbody>
     </v-table>
