@@ -1,4 +1,4 @@
-package com.topics.order.model.service;
+package com.topics.order.model.service.back;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import com.topics.product.model.bean.ProductBean;
 import com.topics.product.model.repository.ProductRepository;
 
 @Service
-public class OrderDetailService {
+public class AdminOrderDetailService {
 	
 	@Autowired
 	private OrderDetailRepository orderDetailRepository;

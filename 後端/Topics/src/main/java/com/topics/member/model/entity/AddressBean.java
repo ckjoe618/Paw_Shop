@@ -30,6 +30,7 @@ public class AddressBean {
 	private String addressDetail;
 	private LocalDateTime createdDate = LocalDateTime.now();
 	private boolean defaultStatus = true;
+	private boolean activeStatus = true;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")

@@ -39,7 +39,7 @@
       </v-col>
 
       <v-col cols="12" md="2" class="d-flex align-end">
-        <div class="w-100" style="padding-bottom: 20px">
+        <div class="w-100 pb-4">
           <v-btn
             color="primary"
             class="w-100 text-subtitle-1 rounded-lg"
@@ -62,11 +62,12 @@ import { ref } from "vue";
 const keyword = ref("");
 const role = ref(null);
 const status = ref(null);
+
 const emit = defineEmits(["search", "clear"]);
 
 const emitSearch = () => {
   emit("search", {
-    keyword: keyword.value.trim().toLowerCase(),
+    keyword: keyword.value.trim().toLowerCase() || null,
     role: role.value,
     status: status.value,
   });

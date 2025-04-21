@@ -24,7 +24,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { apiFindMemberAll, apiDeleteMember } from "@/member/api/api.js";
+import * as api from "@/member/api/memberApi/AdminApi.js";
 import MemberTable from "@/member/components/MemberTable.vue";
 import MemberEditDialog from "@/member/components/MemberEditDialog.vue";
 import MemberSearchPanel from "@/member/components/MemberSearchPanel.vue";
@@ -39,34 +39,31 @@ const selectedMember = ref(null);
 const fetchMembers = async () => {
   loading.value = true;
   try {
-    const response = await apiFindMemberAll();
-    members.value = response.data;
-    filteredMembers.value = response.data;
-  } catch (e) {
-    console.error("載入會員失敗", e);
+    const data = await api.apiFindMemberAll();
+    members.value = data;
+    filteredMembers.value = [...data];
+  } catch (error) {
+    console.error("載入會員失敗", error);
   } finally {
     loading.value = false;
   }
 };
 
 // 處理搜尋事件
-const handleSearch = async ({ keyword, role, status }) => {
-  const response = await apiFindMemberAll();
-  members.value = response.data;
-
-  let matchKey = "";
-
+const handleSearch = async ({ keyword = "", role, status }) => {
   filteredMembers.value = members.value.filter((member) => {
-    if (/^\d+$/.test(keyword)) {
-      matchKey =
-        String(member.memberId) === keyword ||
-        (keyword.length >= 4 && String(member.phone).includes(keyword));
-    } else {
-      matchKey = [member.memberName, member.email].some((value) =>
-        String(value || "")
-          .toLowerCase()
-          .includes(keyword)
-      );
+    let matchKey = true;
+
+    if (keyword) {
+      if (/^\d+$/.test(keyword)) {
+        matchKey =
+          String(member.memberId) === keyword ||
+          (keyword.length >= 4 && String(member.phone).includes(keyword));
+      } else {
+        matchKey = [member.memberName, member.email].some((value) =>
+          String(value).toLowerCase().includes(keyword)
+        );
+      }
     }
     const matchRole = role ? member.role === role : true;
     const matchStatus =
@@ -92,14 +89,9 @@ const openEditDialog = (member) => {
 // 處理停用事件
 const handleDeactivate = async (member) => {
   if (confirm(`確定要停用 ${member.memberName} 嗎？`)) {
-    try {
-      await apiDeleteMember(member.memberId);
-      alert("會員已成功停用");
-      fetchMembers();
-    } catch (e) {
-      console.error("停用失敗", e.response?.data || e.message);
-      alert("停用失敗：" + (e.response?.data || "請稍後再試"));
-    }
+    await api.apiDeleteMember(member.memberId);
+    alert("會員已成功停用");
+    await fetchMembers();
   }
 };
 

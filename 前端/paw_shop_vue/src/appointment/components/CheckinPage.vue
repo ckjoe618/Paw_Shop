@@ -13,7 +13,7 @@
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { apiAppointmentcheckIn } from "@/member/api/api";
-// import QrCodeDisplay from "@/components/QrCodeDisplay.vue";
+import QrCodeDisplay from "@/appointment/components/QrCodeDisplay.vue";
 
 const route = useRoute();
 const appointmentId = route.query.appointmentId;
@@ -21,7 +21,7 @@ const message = ref("處理中...");
 const messageClass = ref("");
 
 const checkIn = (appointmentId) => {
-  return apiAppointmentcheckIn(`/appointments/checkin/${appointmentId}`)
+  return apiAppointmentcheckIn(appointmentId)
     .then((res) => {
       message.value = res.data;
       messageClass.value = "success";

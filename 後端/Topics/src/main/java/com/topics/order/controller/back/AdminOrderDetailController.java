@@ -7,25 +7,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.topics.order.model.bean.OrderDetailBean;
-import com.topics.order.model.service.OrderDetailService;
+import com.topics.order.model.service.back.AdminOrderDetailService;
 
 @RestController
-public class OrderDetailController {
+@RequestMapping("/api/admin/orderdetail")
+public class AdminOrderDetailController {
 
 	@Autowired
-	private OrderDetailService orderDetailService;
+	private AdminOrderDetailService orderDetailService;
 
 	// 新增
-	@PostMapping("/orderdetail/add")
+	@PostMapping
 	public OrderDetailBean insertOrderDetail(@RequestBody OrderDetailBean orderDetailBean) {
 		return orderDetailService.insertOrderDetail(orderDetailBean);
 	}
 
 	// 刪除
-	@DeleteMapping("/orderdetail/delete/{orderDetailId}")
+	@DeleteMapping("/{orderDetailId}")
 	public void deleteOrderDetail(@PathVariable Integer orderDetailId) {
 		if (orderDetailId != null) {
 			orderDetailService.deleteByOrderDetailId(orderDetailId);
@@ -33,7 +35,7 @@ public class OrderDetailController {
 	}
 
 	// 查詢
-	@GetMapping("/orderdetail/allorderdetails")
+	@GetMapping
 	public List<OrderDetailBean> getOrderDetails(@RequestParam Integer orderId) {
 		return orderDetailService.findByOrderId(orderId);
 	}

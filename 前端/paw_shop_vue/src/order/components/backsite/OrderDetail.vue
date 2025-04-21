@@ -158,7 +158,7 @@ const fetchOrderDetails = async () => {
   if (props.order && props.order.orderId) {
     try {
       const res = await axios.get(
-        `http://localhost:8080/orderdetail/allorderdetails?orderId=${props.order.orderId}`
+        `http://localhost:8080/api/admin/orderdetail?orderId=${props.order.orderId}`
       );
       orderDetails.value = res.data;
     } catch (error) {
@@ -197,7 +197,7 @@ const confirmDelete = async (orderDetailId) => {
   orderDetails.value[index].status = "disabled";
   try {
     await axios.delete(
-      `http://localhost:8080/orderdetail/delete/${orderDetailId}`
+      `http://localhost:8080/api/admin/orderdetail/${orderDetailId}`
     );
   } catch (err) {
     console.error("刪除失敗", err);
@@ -266,7 +266,7 @@ const submitDetail = async () => {
 
   try {
     const res = await axios.post(
-      "http://localhost:8080/orderdetail/add",
+      "http://localhost:8080/api/admin/orderdetail",
       newData
     );
     if (res.data) {

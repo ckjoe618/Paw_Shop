@@ -32,7 +32,9 @@ import com.topics.appointment.model.bean.Pet;
 import com.topics.appointment.model.service.AppointmentService;
 import com.topics.appointment.model.service.PetService;
 import com.topics.appointment.model.service.PricingService;
+import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
+import com.topics.member.security.AuthHolder;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -51,10 +53,15 @@ public class AppointmentController {
 	private PricingService pricingService;
 
 	@GetMapping("/appointment")
-	public List<Appointment> showAppointmentPage(Model model) {
-		List<Appointment> appointments = appointmentService.getAllAppointments();
-		return appointments;
+	public ResponseEntity<?> showAppointmentPage() {
+	    MemberDto tokenUser = AuthHolder.getMember(); 
+	    if (tokenUser == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("請先登入");
+	    }
+	    List<Appointment> appointments = appointmentService.getAllAppointments();
+	    return ResponseEntity.ok(appointments);
 	}
+
 
 	@GetMapping("/appointment/phone/{Phone}")
 	@ResponseBody
@@ -117,10 +124,26 @@ public class AppointmentController {
 		return ResponseEntity.ok(petList);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@PostMapping("/appointment")
 	@ResponseBody
 	public ResponseEntity<?> insertAppointmentById(@RequestBody Map<String, Object> payload, HttpSession session) {
 	    String memberIdStr = String.valueOf(payload.get("memberId"));
+	    Integer memberId = null;
+
+	    MemberDto tokenUser = AuthHolder.getMember();
+	    if (tokenUser != null) {
+	    	 memberId = tokenUser.getMemberId();
+	    } else {
+	        if (memberIdStr == null || memberIdStr.isBlank()) {
+	            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "memberId 不能為空"));
+	        }
+	        try {
+	            memberId = Integer.parseInt(memberIdStr);
+	        } catch (NumberFormatException e) {
+	            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "memberId 格式錯誤"));
+	        }
+	    }
 	    String petIdStr = String.valueOf(payload.get("petId"));
 	    String appointmentDate = (String) payload.get("appointmentDate");
 	    String appointmentTimeslot = (String) payload.get("appointmentTimeslot");
@@ -140,7 +163,7 @@ public class AppointmentController {
 	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "日期或時段不能為空"));
 	    }
 
-	    int memberId, petId;
+	    int petId;
 	    try {
 	        memberId = Integer.parseInt(memberIdStr);
 	        petId = Integer.parseInt(petIdStr);
@@ -203,6 +226,7 @@ public class AppointmentController {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> deleteAppointmentById(@PathVariable int appointmentId) {
 		Map<String, Object> response = new HashMap<>();
+		
 		boolean isDeleted = appointmentService.deleteAppointment(appointmentId);
 
 		if (isDeleted) {
@@ -218,26 +242,40 @@ public class AppointmentController {
 
 	@GetMapping("/appointment/{appointmentId}")
 	@ResponseBody
-	public Map<String, Object> getAppointmentDetails(@PathVariable int appointmentId) {
-		 Appointment appointment = appointmentService.getAppointmentById(appointmentId);
-		    List<Integer> extraPackageIds = appointmentService.getSelectedExtraPackages(appointmentId);
-		    ItemDetails itemDetail = appointmentService.getServiceById(appointmentId);
+	public ResponseEntity<Map<String, Object>> getAppointmentDetails(@PathVariable int appointmentId) {
+	    MemberDto tokenUser = AuthHolder.getMember(); 
+	    if (tokenUser == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "請先登入"));
+	    }
 
-		    Map<String, Object> result = new HashMap<>();
-		    result.put("appointmentId", appointment.getAppointmentId());
-		    result.put("appointmentDate", appointment.getAppointmentDate());
-		    result.put("appointmentTimeslot", appointment.getAppointmentTimeslot());
-		    result.put("appointmentStatus", appointment.getAppointmentStatus());
-		    result.put("paymentStatus", appointment.getPaymentStatus());
-		    result.put("appointmentTotal", appointment.getAppointmentTotal());
+	    Appointment appointment = appointmentService.getAppointmentById(appointmentId);
 
-		    result.put("itemId", itemDetail.getItem().getItemId()); 
-		    result.put("extraPackageIds", extraPackageIds); 
-		    result.put("memberName", appointment.getMember().getMemberName());
-		    result.put("petName", appointment.getPet().getPetName());
+	    if (appointment == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", "查無此預約"));
+	    }
 
-		    return result;
+	    if (!appointment.getMember().equals(tokenUser.getIdno())) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("success", false, "message", "無權查看此預約"));
+	    }
+
+	    List<Integer> extraPackageIds = appointmentService.getSelectedExtraPackages(appointmentId);
+	    ItemDetails itemDetail = appointmentService.getServiceById(appointmentId);
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("appointmentId", appointment.getAppointmentId());
+	    result.put("appointmentDate", appointment.getAppointmentDate());
+	    result.put("appointmentTimeslot", appointment.getAppointmentTimeslot());
+	    result.put("appointmentStatus", appointment.getAppointmentStatus());
+	    result.put("paymentStatus", appointment.getPaymentStatus());
+	    result.put("appointmentTotal", appointment.getAppointmentTotal());
+	    result.put("itemId", itemDetail != null ? itemDetail.getItem().getItemId() : null);
+	    result.put("extraPackageIds", extraPackageIds);
+	    result.put("memberName", appointment.getMember().getMemberName());
+	    result.put("petName", appointment.getPet().getPetName());
+
+	    return ResponseEntity.ok(result);
 	}
+
 	@PutMapping("/appointment/{appointmentId}")
 	public String updateAppointmentById(@PathVariable int appointmentId,
 			@RequestParam(required = false) String appointmentStatus,
@@ -330,6 +368,7 @@ public class AppointmentController {
 	        }
 
 	        appt.setAppointmentStatus(1); 
+	        appt.setPaymentStatus(1);
 	        appointmentService.save(appt);
 
 	        return ResponseEntity.ok("報到成功！");
@@ -342,6 +381,27 @@ public class AppointmentController {
 	                                                     @PathVariable int appointmentStatus) {
 	        return appointmentService.getAppointmentsDetails(memberId, appointmentStatus);
 	    }
+	 @PutMapping("/appointment/cancel/{id}")
+		public ResponseEntity<String> CancelAppointment(@PathVariable int id) {
+		  MemberDto tokenUser = AuthHolder.getMember(); 
+		    if (tokenUser == null) {
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("請先登入");
+		    }
+		    List<Appointment> appointments = appointmentService.searchAppointmentById(id);
+
+		    if (!appointments.isEmpty()) {
+		        Appointment appt = appointments.get(0);
+		        if (appt.getAppointmentStatus() == 2) {
+		            return ResponseEntity.ok("已經取消預約！");
+		        }
+
+		        appt.setAppointmentStatus(2); 
+		        appointmentService.save(appt);
+		        return ResponseEntity.ok("預約已取消！");
+		    }
+
+		    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("查無此預約");
+		}
 
 
 }

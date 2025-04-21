@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5 text-center">
-    <h2 class="text-success mb-4">🎉 預約成功！</h2>
+    <h2 class="text-success mb-4"> 預約成功！</h2>
 
     <div class="card shadow-sm p-4 mx-auto" style="max-width: 500px">
       <h5 class="mb-3">
@@ -28,7 +28,7 @@
       <QrCodeDisplay :appointment-id="appointmentId" />
 
       <router-link to="/appointments/queryreserve" class="btn btn-success mt-3"
-        >返回首頁</router-link
+        >前往預約訂單頁面</router-link
       >
     </div>
   </div>

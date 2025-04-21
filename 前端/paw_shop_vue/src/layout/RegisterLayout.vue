@@ -123,6 +123,7 @@
                   block
                   size="large"
                   class="mt-4 font-weight-bold text-white"
+                  :loading="loading"
                   :disabled="!isValid"
                   @click="submit"
                 >
@@ -175,13 +176,14 @@ import cat01 from "@/member/assets/images/註冊_貓01.png";
 import dog02 from "@/member/assets/images/註冊_狗02.png";
 import cat02 from "@/member/assets/images/註冊_貓02.png";
 import { ref, onMounted } from "vue";
-import { apiAddMember } from "@/member/api/api";
+import * as api from "@/member/api/memberApi/UserApi.js";
 import router from "@/router";
 
 const today = new Date().toISOString().split("T")[0];
 const formRef = ref(null);
 const startIndex = ref(0);
 const isValid = ref(false);
+const loading = ref(false);
 const form = ref({
   memberName: "",
   gender: "",
@@ -224,9 +226,11 @@ const rules = {
 };
 
 const submit = async () => {
-  if (!formRef.value.validate()) {
+  const { valid } = await formRef.value.validate();
+  if (!valid) {
     return;
   }
+  loading.value = true;
   // 預設圖片api
   const displayName =
     form.value.memberName.length >= 2
@@ -237,12 +241,10 @@ const submit = async () => {
   )}&background=ffffff&color=215d1e&rounded=true&size=256`;
 
   try {
-    const response = await apiAddMember(form.value);
-    alert("註冊成功！即將跳轉至登入頁面");
+    await api.apiAddMember(form.value);
     router.push("/login");
-  } catch (e) {
-    console.error("註冊失敗", e);
-    alert("註冊失敗，請稍後再試");
+  } finally {
+    loading.value = false;
   }
 };
 

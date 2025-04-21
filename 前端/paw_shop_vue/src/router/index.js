@@ -25,6 +25,11 @@ const routes = [
         component: () => import("@/pages/FrontHome.vue"),
       },
       {
+        path: "member/profile",
+        component: () => import("@/member/pages/FrontMemberPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "appointments",
         component: () => import("@/appointment/pages/AppointmentFrontPage.vue"),
       },
@@ -46,20 +51,29 @@ const routes = [
         component: () => import("@/order/pages/Checkout.vue"),
         meta: { requiresAuth: true },
       },
-
       {
-        path: 'products',
-        name: 'ProductListView',
-        component: () => import('@/product/frontsite/ProductListView.vue'),
+        path: "products",
+        name: "ProductListView",
+        component: () => import("@/product/frontsite/ProductListView.vue"),
       },
       {
-        path: '/products/:id',
-        name: 'ProductDetailPage',
-        component: () => import('@/product/frontsite/ProductDetailPage.vue'),
+        path: "/products/:id",
+        name: "ProductDetailPage",
+        component: () => import("@/product/frontsite/ProductDetailPage.vue"),
       },
       {
         path: "OrderingInfo",
         component: () => import("@/order/pages/OrderingInfo.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "OrderFinish",
+        component: () => import("@/order/pages/OrderFinish.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "OrderManagement",
+        component: () => import("@/order/pages/OrderManagement.vue"),
         meta: { requiresAuth: true },
       },
       {
@@ -96,12 +110,30 @@ const routes = [
       {
         path: "appointments",
         component: () => import("@/appointment/pages/AppointmentList.vue"),
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
       {
         path: "appointments/edit/:id",
         component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
     ],
+  },
+  {
+    path: "/unauthorized",
+    component: () => import("@/components/error/UnauthorizedPage.vue"),
+  },
+  {
+    path: "/not-found",
+    component: () => import("@/components/error/NotFoundPage.vue"),
+  },
+  {
+    path: "/server-error",
+    component: () => import("@/components/error/ServerErrorPage.vue"),
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/not-found",
   },
 ];
 
@@ -131,7 +163,7 @@ router.beforeEach((to, from, next) => {
       return next("/login");
     }
     if (authStore.role !== "ADMIN") {
-      return next("/403"); // 沒權限
+      return next("/");
     }
   }
 

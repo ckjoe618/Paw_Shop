@@ -3,6 +3,8 @@ package com.topics.member.security;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.topics.member.exception.NotFoundException;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.repository.MemberRepository;
 import com.topics.member.utils.JwtUtil;
@@ -31,7 +33,7 @@ public class RequestFilter extends HttpFilter {
 					String memberId = JwtUtil.getSubject(token);
 					MemberDto member = memberRepository.findById(Integer.parseInt(memberId))
 							.map(m -> new MemberDto(m))
-							.orElseThrow(() -> new RuntimeException("找不到使用者"));
+							.orElseThrow(() -> new NotFoundException("找不到使用者"));
 
 					AuthHolder.setMember(member);
 				}

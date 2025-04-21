@@ -185,8 +185,8 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
-import axios from "axios";
 import router from "@/router";
+import { loadCart } from "@/order/components/frontsite/useCart";
 import {
   apiFindShoppingCartItem,
   apiUpdateShoppingCartItem,
@@ -224,6 +224,7 @@ const decreaseQty = async (item) => {
         cartItemId: item.cartItemId,
         quantity: item.quantity,
       });
+      await loadCart();
       console.log("更新成功", res.data);
     } catch (error) {
       console.error("更新失敗", error);
@@ -232,17 +233,16 @@ const decreaseQty = async (item) => {
 };
 
 const increaseQty = async (item) => {
-  if (item.quantity > 1) {
-    item.quantity++;
-    try {
-      const res = await apiUpdateShoppingCartItem({
-        cartItemId: item.cartItemId,
-        quantity: item.quantity,
-      });
-      console.log("更新成功", res.data);
-    } catch (error) {
-      console.error("更新失敗", error);
-    }
+  item.quantity++;
+  try {
+    const res = await apiUpdateShoppingCartItem({
+      cartItemId: item.cartItemId,
+      quantity: item.quantity,
+    });
+    await loadCart();
+    console.log("更新成功", res.data);
+  } catch (error) {
+    console.error("更新失敗", error);
   }
 };
 
@@ -251,6 +251,7 @@ const deleteItem = async (item) => {
   try {
     const res = await apiDeleteShoppingCartItem(item.cartItemId);
     await getAllItems();
+    await loadCart();
     console.log("刪除成功", res.data);
   } catch (error) {
     console.error("刪除失敗", error);

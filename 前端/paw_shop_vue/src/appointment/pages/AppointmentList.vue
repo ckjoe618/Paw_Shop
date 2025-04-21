@@ -1,33 +1,44 @@
 <template>
-  <div class="container mt-3">
+   <div class="container mt-3">
     <div id="messageContainer"></div>
 
-    <!-- 查詢表單 -->
-    <form @submit.prevent="selectAppointmentByPhoneNum">
-      <div class="row g-3 align-items-center">
-        <div class="col-auto">
-          <label class="col-form-label">預約電話:</label>
-        </div>
-        <div class="col-auto">
-          <input type="text" v-model="phoneNumber" class="form-control" />
-        </div>
-        <div class="col-auto">
-          <button
-            type="submit"
-            class="btn btn-success"
-            :disabled="!phoneNumber"
-          >
-            查詢
-          </button>
-        </div>
-      </div>
-    </form>
+    <!-- 查詢 + 新增 -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <!-- 新增按鈕 -->
+      <AddButton @click="() => (openCreateModal = true)" />
+      <v-alert 
+      v-if="phoneNumberError" 
+      type="error" 
+      dense 
+      class="phone-number-error"
+    >
+      {{ phoneNumberError }}
+    </v-alert>
+      <!-- 查詢表單 -->
+      <v-form @submit.prevent="selectAppointmentByPhoneNum" class="d-flex align-items-center">
+        <label class="me-2">預約電話:</label>
+        <v-text-field
+          v-model="phoneNumber"
+          hide-details
+          dense
+          style="width: 250px"
+          class="me-2"
+        ></v-text-field>
+       
+        <v-btn
+          color="primary"
+          :disabled="!phoneNumber"
+          @click="selectAppointmentByPhoneNum"
+          style="height: 40px"
+        >
+          查詢
+        </v-btn>
+     
+      </v-form>
 
-    <br />
+      
+    </div>
 
-    <!-- 新增按鈕 -->
-    <AddButton @click="() => (openCreateModal = true)" />
-    <br />
     <!-- 新增預約 Modal -->
     <div class="modal fade" tabindex="-1" ref="modalRef">
       <div class="modal-dialog">
@@ -49,6 +60,7 @@
                   v-model="form.memberId"
                   class="form-control"
                   required
+                  :min="1"  
                 />
               </div>
 
@@ -79,6 +91,7 @@
                   id="appointmentDate"
                   class="form-control"
                   @change="onDateChange"
+                  :min="minDate"
                   required
                 />
               </div>
@@ -160,52 +173,37 @@
 
     <!-- 資料表 -->
     <v-data-table
-      :headers="headers"
-      :items="appointments"
-      item-value="appointmentId"
-      class="elevation-1"
-    >
-      <thead>
-        <tr>
-          <th>預約編號</th>
-          <th>預約日期</th>
-          <th>時間</th>
-          <th>預約服務</th>
-          <th>加購服務</th>
-          <th>總價格</th>
-          <th>預約狀態</th>
-          <th>付款狀態</th>
-          <th>刪除</th>
-          <th>修改</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="appointment in appointments"
-          :key="appointment.appointmentId"
-        >
-          <td>{{ appointment.appointmentId }}</td>
-          <td>{{ appointment.appointmentDate }}</td>
-          <td>{{ appointment.appointmentTimeslot }}</td>
-          <td>{{ getServiceNames(appointment) }}</td>
-          <td>{{ getAdditionalPackages(appointment) }}</td>
-          <td>{{ appointment.appointmentTotal }}</td>
-          <td>{{ getAppointmentStatus(appointment.appointmentStatus) }}</td>
-          <td>{{ getPaymentStatus(appointment.paymentStatus) }}</td>
-          <td>
-            <DeleteButton
-              @click="() => showDeleteModal(appointment.appointmentId)"
-            />
-          </td>
-          <td>
-            <EditButton
-              @click="() => showUpdateModal(appointment.appointmentId)"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </v-data-table>
+    :headers="headers"
+    :items="appointments"
+    item-value="appointmentId"
+    class="elevation-1"
+  >
+    <template  v-slot:item.serviceNames="{ item }">
+      {{ getServiceNames(item) }}
+    </template>
 
+    <template  v-slot:item.additionalPackages="{ item }">
+      {{ getAdditionalPackages(item) }}
+    </template>
+
+    <template  v-slot:item.appointmentStatus="{ item }">
+      {{ getAppointmentStatus(item.appointmentStatus) }}
+    </template>
+
+    <template  v-slot:item.paymentStatus="{ item }">
+      {{ getPaymentStatus(item.paymentStatus) }}
+    </template>
+
+    <template  v-slot:item.actions1="{ item }">
+      <DeleteButton @click="() => showDeleteModal(item.appointmentId)" />
+    </template>
+    <template  v-slot:item.actions2="{ item }"> 
+      <EditButton @click="() => showUpdateModal(item.appointmentId)" />
+    </template>
+  </v-data-table>
+  <v-container class="d-flex justify-center">
+  <v-btn @click="goBack" color="grey" class="me-2">返回</v-btn>
+</v-container>
     <!-- 隱藏欄位用來存 appointmentId -->
     <input type="hidden" id="appointmentIdToDelete" />
     <input type="hidden" id="appointmentIdToUpdate" />
@@ -231,7 +229,6 @@
 
         <v-card-text>
           <p>您確定要修改此項目嗎？</p>
-          <!-- 可視需求保留這個欄位 -->
           <input type="hidden" v-model="appointmentIdToUpdate" />
         </v-card-text>
 
@@ -267,10 +264,38 @@ const router = useRouter();
 
 const appointments = ref([]);
 const phoneNumber = ref("");
+const phoneNumberError = ref(''); 
 const openCreateModal = ref(false);
 const modalRef = ref(null);
 let modalInstance = null;
-const modalTitle = ref("新增預約");
+const headers = [
+  { title: '預約編號', key: 'appointmentId' },
+  { title: '預約日期', key: 'appointmentDate' },
+  { title: '時間', key: 'appointmentTimeslot' },
+  { title: '預約服務', key: 'serviceNames' },
+  { title: '加購服務', key: 'additionalPackages' },
+  { title: '總價格', key: 'appointmentTotal' },
+  { title: '預約狀態', key: 'appointmentStatus' },
+  { title: '付款狀態', key: 'paymentStatus' },
+  { title: '刪除', key: 'actions1', sortable: false },
+  { title: '修改', key: 'actions2', sortable: false }
+]
+
+const getAppointmentStatus = (status) => {
+  switch (status) {
+    case 0: return '未完成'
+    case 1: return '已完成'
+    default: return '已取消'
+  }
+}
+
+const getPaymentStatus = (status) => {
+  switch (status) {
+    case 0: return '未付款'
+    case 1: return '已付款'
+    default: return '-'
+  }
+}
 
 watch(openCreateModal, (newVal) => {
   if (newVal && modalRef.value) {
@@ -280,11 +305,19 @@ watch(openCreateModal, (newVal) => {
     modalInstance.hide();
   }
 });
-
+const goBack = () => {
+  window.location.reload() 
+    }
 const hideModal = () => {
   openCreateModal.value = false;
 };
-
+const minDate = computed(() => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, '0');
+  const day = today.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+});
 const form = ref({
   memberId: "",
   petId: "",
@@ -322,15 +355,7 @@ const getServiceNames = (appointment) => {
 const getAdditionalPackages = (appointment) => {
   return appointment.additionalPackages || "";
 };
-const getAppointmentStatus = (status) => {
-  if (status === 0) return "未完成";
-  if (status === 1) return "已完成";
-  return "已取消";
-};
 
-const getPaymentStatus = (status) => {
-  return status === 1 ? "已付款" : "未付款";
-};
 const totalPrice = computed(() => {
   let total = 0;
   const selectedService = services.value.find(
@@ -400,20 +425,37 @@ const onDateChange = async () => {
     console.error("無法獲取預約資料: ", error);
   }
 };
-
-//電話查詢
+// 電話號碼格式檢查規則
+const phoneNumberRule = (value) => {
+  if (!value) {
+    phoneNumberError.value = '電話號碼為必填項';
+    return false;
+  } else if (!/^\d{10}$/.test(value)) {
+    phoneNumberError.value = '請輸入有效的電話號碼';
+    return false;
+  }
+  phoneNumberError.value = ''; 
+  return true;
+};
+// 電話查詢
 const selectAppointmentByPhoneNum = async () => {
-  if (!phoneNumber.value) return;
+  if (!phoneNumberRule(phoneNumber.value)) return; 
 
   try {
-    const data = phoneNumber.value;
+    const data = phoneNumber.value.trim(); 
     const res = await apiFindAppointment(data);
-    appointments.value = res.data || [];
+
+    if (res && res.data && Array.isArray(res.data)) {
+      appointments.value = res.data;
+    } else {
+      appointments.value = [];
+      console.warn("未找到相關預約資料");
+    }
   } catch (error) {
     console.error("查詢失敗:", error);
+    alert("查詢過程中發生問題，請稍後再試");
   }
 };
-
 //送出表單
 const submitAppointment = async () => {
   console.log("表單資料:", form.value);
@@ -499,7 +541,7 @@ const showUpdateModal = (appointmentId) => {
 
 const goToEditPage = () => {
   if (!appointmentIdToUpdate.value) return;
-  router.push(`/appointments/edit/${appointmentIdToUpdate.value}`).then(() => {
+  router.push(`/admin/appointments/edit/${appointmentIdToUpdate.value}`).then(() => {
     window.location.reload();
   });
 };
@@ -515,3 +557,11 @@ onMounted(async () => {
   }
 });
 </script>
+<style scoped>
+.phone-number-error {
+  max-width: 70%; 
+  width: 70%; 
+  font-size: 0.875rem;
+  margin-top: 8px; 
+}
+</style>

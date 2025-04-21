@@ -7,7 +7,7 @@
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="form" v-model="isValid">
+        <v-form ref="formRef" v-model="isValid">
           <v-text-field
             label="姓名"
             v-model="localMember.memberName"
@@ -46,7 +46,13 @@
       <v-card-actions>
         <v-spacer />
         <v-btn text @click="close">取消</v-btn>
-        <v-btn color="primary" :disabled="!isValid" @click="submit">確認</v-btn>
+        <v-btn
+          color="primary"
+          :disabled="!isValid"
+          :loading="loading"
+          @click="submit"
+          >確認</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -54,11 +60,12 @@
 
 <script setup>
 import { ref, watch, computed } from "vue";
-import { apiUpdateMember } from "@/member/api/api";
+import * as api from "@/member/api/memberApi/AdminApi.js";
 
-const form = ref();
+const formRef = ref(null);
 const isValid = ref(false);
 const localMember = ref({});
+const loading = ref(false);
 
 const props = defineProps({
   dialog: Boolean,
@@ -89,7 +96,7 @@ const rules = {
 
 watch(dialog, (val) => {
   if (!val) {
-    form.value.reset();
+    formRef.value.resetValidation();
     localMember.value = {};
   } else {
     // 重新打開 dialog 時，把 props.member 值套進去
@@ -102,17 +109,17 @@ const close = () => {
 };
 
 const submit = async () => {
-  if (!form.value.validate()) {
+  const valid = await formRef.value.validate();
+  if (!valid) {
     return;
   }
+  loading.value = true;
   try {
-    console.log("送出資料：", localMember.value);
-    await apiUpdateMember(localMember.value);
+    await api.apiUpdateMember(localMember.value);
     emit("updated");
     close();
-  } catch (e) {
-    console.error("更新失敗", e);
-    alert("更新失敗，請稍後再試");
+  } finally {
+    loading.value = false;
   }
 };
 </script>
