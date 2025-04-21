@@ -45,9 +45,12 @@ export const useAuthStore = defineStore("auth", {
   getters: {
     isLoggedIn: (state) => !!state.token,
     isAdmin: (state) => state.role === "ADMIN",
-    fullAddress: (state) =>
-      `${state.address.zipcode || ""}${state.address.city || ""}${
-        state.address.district || ""
-      }${state.address.addressDetail || ""}`,
+    fullAddress: (state) => {
+      const addr = state.address;
+      if (!addr) return "";
+      return `${addr.zipcode || ""}${addr.city || ""}${addr.district || ""}${
+        addr.addressDetail || ""
+      }`;
+    },
   },
 });

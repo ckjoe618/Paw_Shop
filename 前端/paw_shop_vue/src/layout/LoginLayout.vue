@@ -94,7 +94,7 @@
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import { ref } from "vue";
-import * as api from "@/member/api/api";
+import * as api from "@/member/api/memberApi/UserApi.js";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 

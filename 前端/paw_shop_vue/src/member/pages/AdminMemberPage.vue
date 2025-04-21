@@ -24,7 +24,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import * as api from "@/member/api/api.js";
+import * as api from "@/member/api/memberApi/AdminApi.js";
 import MemberTable from "@/member/components/MemberTable.vue";
 import MemberEditDialog from "@/member/components/MemberEditDialog.vue";
 import MemberSearchPanel from "@/member/components/MemberSearchPanel.vue";

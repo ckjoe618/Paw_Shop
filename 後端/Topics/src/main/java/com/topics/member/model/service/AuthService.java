@@ -36,6 +36,9 @@ public class AuthService {
 		}
 
 		AddressBean address = addressRepository.findActiveAddressByMemberId(member.getMemberId());
+		if (address == null) {
+			return new MemberDto(member, null);
+		}
 		return new MemberDto(member, new AddressDto(address));
 	}
 }

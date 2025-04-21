@@ -20,8 +20,8 @@ import com.topics.member.utils.SecurityUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
-@RequestMapping("/api")
-public class MemberController {
+@RequestMapping("/api/admin")
+public class AdminMemberController {
 
 	@Autowired
 	private MemberService memberService;

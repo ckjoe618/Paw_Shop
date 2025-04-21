@@ -18,7 +18,9 @@ public class AddressDto {
 	private String addressDetail;
 
 	public AddressDto(AddressBean entity) {
-		BeanUtils.copyProperties(entity, this);
-		this.memberId = entity.getMember().getMemberId();
+		if (entity != null) {
+			BeanUtils.copyProperties(entity, this);
+			this.memberId = entity.getMember().getMemberId();
+		}
 	}
 }
