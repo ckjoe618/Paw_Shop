@@ -1,6 +1,5 @@
 package com.topics.order.controller.front;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.topics.order.model.bean.OrderDetailBean;
 import com.topics.order.model.service.front.OrderDetailService;
-import com.topics.order.model.service.front.OrderService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +28,6 @@ public class OrderDetailController {
 		for(OrderDetailBean o : orderDetails) {
 			orderDetailService.addOrderdetailsFromCart(o);
 		}
-		
 		return "ok";
 	}
 	

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.topics.order.model.bean.OrderBean;
+import com.topics.order.model.bean.OrderDetailBean;
 import com.topics.order.model.service.back.AdminOrderService;
 
 @RestController
@@ -75,17 +76,16 @@ public class AdminOrderController {
 
 	@PutMapping("/update/{orderId}")
 	public OrderBean updateOrderByOrderId(@PathVariable Integer orderId, @RequestBody OrderBean orderBean) {
-		String memberidrule = "^[0-9]{1,3}$";
-		String totalpricerule = "^[0-9]+$";
 		String trackingnumrule = "^[0-9]{10}$";
 
-		String memberid = String.valueOf(orderBean.getMember().getMemberId());
-		String totalprice = String.valueOf(orderBean.getPriceTotal());
 		String trackingNum = orderBean.getTrackingNum();
 
-		if (memberid.matches(memberidrule) && totalprice.matches(totalpricerule) &&
-				(trackingNum != "") ? trackingNum.matches(trackingnumrule) : true) {
+		if ((!trackingNum.isEmpty()) ? trackingNum.matches(trackingnumrule) : true) {
 			orderBean.setOrderId(orderId);
+			for (OrderDetailBean detail : orderBean.getOrderDetails()) {
+			    detail.setOrder(orderBean);
+			}
+			
 			return orderService.updateOrderByOrderId(orderBean);
 		} else {
 			return null;

@@ -70,7 +70,7 @@
         <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
 
-      <v-app-bar-title class="text-h5">PawShop後臺</v-app-bar-title>
+      <v-app-bar-title class="text-h5">PawShop 後臺管理中心</v-app-bar-title>
 
       <v-menu>
         <template #activator="{ props }">

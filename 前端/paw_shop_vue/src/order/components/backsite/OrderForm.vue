@@ -146,6 +146,7 @@ const submitForm = async () => {
         ...form.value,
         member: { memberId: form.value.member.memberId },
       };
+      console.log(props.orderId);
       const response = await axios.put(
         `http://localhost:8080/api/admin/order/update/${props.orderId}`,
         newData
