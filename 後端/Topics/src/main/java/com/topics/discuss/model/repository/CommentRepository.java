@@ -9,8 +9,11 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<CommentBean, Integer> {
 
+    // 查全部留言
+    List<CommentBean> findByArticleIdAndDeletedFalseOrderByCreatedDateAsc(int articleId);
+
     // 查主文章留言(1-1,1-2)
-    List<CommentBean> findByArticleIdAndParentCommentIdAndDeletedFalseOrderByCreatedDateAsc(int articleId, Integer parentCommentId);
+    List<CommentBean> findByArticleIdAndParentCommentIdAndDeletedFalseOrderByCreatedDateAsc(int articleId, int parentCommentId);
 
     // 查文章回復(2樓3樓)
     List<CommentBean> findByArticleIdAndParentCommentIdIsNullAndDeletedFalseOrderByFloorAsc(int articleId);

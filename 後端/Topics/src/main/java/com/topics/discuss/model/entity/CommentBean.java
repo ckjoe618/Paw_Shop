@@ -1,5 +1,6 @@
 package com.topics.discuss.model.entity;
 
+import com.topics.member.model.entity.MemberBean;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class CommentBean {
 
     private int articleId;
 
+    @Column(name = "member_id")
     private int memberId;
 
     private Integer parentCommentId;
@@ -37,4 +39,8 @@ public class CommentBean {
     private Integer floor;
 
     private boolean deleted;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", insertable = false, updatable = false)
+    private MemberBean member;
 }
