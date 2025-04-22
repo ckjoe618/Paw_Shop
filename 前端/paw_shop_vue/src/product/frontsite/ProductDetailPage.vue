@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-6">
+  <v-container class="pt-16 px-4 pb-6">
     <v-row>
       <!-- 商品圖片區 -->
       <v-col cols="12" md="5">

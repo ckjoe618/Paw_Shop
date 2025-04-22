@@ -3,73 +3,41 @@
     <h3 class="text-h6 font-weight-medium mb-4">
       <i class="fas fa-thumbs-up mr-2"></i>Top Recommendations
     </h3>
-    <v-slide-group show-arrows>
-      <v-slide-item v-for="(item, index) in items" :key="index">
-        <v-card class="mx-2" width="150">
-          <v-img :src="item.image" height="120" />
-          <v-card-title class="text-subtitle-2">{{ item.name }}</v-card-title>
-          <v-card-subtitle>€{{ item.price }}</v-card-subtitle>
-          <div class="px-3 pb-2">
-            <i
-              class="fas fa-star"
-              v-for="n in item.rating"
-              :key="n"
-              style="color: #ffd700"
-            ></i>
-          </div>
-        </v-card>
-      </v-slide-item>
-    </v-slide-group>
+    <v-row>
+      <v-col
+        v-for="product in topProducts"
+        :key="product.productId"
+        cols="12"
+        sm="6"
+        md="3"
+      >
+        <ProductCard :product="product" />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { ref, onMounted } from "vue";
+import ProductCard from "@/product/frontsite/ProductCard.vue";
+import axios from "axios";
 
-const props = defineProps({
-  items: {
-    type: Array,
-    default: () => [
-      {
-        name: "Product 1",
-        image: "https://via.placeholder.com/150",
-        price: 5.99,
-        rating: 5,
-      },
-      {
-        name: "Product 2",
-        image: "https://via.placeholder.com/150",
-        price: 8.99,
-        rating: 4,
-      },
-      {
-        name: "Product 3",
-        image: "https://via.placeholder.com/150",
-        price: 7.99,
-        rating: 3,
-      },
-      {
-        name: "Product 4",
-        image: "https://via.placeholder.com/150",
-        price: 6.99,
-        rating: 5,
-      },
-      {
-        name: "Product 5",
-        image: "https://via.placeholder.com/150",
-        price: 9.99,
-        rating: 4,
-      },
-      {
-        name: "Product 6",
-        image: "https://via.placeholder.com/150",
-        price: 4.99,
-        rating: 3,
-      },
-    ],
-  },
+const topProducts = ref([]);
+
+onMounted(async () => {
+  try {
+    const res = await axios.get("http://localhost:8080/product/expensive");
+
+    if (Array.isArray(res.data)) {
+      topProducts.value = res.data.slice(0, 4);
+    } else {
+      console.warn("⚠️ 回傳不是陣列：", res.data);
+    }
+  } catch (error) {
+    console.error("❌ 無法取得資料", error);
+  }
 });
-</script>
+</script> 
 
 <style scoped>
 .v-card-title {
