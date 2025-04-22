@@ -108,7 +108,7 @@
           <v-icon class="mr-2">mdi-truck-cargo-container</v-icon>選擇取貨方式
         </h4>
         <v-radio-group v-model="pickupMethod">
-          <v-radio value="Delivery" color="success">
+          <v-radio value="宅配" color="success">
             <template #label>
               <span style="font-weight: bold">宅配</span>
               <span style="font-size: 14px; color: #5b5b5b; margin-left: 10px">
@@ -116,7 +116,7 @@
               </span>
             </template>
           </v-radio>
-          <v-radio value="CashOnDelivery" color="success">
+          <v-radio value="超商取貨付款" color="success">
             <template #label>
               <span style="font-weight: bold">超商取貨付款</span>
               <span style="font-size: 14px; color: #5b5b5b; margin-left: 10px">
@@ -124,7 +124,7 @@
               </span>
             </template>
           </v-radio>
-          <v-radio value="In-store" color="success">
+          <v-radio value="超商取貨不付款" color="success">
             <template #label>
               <span style="font-weight: bold">超商取貨不付款</span>
               <span style="font-size: 14px; color: #5b5b5b; margin-left: 10px">
@@ -143,9 +143,9 @@
           <v-col cols="auto">
             <v-btn
               size="large"
-              :color="paymentMethod === 'card' ? 'success' : '#FBFFFD'"
-              :variant="paymentMethod === 'card' ? 'elevated' : 'flat'"
-              @click="paymentMethod = 'card'"
+              :color="paymentMethod === '信用卡' ? 'success' : '#FBFFFD'"
+              :variant="paymentMethod === '信用卡' ? 'elevated' : 'flat'"
+              @click="paymentMethod = '信用卡'"
               :class="{ 'btn-disabled': paymentLocked }"
               >線上刷卡</v-btn
             >
@@ -153,9 +153,9 @@
           <v-col cols="auto">
             <v-btn
               size="large"
-              :color="paymentMethod === 'cash' ? 'success' : '#FBFFFD'"
-              :variant="paymentMethod === 'cash' ? 'elevated' : 'flat'"
-              @click="paymentMethod = 'cash'"
+              :color="paymentMethod === '現金' ? 'success' : '#FBFFFD'"
+              :variant="paymentMethod === '現金' ? 'elevated' : 'flat'"
+              @click="paymentMethod = '現金'"
               :class="{ 'btn-disabled': paymentLocked }"
               >現金付款</v-btn
             >
@@ -192,6 +192,8 @@ import {
   apiUpdateShoppingCartItem,
   apiDeleteShoppingCartItem,
 } from "@/member/api/api";
+import { useCheckoutStore } from "@/order/stores/checkoutStore";
+const checkoutStore = useCheckoutStore();
 
 // 向後端拿購物車內容
 const cartItems = ref([]);
@@ -284,11 +286,11 @@ const pickupMethod = ref("");
 const paymentMethod = ref(null);
 const paymentLocked = ref(false);
 watch(pickupMethod, (newMethod) => {
-  if (newMethod === "Delivery" || newMethod === "In-store") {
-    paymentMethod.value = "card";
+  if (newMethod === "宅配" || newMethod === "超商取貨不付款") {
+    paymentMethod.value = "信用卡";
     paymentLocked.value = true;
-  } else if (newMethod === "CashOnDelivery") {
-    paymentMethod.value = "cash";
+  } else if (newMethod === "超商取貨付款") {
+    paymentMethod.value = "現金";
     paymentLocked.value = true;
   }
 });
@@ -299,9 +301,9 @@ watch([pickupMethod, subtotal], ([newPickup, newSubtotal]) => {
   if (newSubtotal >= 1000) {
     shipping.value = 0;
   } else {
-    if (newPickup === "Delivery") {
+    if (newPickup === "宅配") {
       shipping.value = 85;
-    } else if (newPickup === "CashOnDelivery" || newPickup === "In-store") {
+    } else if (newPickup === "超商取貨付款" || newPickup === "超商取貨不付款") {
       shipping.value = 60;
     } else {
       shipping.value = 0;
@@ -309,12 +311,23 @@ watch([pickupMethod, subtotal], ([newPickup, newSubtotal]) => {
   }
 });
 
+//計算加總總額
+const priceTotal = computed(() => {
+  return subtotal.value - discount.value + shipping.value;
+});
+
 //點擊繼續購物/前往下一步
 const keppShopping = () => {
   router.back();
 };
 const orderingInfo = async () => {
-  router.push("/OrderingInfo");
+  checkoutStore.cartItems = cartItems;
+  checkoutStore.paymentMethod = paymentMethod.value;
+  checkoutStore.pickupMethod = pickupMethod.value;
+  checkoutStore.shippingFee = shipping.value;
+  checkoutStore.priceTotal = priceTotal.value;
+
+  router.push("/orderingInfo");
 };
 </script>
 

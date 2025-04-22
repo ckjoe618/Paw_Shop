@@ -24,31 +24,9 @@
 
 <script setup>
 import router from "@/router";
-import { ref, onMounted } from "vue";
-import {
-  apiFindShoppingCartItem,
-  apiDeleteAllShoppingCartItem,
-} from "@/member/api/api";
-import { loadCart } from "@/order/components/frontsite/useCart";
-
-onMounted(async () => {
-  try {
-    const res = await apiFindShoppingCartItem();
-    const cartItemIds = res.data.map((item) => item.cartItemId);
-    console.log(cartItemIds);
-
-    await apiDeleteAllShoppingCartItem(cartItemIds);
-    await loadCart();
-    console.log("購物車已清空");
-  } catch (err) {
-    console.error("清空購物車失敗", err);
-  }
-});
-
-// 模擬訂單編號（實際應從後端回傳）
 
 const goToOrders = () => {
-  router.push("/");
+  router.push("/orderManagement");
 };
 
 const goToHome = () => {

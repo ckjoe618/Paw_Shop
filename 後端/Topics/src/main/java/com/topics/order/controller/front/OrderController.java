@@ -25,20 +25,33 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
+	private Integer getmemberId() {
+		MemberDto member = AuthHolder.getMember();
+	    if (member == null) {
+	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登入");
+	    }
+		return member.getMemberId();
+	}
+	
 	//新增
 	@PostMapping
 	public OrderBean createOrder(@RequestBody OrderBean orderBean) {
-		return orderService.createOrder(orderBean);
+		Integer memberId = getmemberId();
+		return orderService.createOrder(orderBean, memberId);
+	}
+	
+	//修改(付款成功）
+	@PutMapping
+	public OrderBean updateOrder(@RequestBody OrderBean orderBean) {
+		orderBean.setPaymentStatus("已付款");
+		orderBean.setOrderStatus("備貨中");
+		return orderService.updateOrder(orderBean);
 	}
 	
 	//查詢
 	@GetMapping
 	public List<OrderBean> getOrdersByMemberId(){
-		MemberDto member = AuthHolder.getMember();
-	    if (member == null) {
-	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登入");
-	    }
-		Integer memberId = member.getMemberId();
+		Integer memberId = getmemberId();
 		
 		return orderService.getOrdersByMemberId(memberId);
 	}

@@ -1,5 +1,7 @@
 package com.topics.order.model.bean;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.topics.product.model.bean.ProductBean;
 
@@ -33,8 +35,9 @@ public class OrderDetailBean {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId")
-	//@JsonIgnore //直接不序列化order
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JsonIgnore
+	@JsonBackReference
+//	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private OrderBean order;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

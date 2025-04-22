@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.topics.member.model.entity.MemberBean;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -39,9 +40,13 @@ public class OrderBean {
 	private String recipientPhone;
 	private Integer shippingFee;
 	private LocalDateTime updateTime;
+	//綠界
+	private String merchantTradeNo; // TSxxxxxx，自己系統產出的訂單編號
+	private String ecpayTradeNo; // 綠界交易編號
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnore
+	//@JsonIgnore
+	@JsonProperty("orderDetails")
 	private List<OrderDetailBean> orderDetails;
 
 	@ManyToOne(fetch = FetchType.LAZY)

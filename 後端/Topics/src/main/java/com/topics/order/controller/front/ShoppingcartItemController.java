@@ -31,14 +31,18 @@ public class ShoppingcartItemController {
 	@Autowired
 	private ShoppingcartItemService shoppingcartItemService;
 	
-	//一次新增多筆
-	@PostMapping
-	public ResponseEntity<String> addShoppingcart(@RequestBody List<ShoppingcartItemBean> shoppingcartItemlist) {
+	private Integer getmemberId() {
 		MemberDto member = AuthHolder.getMember();
 	    if (member == null) {
 	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登入");
 	    }
-		Integer memberId = member.getMemberId();
+		return member.getMemberId();
+	}
+	
+	//一次新增多筆
+	@PostMapping
+	public ResponseEntity<String> addShoppingcart(@RequestBody List<ShoppingcartItemBean> shoppingcartItemlist) {
+		Integer memberId = getmemberId();
 		
 		for (ShoppingcartItemBean item : shoppingcartItemlist) {
 			MemberBean m = new MemberBean();
@@ -84,11 +88,7 @@ public class ShoppingcartItemController {
 	//查詢
 	@GetMapping
 	public List<ShoppingcartItemBean> getShoppingcart() {
-		MemberDto member = AuthHolder.getMember();
-	    if (member == null) {
-	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登入");
-	    }
-		Integer memberId = member.getMemberId();
+		Integer memberId = getmemberId();
 		
 		return shoppingcartItemService.findItemsByMemberId(memberId);
 	}

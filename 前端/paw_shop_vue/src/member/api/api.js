@@ -25,7 +25,8 @@ export const apiLogin = (data) =>
 // 全部預約查詢
 export const apiFindAppointmentAll = () => api.get("/api/appointment");
 // 單筆預約查詢
-export const apiFindAppointment = (data) => api.get(`/api/appointment/phone/${data}`);
+export const apiFindAppointment = (data) =>
+  api.get(`/api/appointment/phone/${data}`);
 // 新增預約
 export const apiaddAppointment = (data) => api.post("/api/appointment", data);
 // 顯示單筆預約修改頁面
@@ -62,10 +63,17 @@ export const apiDeleteShoppingCartItem = (data) =>
 export const apiDeleteAllShoppingCartItem = (data) => {
   return api.delete(`/api/shoppingcart/truncatecart`, {
     data,
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 };
 export const apiAddShoppingCartItem = (data) =>
   api.post(`/api/shoppingcart`, data);
+
+//前台訂單
+export const apiFindOrdersByMemberId = () => api.get(`/api/order`);
+export const apiCancelOrder = (data) => api.put(`/api/order/${data}`);
+export const apiFindOrderDetails = (data) =>
+  api.get(`/api/orderdetail/${data}`);
+export const apiCreateOrder = (data) => api.post(`/api/order`, data);
+
+//綠界
+export const apiECpay = (data) => api.post(`/api/ecpay/checkout`, data);

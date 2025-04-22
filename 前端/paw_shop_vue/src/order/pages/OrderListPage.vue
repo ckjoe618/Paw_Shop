@@ -39,7 +39,6 @@
       :items="filteredOrders"
       item-value="orderId"
       class="elevation-1 custom-table"
-      items-per-page-text="每頁顯示筆數："
     >
       <template #item.memberId="{ item }">
         {{ item.member?.memberId }}
@@ -210,7 +209,6 @@ const deleteOrder = async () => {
 const selectedOrder = ref(null);
 const showDetailDialog = ref(false);
 const openDetailDialog = (order) => {
-  console.log("打開明細的訂單：", order); // ⬅️ 加這行
   selectedOrder.value = order;
   showDetailDialog.value = true;
 };
