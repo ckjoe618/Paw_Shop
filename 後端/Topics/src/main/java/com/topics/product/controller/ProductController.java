@@ -96,5 +96,11 @@ public class ProductController {
 	    }
 	    return ResponseEntity.ok("批次進貨成功");
 	}
+	
+	@GetMapping("/expensive")
+	@ResponseBody
+	public List<ProductBean> getTopExpensiveProducts() {
+	    return pService.getTopExpensiveProducts();
+	}
 
 }

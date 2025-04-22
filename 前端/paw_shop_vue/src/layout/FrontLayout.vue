@@ -30,14 +30,14 @@ import NavTabs from "@/components/NavTabs.vue";
 import FooterBar from "@/components/FooterBar.vue";
 
 const navItems = [
-  { label: "Product", link: { path: "/products", query: {} } },
+  { label: "Product", link: "/products" },
   { label: "Dog", link: "" },
   { label: "Cat", link: "" },
   { label: "Small Pet", link: "" },
   { label: "+ Vet", link: "" },
   { label: "Top Brands", link: "" },
   { label: "Special Offers", link: "" },
-  { label: "Appointment", link: "" },
+  { label: "Appointment", link: "/appointments" },
   { label: "Forum", link: "" },
 ];
 </script>

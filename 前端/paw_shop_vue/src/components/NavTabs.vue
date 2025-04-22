@@ -1,5 +1,5 @@
 <template>
-  <v-tabs background-color="grey lighten-4" grow>
+  <v-tabs background-color="grey lighten-4" grow hide-slider>
     <v-tab
       v-for="item in items"
       :key="item.label"
