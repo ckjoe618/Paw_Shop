@@ -35,6 +35,7 @@ import com.topics.appointment.model.service.PricingService;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
 import com.topics.member.security.AuthHolder;
+import com.topics.member.utils.SecurityUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -54,10 +55,7 @@ public class AppointmentController {
 
 	@GetMapping("/appointment")
 	public ResponseEntity<?> showAppointmentPage() {
-	    MemberDto tokenUser = AuthHolder.getMember(); 
-	    if (tokenUser == null) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("請先登入");
-	    }
+		SecurityUtil.checkAdminPermission();
 	    List<Appointment> appointments = appointmentService.getAllAppointments();
 	    return ResponseEntity.ok(appointments);
 	}
@@ -66,6 +64,7 @@ public class AppointmentController {
 	@GetMapping("/appointment/phone/{Phone}")
 	@ResponseBody
 	public List<Appointment> selectAppointmentByPhoneNum(@PathVariable(name = "Phone", required = false) String phoneNumber) {
+		SecurityUtil.checkAdminPermission();
 	    List<Appointment> appointments = appointmentService.searchAppointmentsByPhoneNumber(phoneNumber);
 	    
 	    for (Appointment appointment : appointments) {
@@ -92,6 +91,7 @@ public class AppointmentController {
 
 	@GetMapping("/querybookingtime/{appointmentDate}")
 	public ResponseEntity<Map<String, Object>> handleQueryBookingTime(@PathVariable String appointmentDate) {
+		SecurityUtil.checkAdminPermission();
 		List<String> bookedTimeslots = appointmentService.getBookedTimeslots(appointmentDate);
 		Map<String, Object> responseData = new HashMap<>();
 		responseData.put("bookedTimeslots", bookedTimeslots);
@@ -100,6 +100,7 @@ public class AppointmentController {
 
 	@GetMapping("/querypet/{memberId}")
 	public ResponseEntity<Object> handleQueryPetById(@PathVariable("memberId") String memberIdStr) {
+		SecurityUtil.checkAdminPermission();
 		if (memberIdStr == null || memberIdStr.trim().isEmpty()) {
 			return ResponseEntity.badRequest().body("memberId 不能為空");
 		}
@@ -128,6 +129,7 @@ public class AppointmentController {
 	@PostMapping("/appointment")
 	@ResponseBody
 	public ResponseEntity<?> insertAppointmentById(@RequestBody Map<String, Object> payload, HttpSession session) {
+		SecurityUtil.checkAdminPermission();
 	    String memberIdStr = String.valueOf(payload.get("memberId"));
 	    Integer memberId = null;
 
@@ -225,6 +227,7 @@ public class AppointmentController {
 	@DeleteMapping("/appointment/{appointmentId}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> deleteAppointmentById(@PathVariable int appointmentId) {
+		SecurityUtil.checkAdminPermission();
 		Map<String, Object> response = new HashMap<>();
 		
 		boolean isDeleted = appointmentService.deleteAppointment(appointmentId);
@@ -243,20 +246,16 @@ public class AppointmentController {
 	@GetMapping("/appointment/{appointmentId}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getAppointmentDetails(@PathVariable int appointmentId) {
-	    MemberDto tokenUser = AuthHolder.getMember(); 
-	    if (tokenUser == null) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "請先登入"));
-	    }
+		SecurityUtil.checkAdminPermission();
+		MemberDto tokenUser = AuthHolder.getMember();
 
 	    Appointment appointment = appointmentService.getAppointmentById(appointmentId);
 
-	    if (appointment == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", "查無此預約"));
-	    }
-
-	    if (!appointment.getMember().equals(tokenUser.getIdno())) {
-	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("success", false, "message", "無權查看此預約"));
-	    }
+	    if (!"ADMIN".equals(tokenUser.getRole()) && 
+	            !appointment.getMember().getIdno().equals(tokenUser.getIdno())) {
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+	                .body(Map.of("success", false, "message", "無權查看此預約"));
+	        }
 
 	    List<Integer> extraPackageIds = appointmentService.getSelectedExtraPackages(appointmentId);
 	    ItemDetails itemDetail = appointmentService.getServiceById(appointmentId);
@@ -283,7 +282,7 @@ public class AppointmentController {
 			@RequestParam String appointmentTimeslot,
 			@RequestParam(value = "services", required = false) String[] services,
 			@RequestParam(value = "extraPackages", required = false) String[] extraPackages, Model model,HttpSession session) {
-
+		SecurityUtil.checkAdminPermission();
 		try {
 			if (appointmentId <= 0) {
 				model.addAttribute("errorMessage", "預約 ID 不能為空或無效。");
@@ -358,6 +357,7 @@ public class AppointmentController {
 	}
 	@PutMapping("/appointment/checkin/{id}")
 	public ResponseEntity<String> checkIn(@PathVariable int id) {
+		SecurityUtil.checkAdminPermission();
 	    List<Appointment> appointments = appointmentService.searchAppointmentById(id);
 
 	    if (!appointments.isEmpty()) {
@@ -376,11 +376,27 @@ public class AppointmentController {
 
 	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("查無此預約");
 	}
-	 @GetMapping("/appointment/{memberId}/{appointmentStatus}")
-	    public List<Map<String, Object>> getAppointmentsWithStatu(@PathVariable int memberId, 
-	                                                     @PathVariable int appointmentStatus) {
-	        return appointmentService.getAppointmentsDetails(memberId, appointmentStatus);
+	@GetMapping("/appointment/{memberId}/{appointmentStatus}")
+	public ResponseEntity<List<Map<String, Object>>> getAppointmentsWithStatus(@PathVariable int memberId, 
+	                                                                            @PathVariable int appointmentStatus) {
+	    MemberDto tokenUser = AuthHolder.getMember(); 
+	    
+	    if (tokenUser == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 	    }
+	    System.out.println("tokenUser.getIdno(): " + tokenUser.getIdno());
+	    System.out.println("memberId: " + memberId);
+	    if (tokenUser.getMemberId() != memberId) {
+	        System.out.println("Forbidden: User ID does not match");
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+	    
+	    List<Map<String, Object>> appointments = appointmentService.getAppointmentsDetails(memberId, appointmentStatus);
+
+	    return ResponseEntity.ok(appointments); 
+
+	}
+
 	 @PutMapping("/appointment/cancel/{id}")
 		public ResponseEntity<String> CancelAppointment(@PathVariable int id) {
 		  MemberDto tokenUser = AuthHolder.getMember(); 

@@ -111,6 +111,15 @@
                     :rules="[(v) => !!v || '※請填寫地址']"
                   />
                 </v-col>
+                <!-- 選擇超商 -->
+                <v-col cols="12" v-if="pickupMethodforbtn !== '宅配'">
+                  <v-btn color="green" @click="openCvsMap">選擇超商門市</v-btn>
+
+                  <div v-if="cvsInfo" class="mt-2">
+                    <p>門市名稱：{{ cvsInfo.CVSStoreName }}</p>
+                    <p>門市地址：{{ cvsInfo.CVSAddress }}</p>
+                  </div>
+                </v-col>
               </v-row>
             </v-col>
           </v-row>
@@ -134,15 +143,26 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import router from "@/router";
 import CityCountyData from "@/order/assets/data/CityCountyData.json";
+import { useAuthStore } from "@/member/stores/auth";
+const auth = useAuthStore();
+import { useCheckoutStore } from "@/order/stores/checkoutStore";
+const checkoutStore = useCheckoutStore();
+import {
+  apiECpay,
+  apiCreateOrder,
+  apiFindShoppingCartItem,
+  apiDeleteAllShoppingCartItem,
+} from "@/member/api/api";
+import { loadCart } from "@/order/components/frontsite/useCart";
 
 //訂購資料
-const memberName = ref("王小明");
-const memberPhone = ref("0912345678");
-const memberEmail = ref("m@example.com");
-const memberAddress = ref("臺北市中正區仁愛路一段100號");
+const memberName = computed(() => auth.memberName);
+const memberPhone = computed(() => auth.phone);
+const memberEmail = computed(() => auth.email);
+const memberAddress = computed(() => auth.fullAddress);
 
 //收件資料
 const formRef = ref(null);
@@ -162,16 +182,66 @@ const address = ref({
   detail: "",
 });
 
+//選擇取貨門市
+const pickupMethodforbtn = computed(() => checkoutStore.pickupMethod);
+const cvsInfo = ref(null);
+
+const openCvsMap = () => {
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = "https://emap.pcsc.com.tw/EMapSDK/EMapSDK.aspx";
+  form.target = "cvsMapWindow";
+
+  const params = {
+    MerchantID: "2000132", // 綠界提供的測試帳號
+    MerchantTradeNo: `TEST${Date.now()}`,
+    LogisticsType: "CVS",
+    LogisticsSubType: "FAMI", // 全家超商
+    IsCollection: "N",
+    ServerReplyURL: "https://localhost/dummy", // 建議填個假的避免出錯
+    ExtraData: "",
+    Device: 0,
+  };
+
+  for (const key in params) {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = params[key];
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+
+  const win = window.open("", "cvsMapWindow", "width=800,height=600");
+  if (win) {
+    console.log("已開啟新視窗並送出表單");
+    form.submit();
+  } else {
+    alert("請允許瀏覽器開啟新視窗");
+  }
+
+  document.body.removeChild(form);
+};
+// 接收綠界回傳門市資訊（window.postMessage）
+onMounted(() => {
+  window.addEventListener("message", (event) => {
+    if (event.origin !== "https://emap.pcsc.com.tw") return;
+    cvsInfo.value = event.data;
+    console.log("綠界門市回傳：", event.data);
+  });
+});
+
 //與訂購人相同
 watch(sameAsBuyer, (val) => {
   if (val) {
     recipientName.value = memberName.value;
     recipientPhone.value = memberPhone.value;
     address.value = {
-      city: memberAddress.value.slice(0, 3),
-      district: memberAddress.value.slice(3, 6),
+      city: memberAddress.value.slice(3, 6),
+      district: memberAddress.value.slice(6, 9),
       zipcode: "",
-      detail: memberAddress.value.slice(6),
+      detail: memberAddress.value.slice(9),
     };
   } else {
     recipientName.value = "";
@@ -217,22 +287,56 @@ watch(
   }
 );
 
-//表單送出前驗證
-const submitOrder = async () => {
-  const valid = await formRef.value.validate();
-  if (valid) {
-    console.log("表單驗證成功，可送出");
-  } else {
-    console.warn("請確認欄位是否填寫正確");
-  }
-};
-
 //按鈕下一步
 const editCheckout = () => {
   router.back();
 };
+
 const orderFinish = async () => {
-  router.push("/OrderFinish");
+  //新增訂單
+  const orderData = {
+    recipientName: recipientName.value,
+    recipientPhone: recipientPhone.value,
+    recipientAddress: `${address.value.city}${address.value.district}${address.value.detail}`,
+    priceTotal: checkoutStore.priceTotal,
+    paymentMethod: checkoutStore.paymentMethod,
+    pickupMethod: checkoutStore.pickupMethod,
+    shippingFee: checkoutStore.shippingFee,
+    orderDetails: checkoutStore.cartItems.map((item) => ({
+      product: { productId: item.product.productId },
+      quantity: item.quantity,
+    })),
+  };
+  console.log(orderData);
+  const createRes = await apiCreateOrder(orderData);
+
+  //清空購物車
+  try {
+    const res = await apiFindShoppingCartItem();
+    const cartItemIds = res.data.map((item) => item.cartItemId);
+
+    await apiDeleteAllShoppingCartItem(cartItemIds);
+    await loadCart();
+    console.log("購物車已清空");
+  } catch (err) {
+    console.error("清空購物車失敗", err);
+  }
+
+  //綠界
+  const payment = checkoutStore.paymentMethod;
+  if (payment === "信用卡") {
+    const payRes = await apiECpay({
+      amount: orderData.priceTotal,
+      itemName: "Paw Shop 爪娃商店",
+      orderId: createRes.data.orderId,
+    });
+
+    document.open();
+    document.write(payRes.data);
+    document.close();
+  } else {
+    router.replace("/orderFinish");
+  }
 };
 </script>
 

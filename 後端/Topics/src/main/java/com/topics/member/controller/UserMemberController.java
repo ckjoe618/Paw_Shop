@@ -30,7 +30,7 @@ public class UserMemberController {
 
 	@PutMapping("/member/{id}")
 	public ResponseEntity<?> updateMemberById(@PathVariable Integer id,
-			@RequestBody MemberBean entity,
+			@RequestPart("data") MemberBean entity,
 			@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 		SecurityUtil.checkUserLogin(id);
 		// 處理圖片

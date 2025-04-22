@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-2" width="300">
+  <v-card class="pa-2" width="330">
     <v-table density="compact">
       <thead>
         <tr>
@@ -11,8 +11,20 @@
       <tbody>
         <tr v-for="(item, index) in items" :key="index">
           <td>{{ item.product.productName }}</td>
-          <td>{{ item.quantity }}</td>
-          <td class="text-right">
+          <td
+            style="
+              text-align: center;
+              width: 60px;
+              white-space: nowrap;
+              vertical-align: top;
+            "
+          >
+            {{ item.quantity }}
+          </td>
+          <td
+            style="width: 80px; white-space: nowrap; vertical-align: top"
+            class="text-right"
+          >
             ${{ item.product.productPrice * item.quantity }}
           </td>
         </tr>

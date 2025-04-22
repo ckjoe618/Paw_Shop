@@ -37,7 +37,7 @@ api.interceptors.response.use(
     if (status === 401 && !isHandlingTokenError) {
       isHandlingTokenError = true;
       authStore.logout();
-      router.push("/login");
+      window.location.href = "/login";
       return;
     }
 

@@ -1,8 +1,9 @@
 <template>
   <div class="grooming-wrapper">
-    <div class="text-center mb-4 text-dark">
-      <h2 class="fw-bold">Paw-Shop</h2>
+    <div class="text-center mb-4 text-dark ">
+      <h2>寵物美容</h2>
       <p class="lead">爪娃專業洗護你家毛小孩！</p>
+      <h5>專業美容｜舒適環境｜五星級服務</h5>
     </div>
 
     <div class="row justify-content-center g-3 mb-4">
@@ -14,29 +15,29 @@
         <div
           class="service-btn"
           :class="{ active: selectedService?.title === item.title }"
-          @click="selectedService = item"
+          @mouseenter="selectedService = item"
         >
           <div class="icon">🐾</div>
           <div class="title">{{ item.title }}</div>
         </div>
       </div>
     </div>
-
-    <div class="row align-items-center g-4">
-      <div class="col-md-6">
-        <div class="image-box">
-          <img
+    <div class="row align-items-center g-4 section-spacing">
+      <div class="row align-items-center g-4">
+        <div class=" col-md-4 ">
+          <div class="image-box">
+           <img
             v-if="selectedService"
             :src="selectedService.img"
             alt="美容圖片"
             class="img-fluid shadow"
-          />
-          <div
+            />
+            <div
             v-else
             id="carouselExampleFade"
             class="carousel slide carousel-fade"
             data-bs-ride="carousel"
-          >
+           >
             <div class="carousel-inner shadow">
               <div
                 class="carousel-item"
@@ -50,31 +51,95 @@
           </div>
         </div>
       </div>
-
-      <div class="col-md-6">
-        <div class="info-card">
-          <h4 v-if="selectedService">{{ selectedService.title }}</h4>
-          <p v-if="selectedService">{{ selectedService.description }}</p>
-          <p v-else class="text-muted">爪娃專業洗護你家毛小孩！</p>
-          <div class="text-end mt-3">
-            <button
-              class="btn btn-success px-4 py-2 rounded-pill"
-              :disabled="!selectedService"
-              @click="goToAppointment"
-            >
-              🐾 我要預約
-            </button>
-          </div>
+      <!-- 說明區塊 -->
+  <div class="col-md-6">
+    <div class="info-card bg-light p-4 h-100 d-flex flex-column justify-content-center rounded-end shadow-sm">
+      <h4 v-if="selectedService" class="text-success fw-bold">
+        {{ selectedService.title }}
+      </h4>
+      <p v-if="selectedService">{{ selectedService.description }}</p>
+      <p v-else class="text-muted">爪娃專業洗護你家毛小孩！</p>
+    </div>
+  </div>
+</div>
+    <div class="my-5"></div>
+      <div class="row justify-content-center text-start px-3 px-md-5 py-4">
+  <div class="col-12 col-md-10">
+    <div class="row gy-4">
+      <div class="row justify-content-center text-start px-3 px-md-5 py-4">
+      <!-- 專業美容師 -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="feature-box">
+          <h5 class="text-success fw-bold mb-3">專業美容師團隊</h5>
+          <ul class="custom-list">
+            <li>每位美容師皆通過專業訓練與認證</li>
+            <li>持續進修，掌握最新寵物美容趨勢</li>
+            <li>用愛與耐心，細心對待每一位毛孩</li>
+          </ul>
         </div>
       </div>
+
+      <!-- 舒適環境 -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="feature-box">
+          <h5 class="text-success fw-bold mb-3">安心舒適的美容環境</h5>
+          <ul class="custom-list">
+            <li>犬貓分區，避免交叉緊張</li>
+            <li>每次服務後皆徹底消毒清潔</li>
+            <li>打造讓毛孩放鬆的氛圍</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 全預約制 -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="feature-box">
+          <h5 class="text-success fw-bold mb-3">預約制・專屬時段</h5>
+          <ul class="custom-list">
+            <li>一對一專屬時段，避免等待與趕場</li>
+            <li>不超接，確保美容品質與安全</li>
+            <li>細心觀察毛孩狀況，主動回報分享</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 職人精神 -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="feature-box">
+          <h5 class="text-success fw-bold mb-3">用心呵護的毛小孩</h5>
+          <ul class="custom-list">
+            <li>開放陪同美容，安心陪伴不緊張</li>
+            <li>依照毛孩膚質與需求量身打造護理方式</li>
+          </ul>
+        </div>
+      </div>
+</div>
     </div>
+  </div>
+</div>
+<!-- 店家資訊區塊 -->
+<div class="store-info-container p-4 mt-5">
+  <h4 class="text-center text-success mb-4">店家資訊</h4>
+  <div class="store-info">
+    <ul class="list-unstyled">
+      <li><strong>地址：</strong> 桃園市中壢區新生路二段421號 </li>
+      <li><strong>電話：</strong>(03) 453-3013</li>
+      <li><strong>營業時間：</strong>週一至週日 10:00 - 22:00</li>
+      <li><strong>LINE 官方帳號：</strong>@pawcare</li>
+      <li><strong>交通資訊：</strong>中壢火車站→ 中壢客運17路(中壢– 高鐵青埔站) 即可到達</li>
+    </ul>
+  </div>
+</div>
+
+    </div>
+<check/>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-
+import check from '@/appointment/components/ReserveCheck.vue'
 const router = useRouter();
 const selectedService = ref(null);
 
@@ -117,16 +182,11 @@ const services = [
   },
 ];
 
-const goToAppointment = () => {
-  if (selectedService.value) {
-    router.push({
-      path: "/appointments/reserve",
-    });
-  }
-};
+
 </script>
 
 <style scoped>
+h5 { font-size: 1.25rem; color: #388e3c; }
 .grooming-wrapper {
   background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
   padding: 3rem 2rem;
@@ -164,7 +224,11 @@ const goToAppointment = () => {
   margin-top: 0.5rem;
   font-size: 0.95rem;
 }
-
+.logo-img {
+  height: 250px;
+  width: auto;
+  object-fit: contain;
+}
 .image-box {
   width: 500px;
   height: 500px;
@@ -189,4 +253,85 @@ const goToAppointment = () => {
   box-shadow: 0 4px 12px rgba(102, 187, 106, 0.2);
   height: 320px;
 }
+.custom-list {
+  padding-left: 1rem;
+  margin-bottom: 0;
+  list-style-type: disc;
+}
+
+.custom-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+h5 {
+  font-size: 1.1rem;
+}
+
+.row {
+  flex-wrap: wrap; /* 保證項目能換行並且自適應 */
+}
+.feature-box {
+    border: 2px dashed #28a745; /* 綠色虛線框 */
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%;
+    background-color: #fdfdfd; /* 淺背景讓框框更明顯 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+  }
+
+  .feature-box:hover {
+    transform: translateY(-4px);
+  }
+
+  .custom-list {
+    padding-left: 1.2rem;
+  }
+
+  .custom-list li {
+    margin-bottom: 0.5rem;
+  }
+
+  .store-info-container {
+  display: flex;
+  position: relative;
+  background-color: #ffffff; 
+  padding-top: 80px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  max-width: 650px;
+  margin: 0 auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.store-info-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.store-info-container h4 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #007b3e;
+  text-transform: uppercase;
+}
+
+.store-info ul li {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #555;
+  line-height: 1.8;
+}
+
+.store-info ul li strong {
+  color: #007b3e;
+}
+
+.store-info ul {
+  padding-left: 20px;
+}
+
+
+
 </style>

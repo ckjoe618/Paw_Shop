@@ -52,6 +52,26 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "orderingInfo",
+        component: () => import("@/order/pages/OrderingInfo.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "orderFinish",
+        component: () => import("@/order/pages/OrderFinish.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "orderResult",
+        component: () => import("@/order/pages/OrderResult.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "orderManagement",
+        component: () => import("@/order/pages/OrderManagement.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "products",
         name: "ProductListView",
         component: () => import("@/product/frontsite/ProductListView.vue"),
@@ -60,21 +80,6 @@ const routes = [
         path: "/products/:id",
         name: "ProductDetailPage",
         component: () => import("@/product/frontsite/ProductDetailPage.vue"),
-      },
-      {
-        path: "OrderingInfo",
-        component: () => import("@/order/pages/OrderingInfo.vue"),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: "OrderFinish",
-        component: () => import("@/order/pages/OrderFinish.vue"),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: "OrderManagement",
-        component: () => import("@/order/pages/OrderManagement.vue"),
-        meta: { requiresAuth: true },
       },
       {
         path: "checkin",

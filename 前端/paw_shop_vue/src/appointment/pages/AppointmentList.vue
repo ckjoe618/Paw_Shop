@@ -238,6 +238,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="showSnackbar" :timeout="3000" color="success" top>
+    {{ snackbarMessage }}
+  </v-snackbar>
   </div>
 </template>
 
@@ -248,8 +251,6 @@ import {
   apiFindAppointmentAll,
   apiFindAppointment,
   apiaddAppointment,
-  apishowUpdateAppointment,
-  apiUpdateAppointment,
   apiDeleteAppointment,
   apihandleQueryAppointmentPet,
   apihandleQueryBookingTime,
@@ -261,7 +262,8 @@ import EditButton from "@/order/components/buttons/formEditbtn.vue";
 import AddButton from "@/order/components/buttons/addbtn.vue";
 
 const router = useRouter();
-
+const showSnackbar = ref(false);
+const snackbarMessage = ref('');
 const appointments = ref([]);
 const phoneNumber = ref("");
 const phoneNumberError = ref(''); 
@@ -308,9 +310,7 @@ watch(openCreateModal, (newVal) => {
 const goBack = () => {
   window.location.reload() 
     }
-const hideModal = () => {
-  openCreateModal.value = false;
-};
+
 const minDate = computed(() => {
   const today = new Date();
   const year = today.getFullYear();
@@ -328,8 +328,6 @@ const form = ref({
 });
 
 const pets = ref([]);
-const appointmentDate = ref("");
-const appointmentTimeslot = ref("");
 const availableTimeslots = ref([]);
 const showDelete = ref(false);
 
@@ -472,9 +470,13 @@ const submitAppointment = async () => {
   console.log("送出資料:", JSON.stringify(data));
   try {
     const res = await apiaddAppointment(data);
+    snackbarMessage.value = "預約成功！";
+    showSnackbar.value = true;
     console.log("預約成功", res.data);
     window.location.reload();
   } catch (error) {
+    snackbarMessage.value = "預約失敗！";
+    showSnackbar.value = true;
     console.error("預約失敗", error);
   }
 };
@@ -517,14 +519,19 @@ const confirmDelete = async () => {
         deleteModalInstance.hide();
       }
       showDelete.value = false;
-
+      snackbarMessage.value = "刪除成功！";
+      showSnackbar.value = true;
       console.log("刪除成功");
 
       window.location.reload();
     } else {
+      snackbarMessage.value = "刪除預約失敗！";
+      showSnackbar.value = true;
       console.error("刪除預約失敗: success = false", result.message);
     }
   } catch (error) {
+    snackbarMessage.value = "刪除預約失敗！";
+      showSnackbar.value = true;
     console.error("刪除預約時發生錯誤:", error);
   }
 };

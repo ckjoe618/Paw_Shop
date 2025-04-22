@@ -1,5 +1,6 @@
 package com.topics.order.controller.front;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +31,18 @@ public class ShoppingcartItemController {
 	@Autowired
 	private ShoppingcartItemService shoppingcartItemService;
 	
-	//一次新增多筆
-	@PostMapping
-	public ResponseEntity<String> addShoppingcart(@RequestBody List<ShoppingcartItemBean> shoppingcartItemlist) {
+	private Integer getmemberId() {
 		MemberDto member = AuthHolder.getMember();
 	    if (member == null) {
 	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登入");
 	    }
-		Integer memberId = member.getMemberId();
+		return member.getMemberId();
+	}
+	
+	//一次新增多筆
+	@PostMapping
+	public ResponseEntity<String> addShoppingcart(@RequestBody List<ShoppingcartItemBean> shoppingcartItemlist) {
+		Integer memberId = getmemberId();
 		
 		for (ShoppingcartItemBean item : shoppingcartItemlist) {
 			MemberBean m = new MemberBean();
@@ -64,6 +69,13 @@ public class ShoppingcartItemController {
 		shoppingcartItemService.deleteShoppingcartById(cartItemId);
 	}
 	
+	@DeleteMapping("/truncatecart")
+	public void deleteAllShoppingcart(@RequestBody List<Integer> cartItemIds) {
+		for(Integer id : cartItemIds){
+			shoppingcartItemService.deleteShoppingcartById(id);
+		}
+	}
+	
 	//修改
 	@PutMapping
 	public ShoppingcartItemBean updateItemQuantity(@RequestBody Map<String, Object> data) {
@@ -76,11 +88,7 @@ public class ShoppingcartItemController {
 	//查詢
 	@GetMapping
 	public List<ShoppingcartItemBean> getShoppingcart() {
-		MemberDto member = AuthHolder.getMember();
-	    if (member == null) {
-	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登入");
-	    }
-		Integer memberId = member.getMemberId();
+		Integer memberId = getmemberId();
 		
 		return shoppingcartItemService.findItemsByMemberId(memberId);
 	}

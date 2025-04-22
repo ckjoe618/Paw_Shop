@@ -34,9 +34,6 @@
             />
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field label="性別" v-model="form.gender" disabled />
-          </v-col>
-          <v-col cols="12" md="6">
             <v-text-field label="Email" v-model="form.email" disabled />
           </v-col>
           <v-col cols="12" md="6">
@@ -72,7 +69,7 @@ const formRef = ref(null);
 const isValid = ref(false);
 const loading = ref(false);
 const uploadFile = ref(null);
-const previewPhoto = ref(null);
+const previewPhoto = ref("");
 
 const form = ref({
   memberId: authStore.memberId,
@@ -89,7 +86,10 @@ const rules = {
 const handleFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
-    previewPhoto = URL.createObjectURL(file);
+    if (previewPhoto.value.startsWith("blob:")) {
+      URL.revokeObjectURL(previewPhoto.value);
+    }
+    previewPhoto.value = URL.createObjectURL(file);
     uploadFile.value = file;
   }
 };
@@ -107,7 +107,6 @@ const saveProfile = async () => {
     authStore.phone = data.phone;
     if (data.memberPhoto) {
       authStore.memberPhoto = data.memberPhoto;
-      form.value.memberPhoto = data.memberPhoto;
       previewPhoto.value = data.memberPhoto;
     }
     uploadFile.value = null;
