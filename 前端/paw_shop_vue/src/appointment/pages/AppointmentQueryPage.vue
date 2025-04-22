@@ -2,20 +2,29 @@
   <div class="container mt-5">
     <h2 class="text-center mb-4">預約訂單查詢</h2>
 
-    <!-- 狀態選擇下拉選單 -->
-    <div class="mb-3">
-      <label for="statusSelect" class="form-label">選擇預約狀態：</label>
-      <select
-        id="statusSelect"
-        v-model="selectedStatus"
-        @change="fetchAppointments"
-        class="form-select"
+    <div class="row align-items-end mb-3">
+  <!-- 狀態下拉選單 -->
+  <div class="col-md-6">
+    <label for="statusSelect" class="form-label">選擇預約狀態：</label>
+    <select
+      id="statusSelect"
+      v-model="selectedStatus"
+      @change="fetchAppointments"
+      class="form-select"
+    >
+      <option :value="0">待處理</option>
+      <option :value="1">已完成</option>
+      <option :value="2">已取消</option>
+    </select>
+  </div>
+
+  <!-- 回首頁按鈕 -->
+  <div class="col-md-6 text-end">
+    <router-link to="/home" class="btn btn-success mt-3"
+        >回首頁</router-link
       >
-        <option :value="0">待處理</option>
-        <option :value="1">已完成</option>
-        <option :value="2">已取消</option>
-      </select>
-    </div>
+  </div>
+</div>
 
     <!-- 預約列表 -->
     <div
@@ -129,6 +138,21 @@
         下一頁
       </button>
     </div>
+    <div class="text-center text-muted mt-5">
+      <p>
+  店家地址：
+  <a
+    href="https://www.google.com/maps?q=桃園市中壢區新生路二段421號"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="text-body text-decoration-none "
+  >
+    桃園市中壢區新生路二段421號
+  </a>
+</p>
+  <p>電話：(03) 453-3013 </p>
+
+</div>
     <!-- 取消確認 Modal -->
     <v-dialog v-model="showCancelModal" max-width="400">
       <v-card>
@@ -152,7 +176,8 @@
 import { ref, onMounted, computed } from "vue";
 import { apiAppointmentsByStatus,apiAppointmentCancel } from "@/member/api/api";
 import QrCodeDisplay from "@/appointment/components/QrCodeDisplay.vue";
-
+import { useRoute } from "vue-router";
+const router = useRoute();
 const toggleQRCode = (appointmentId) => {
   if (showQRCodeForAppointment.value === appointmentId) {
     showQRCodeForAppointment.value = null;

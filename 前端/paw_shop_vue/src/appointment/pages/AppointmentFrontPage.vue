@@ -1,7 +1,7 @@
 <template>
   <div class="grooming-wrapper">
     <div class="text-center mb-4 text-dark ">
-      
+      <h2>寵物美容</h2>
       <p class="lead">爪娃專業洗護你家毛小孩！</p>
       <h5>專業美容｜舒適環境｜五星級服務</h5>
     </div>
@@ -117,6 +117,19 @@
     </div>
   </div>
 </div>
+<!-- 店家資訊區塊 -->
+<div class="store-info-container p-4 mt-5">
+  <h4 class="text-center text-success mb-4">店家資訊</h4>
+  <div class="store-info">
+    <ul class="list-unstyled">
+      <li><strong>地址：</strong> 桃園市中壢區新生路二段421號 </li>
+      <li><strong>電話：</strong>(03) 453-3013</li>
+      <li><strong>營業時間：</strong>週一至週日 10:00 - 22:00</li>
+      <li><strong>LINE 官方帳號：</strong>@pawcare</li>
+      <li><strong>交通資訊：</strong>中壢火車站→ 中壢客運17路(中壢– 高鐵青埔站) 即可到達</li>
+    </ul>
+  </div>
+</div>
 
     </div>
 <check/>
@@ -169,13 +182,7 @@ const services = [
   },
 ];
 
-const goToAppointment = () => {
-  if (selectedService.value) {
-    router.push({
-      path: "/appointments/reserve",
-    });
-  }
-};
+
 </script>
 
 <style scoped>
@@ -285,4 +292,46 @@ h5 {
   .custom-list li {
     margin-bottom: 0.5rem;
   }
+
+  .store-info-container {
+  display: flex;
+  position: relative;
+  background-color: #ffffff; 
+  padding-top: 80px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  max-width: 650px;
+  margin: 0 auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.store-info-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.store-info-container h4 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #007b3e;
+  text-transform: uppercase;
+}
+
+.store-info ul li {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #555;
+  line-height: 1.8;
+}
+
+.store-info ul li strong {
+  color: #007b3e;
+}
+
+.store-info ul {
+  padding-left: 20px;
+}
+
+
+
 </style>
