@@ -1,6 +1,8 @@
 package com.topics.discuss.model.service.front;
 
+import com.topics.discuss.model.dto.request.CommentDeleteDto;
 import com.topics.discuss.model.dto.request.CommentRequestDto;
+import com.topics.discuss.model.dto.request.CommentUpdateDto;
 import com.topics.discuss.model.dto.response.CommentGroupDto;
 import com.topics.discuss.model.dto.response.CommentResponseDto;
 import com.topics.discuss.model.entity.CommentBean;
@@ -9,6 +11,7 @@ import com.topics.member.model.entity.MemberBean;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,5 +126,59 @@ public class CommentService {
         }
 
         return commentRepository.save(comment);
+    }
+
+    // 編輯留言
+    public CommentResponseDto updateComment(CommentUpdateDto dto) {
+        CommentBean comment = commentRepository.findById(dto.getCommentId())
+                .orElseThrow(() -> new RuntimeException("找不到該留言"));
+
+        if (comment.getMemberId() != dto.getMemberId()) {
+            throw new RuntimeException("無編輯權限");
+        }
+
+        if (comment.isDeleted()) {
+            throw new RuntimeException("留言已刪除");
+        }
+
+        comment.setContent(dto.getContent());
+        comment.setUpdatedDate(LocalDateTime.now());
+
+        CommentBean updated = commentRepository.save(comment);
+        MemberBean member = updated.getMember();
+        String memberPhoto = (member.getMemberPhoto() != null)
+                ? new String(member.getMemberPhoto(), StandardCharsets.UTF_8)
+                : null;
+
+        return new CommentResponseDto(
+                updated.getCommentId(),
+                updated.getMemberId(),
+                member.getMemberName(),
+                memberPhoto,
+                updated.getContent(),
+                updated.getFloor(),
+                updated.getParentCommentId(),
+                updated.getCreatedDate(),
+                updated.getUpdatedDate()
+        );
+    }
+
+    // 刪除留言
+    public void deleteComment(CommentDeleteDto dto) {
+        CommentBean comment = commentRepository.findById(dto.getCommentId())
+                .orElseThrow(() -> new RuntimeException("找不到留言"));
+
+        if (comment.isDeleted()) {
+            throw new RuntimeException("該留言已刪除");
+        }
+
+        if (comment.getMemberId() != dto.getMemberId()) {
+            throw new RuntimeException("沒有刪除權限");
+        }
+
+        comment.setDeleted(true);
+        comment.setUpdatedDate(LocalDateTime.now());
+
+        commentRepository.save(comment);
     }
 }

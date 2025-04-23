@@ -1,5 +1,6 @@
 package com.topics.discuss.model.service.front;
 
+import com.topics.discuss.model.dto.request.ArticleUpdateDto;
 import com.topics.discuss.model.entity.ArticleBean;
 import com.topics.discuss.model.entity.ArticleCategory;
 import com.topics.discuss.model.dto.request.ArticleRequestDto;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -91,34 +93,7 @@ public class ArticleService {
 
         ArticleBean article = optional.get();
 
-        String categoryName = articleCategoryRepository
-                .findById(article.getCategoryId())
-                .map(ArticleCategory :: getCategoryName)
-                .orElse("未知分類");
-
-        MemberBean member = article.getMember();
-        String memberName = (member != null) ? member.getMemberName() : "未知會員";
-        String memberPhoto = (member != null && member.getMemberPhoto() != null)
-                ? new String(member.getMemberPhoto(), StandardCharsets.UTF_8)
-                : null;
-
-        ArticleDetailDto dto = new ArticleDetailDto();
-        dto.setArticleId(article.getArticleId());
-        dto.setTitle(article.getTitle());
-        dto.setContent(article.getContent());
-        dto.setCategoryId(article.getCategoryId());
-        dto.setCategoryName(categoryName);
-        dto.setMemberId(article.getMemberId());
-        dto.setMemberName(memberName);
-        dto.setMemberPhoto(memberPhoto);
-        dto.setCreatedDate(article.getCreatedDate());
-        dto.setUpdatedDate(article.getUpdatedDate());
-        dto.setViewCount(article.getViewCount());
-        dto.setCommentCount(article.getCommentCount());
-        dto.setPinned(article.isPinned());
-        dto.setFeatured(article.isFeatured());
-
-        return dto;
+        return toDetailDto(article);
     }
 
     // 新增文章
@@ -139,4 +114,76 @@ public class ArticleService {
 
         return articleRepository.save(article);
     }
+
+    // 編輯文章
+    public ArticleDetailDto updateArticle(ArticleUpdateDto articleUpdateDto) {
+        ArticleBean article = articleRepository.findById(articleUpdateDto.getArticleId())
+                .orElseThrow(() -> new RuntimeException("找不到該文章"));
+
+        if (article.isDeleted()) {
+            throw new RuntimeException("該文章已刪除");
+        }
+
+        article.setTitle(articleUpdateDto.getTitle());
+        article.setContent(articleUpdateDto.getContent());
+        article.setCategoryId(articleUpdateDto.getCategoryId());
+        article.setUpdatedDate(LocalDateTime.now());
+
+        return toDetailDto(articleRepository.save(article));
+    }
+
+    // 刪除文章
+    public void deleteArticle(int articleId, int memberId) {
+        ArticleBean article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new RuntimeException("找不到該文章"));
+
+        if (article.getMemberId() != memberId) {
+            throw new RuntimeException("沒有權限");
+        }
+
+        if (article.isDeleted()) {
+            throw new RuntimeException("文章已刪除");
+        }
+
+        article.setDeleted(true);
+        article.setUpdatedDate(LocalDateTime.now());
+
+        articleRepository.save(article);
+    }
+
+    // 共用方法
+    private ArticleDetailDto toDetailDto(ArticleBean article) {
+        ArticleDetailDto dto = new ArticleDetailDto();
+
+        dto.setArticleId(article.getArticleId());
+        dto.setTitle(article.getTitle());
+        dto.setContent(article.getContent());
+        dto.setCategoryId(article.getCategoryId());
+        dto.setMemberId(article.getMemberId());
+        dto.setCreatedDate(article.getCreatedDate());
+        dto.setUpdatedDate(article.getUpdatedDate());
+        dto.setViewCount(article.getViewCount());
+        dto.setCommentCount(article.getCommentCount());
+        dto.setPinned(article.isPinned());
+        dto.setFeatured(article.isFeatured());
+
+        // 額外查分類名稱
+        String categoryName = articleCategoryRepository
+                .findById(article.getCategoryId())
+                .map(ArticleCategory::getCategoryName)
+                .orElse("未知分類");
+        dto.setCategoryName(categoryName);
+
+        // 額外查會員資訊
+        MemberBean member = article.getMember();
+        String memberName = (member != null) ? member.getMemberName() : "未知會員";
+        String memberPhoto = (member != null && member.getMemberPhoto() != null)
+                ? new String(member.getMemberPhoto(), StandardCharsets.UTF_8)
+                : null;
+        dto.setMemberName(memberName);
+        dto.setMemberPhoto(memberPhoto);
+
+        return dto;
+    }
+
 }

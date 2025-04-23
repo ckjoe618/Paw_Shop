@@ -1,5 +1,6 @@
 package com.topics.discuss.controller.front;
 
+import com.topics.discuss.model.dto.request.ArticleUpdateDto;
 import com.topics.discuss.model.entity.ArticleBean;
 import com.topics.discuss.model.dto.request.ArticleRequestDto;
 import com.topics.discuss.model.dto.response.ArticleDetailDto;
@@ -39,5 +40,19 @@ public class ArticleController {
     public ResponseEntity<ArticleBean> addArticle(@Valid @RequestBody ArticleRequestDto articleRequestDto) {
         ArticleBean saved = articleService.addArticle(articleRequestDto);
         return ResponseEntity.status(201).body(saved);
+    }
+
+    // 編輯文章
+    @PutMapping
+    public ResponseEntity<ArticleDetailDto> updateArticle(@Valid @RequestBody ArticleUpdateDto articleUpdateDto) {
+        ArticleDetailDto updated = articleService.updateArticle(articleUpdateDto);
+        return ResponseEntity.ok(updated);
+    }
+
+    // 刪除文章
+    @DeleteMapping("/{articleId}/member/{memberId}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable int articleId, @PathVariable int memberId) {
+        articleService.deleteArticle(articleId, memberId);
+        return ResponseEntity.noContent().build();
     }
 }

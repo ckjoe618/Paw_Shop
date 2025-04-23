@@ -7,25 +7,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleUpdateDto {
+public class CommentUpdateDto {
 
     @NotNull(message = "ID不可為空")
-    private int articleId;
+    private Integer commentId;
 
-    @NotBlank(message = "標題不可為空")
-    private String title;
+    @NotNull(message = "會員不可為空")
+    private Integer memberId;
 
     @NotBlank(message = "內容不可為空")
     private String content;
-
-    @NotNull(message = "分類不可為空")
-    private int categoryId;
-
-    private LocalDateTime updatedDate;
 }

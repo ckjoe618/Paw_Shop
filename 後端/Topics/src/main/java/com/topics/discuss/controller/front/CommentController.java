@@ -1,6 +1,8 @@
 package com.topics.discuss.controller.front;
 
+import com.topics.discuss.model.dto.request.CommentDeleteDto;
 import com.topics.discuss.model.dto.request.CommentRequestDto;
+import com.topics.discuss.model.dto.request.CommentUpdateDto;
 import com.topics.discuss.model.dto.response.CommentGroupDto;
 import com.topics.discuss.model.dto.response.CommentResponseDto;
 import com.topics.discuss.model.entity.CommentBean;
@@ -41,5 +43,19 @@ public class CommentController {
     public ResponseEntity<CommentBean> addComment(@Valid @RequestBody CommentRequestDto dto) {
         CommentBean saved = commentService.addComment(dto);
         return ResponseEntity.status(201).body(saved);
+    }
+
+    // 編輯留言
+    @PutMapping
+    public ResponseEntity<CommentResponseDto> updateComment(@Valid @RequestBody CommentUpdateDto dto) {
+        CommentResponseDto updated = commentService.updateComment(dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    // 刪除留言
+    @DeleteMapping
+    public ResponseEntity<String> deleteComment(@Valid @RequestBody CommentDeleteDto dto) {
+        commentService.deleteComment(dto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
