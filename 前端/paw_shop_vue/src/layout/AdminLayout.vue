@@ -101,7 +101,7 @@
           rounded="lg"
           width="100%"
         >
-          <router-view />
+          <router-view :key="$route.fullPath" />
         </v-sheet>
       </div>
     </v-main>

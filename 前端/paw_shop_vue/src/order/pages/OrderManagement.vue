@@ -72,24 +72,113 @@
                 "
               ></tr>
 
-              <tr
+              <template
                 v-for="(item, index) in orderDetails"
                 :key="item.orderDetailId"
-                :style="
-                  item.status === 'disabled'
-                    ? 'text-decoration: line-through'
-                    : ''
-                "
               >
-                <td>{{ item.product.productId }}</td>
-                <td>{{ item.product.productName }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>${{ item.unitPrice }}</td>
-                <td>${{ item.unitPrice * item.quantity }}</td>
-                <td>
-                  <v-btn size="small" color="#F3F3FA" @click="">評論</v-btn>
-                </td>
-              </tr>
+                <!-- 訂單明細列 -->
+                <tr
+                  :style="
+                    item.status === 'disabled'
+                      ? 'text-decoration: line-through'
+                      : ''
+                  "
+                >
+                  <td>{{ item.product.productId }}</td>
+                  <td>{{ item.product.productName }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>${{ item.unitPrice }}</td>
+                  <td>${{ item.unitPrice * item.quantity }}</td>
+                  <td>
+                    <v-btn
+                      size="small"
+                      color="#F3F3FA"
+                      @click="
+                        expandedRow === index
+                          ? (expandedRow = null)
+                          : (expandedRow = index)
+                      "
+                      :disabled="selectedOrder?.orderStatus !== '包裹已送達'"
+                      >評論</v-btn
+                    >
+                  </td>
+                </tr>
+                <!-- 評論區塊（展開） -->
+                <tr v-if="expandedRow === index">
+                  <td colspan="6" class="pa-0">
+                    <v-expansion-panels
+                      v-model="activePanels"
+                      class="pa-0"
+                      elevation="0"
+                    >
+                      <v-expansion-panel :value="index">
+                        <v-expansion-panel-content>
+                          <div class="pa-4">
+                            <v-rating
+                              v-model="item.rating"
+                              length="5"
+                              color="amber"
+                              size="32"
+                              class="mb-3"
+                              :readonly="item.commented"
+                            />
+                            <v-textarea
+                              v-model="item.comment"
+                              label="撰寫評論..."
+                              rows="2"
+                              auto-grow
+                              variant="outlined"
+                              :readonly="item.commented"
+                            />
+
+                            <div class="text-right mt-2">
+                              <!-- ✅ 如果已評論，顯示灰色 chip -->
+                              <v-chip
+                                v-if="item.commented"
+                                color="grey lighten-2"
+                                size="small"
+                                class="text-caption"
+                              >
+                                已評論
+                              </v-chip>
+
+                              <!-- ✅ 如果未評論，但尚未評分，顯示 Tooltip 提示 -->
+                              <v-tooltip
+                                v-else-if="item.rating <= 0"
+                                text="請先給予評分"
+                              >
+                                <template #activator="{ props }">
+                                  <v-btn
+                                    v-bind="props"
+                                    size="small"
+                                    color="green"
+                                    variant="outlined"
+                                    disabled
+                                  >
+                                    送出
+                                  </v-btn>
+                                </template>
+                              </v-tooltip>
+
+                              <!-- ✅ 如果未評論且評分有效，顯示可送出的按鈕 -->
+                              <v-btn
+                                v-else
+                                size="small"
+                                color="green"
+                                variant="outlined"
+                                @click="submitComment(item)"
+                              >
+                                送出
+                              </v-btn>
+                            </div>
+                          </div>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </td>
+                </tr>
+              </template>
+              <!-- 總計 -->
               <tr>
                 <td colspan="4"></td>
                 <td>運費 ${{ shippingFee }}</td>
@@ -155,6 +244,7 @@ import {
   apiFindOrdersByMemberId,
   apiCancelOrder,
   apiFindOrderDetails,
+  apiUpdateOrderDetail,
 } from "@/member/api/api";
 
 const headers = [
@@ -187,6 +277,8 @@ const orderDetails = ref([]);
 const shippingFee = computed(() => selectedOrder.value?.shippingFee || 0);
 
 const openDetailsDialog = (order) => {
+  expandedRow.value = null;
+  activePanels.value = [];
   selectedOrder.value = order;
   fetchOrderDetails(order.orderId);
   seeDetails.value = true;
@@ -196,7 +288,10 @@ const fetchOrderDetails = async (orderId) => {
   if (orderId) {
     try {
       const res = await apiFindOrderDetails(orderId);
-      orderDetails.value = res.data;
+      orderDetails.value = res.data.map((item) => ({
+        ...item,
+        commented: item.rating > 0,
+      }));
     } catch (error) {
       console.error("取得訂單明細失敗：", error);
     }
@@ -206,8 +301,32 @@ watch(seeDetails, (val) => {
   if (!val) {
     orderDetails.value = [];
     selectedOrder.value = null;
+    expandedRow.value = null;
+    activePanels.value = [];
   }
 });
+
+//商品評論
+const expandedRow = ref(null);
+const activePanels = ref([]);
+const submitComment = async (item) => {
+  console.log("評論送出", item.orderDetailId);
+  try {
+    const orderDetail = {
+      orderDetailId: item.orderDetailId,
+      rating: item.rating,
+      comment: item.comment,
+    };
+
+    await apiUpdateOrderDetail(orderDetail);
+
+    item.commented = true;
+    expandedRow.value = null;
+    activePanels.value = activePanels.value.filter((i) => i !== item.index);
+  } catch (error) {
+    console.error("評論送出失敗", error);
+  }
+};
 
 //總計計算
 const totalPrice = computed(() => {

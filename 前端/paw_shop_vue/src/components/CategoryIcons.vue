@@ -33,22 +33,22 @@ import bird from "@/order/assets/pictures/home_bird.webp";
 
 const pets = [
   {
-    label: "Cat",
-    img: catImg,
-    bgColor: "#fde78b",
-  },
-  {
-    label: "Dog",
+    label: "狗狗",
     img: dogImg,
     bgColor: "#c8eafd",
   },
   {
-    label: "Small Pet",
+    label: "貓咪",
+    img: catImg,
+    bgColor: "#fde78b",
+  },
+  {
+    label: "小型寵物",
     img: smallpets,
     bgColor: "#c7f5b0",
   },
   {
-    label: "Bird",
+    label: "鳥類",
     img: bird,
     bgColor: "#fbd1d9",
   },

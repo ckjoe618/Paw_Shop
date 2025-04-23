@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="checkout-container">
-      <div class="d-flex justify-center mt-8 mb-10">
+      <div class="d-flex justify-center mt-14 mb-10">
         <img src="@/order/assets/pictures/step1ing.jpg" />
         <img src="@/order/assets/pictures/step2.jpg" />
         <img src="@/order/assets/pictures/step3.jpg" />
@@ -22,9 +22,20 @@
           <template v-for="item in cartItems" :key="item.id">
             <tr v-if="item.product">
               <td>
-                <img src="@/order/assets/pictures/step1ing.jpg" width="80" />
+                <img :src="item.product.productPhoto" width="80" />
               </td>
-              <td>{{ item.product.productName }}</td>
+              <td>
+                <router-link
+                  :to="{
+                    name: 'ProductDetailPage',
+                    params: { id: item.product.productId },
+                  }"
+                  class="text-decoration-none"
+                  style="color: black"
+                >
+                  {{ item.product.productName }}
+                </router-link>
+              </td>
               <td>
                 <div class="d-inline-flex">
                   <v-btn
@@ -327,7 +338,7 @@ const orderingInfo = async () => {
   checkoutStore.shippingFee = shipping.value;
   checkoutStore.priceTotal = priceTotal.value;
 
-  router.push("/orderingInfo");
+  router.replace("/orderingInfo");
 };
 </script>
 

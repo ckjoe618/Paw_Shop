@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="orderingInfo-container">
-      <div class="d-flex justify-center mt-8 mb-10">
+      <div class="d-flex justify-center mt-14 mb-10">
         <img src="@/order/assets/pictures/step1.jpg" />
         <img src="@/order/assets/pictures/step2ing.jpg" />
         <img src="@/order/assets/pictures/step3.jpg" />
@@ -289,7 +289,7 @@ watch(
 
 //按鈕下一步
 const editCheckout = () => {
-  router.back();
+  router.push("/checkout");
 };
 
 const orderFinish = async () => {

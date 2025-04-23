@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h3 class="text-h6 font-weight-medium mb-4">
+    <h3 class="text-h6 font-weight-medium mb-2">
       <i class="fas fa-thumbs-up mr-2"></i>Top Recommendations
     </h3>
     <v-row>
@@ -37,7 +37,7 @@ onMounted(async () => {
     console.error("❌ 無法取得資料", error);
   }
 });
-</script> 
+</script>
 
 <style scoped>
 .v-card-title {

@@ -24,15 +24,14 @@ const props = defineProps({
 });
 
 const iconMap = {
-  Product: "fa-solid fa-bag-shopping",
-  Dog: "fas fa-dog",
-  Cat: "fas fa-cat",
-  "Small Pet": "fas fa-otter",
-  "+ Vet": "fas fa-user-md",
-  "Top Brands": "fas fa-star",
-  "Special Offers": "fas fa-tags",
-  Appointment: "fa-solid fa-calendar-check",
-  Forum: "fa-solid fa-comment",
+  所有商品: "fa-solid fa-bag-shopping",
+  狗狗: "fas fa-dog",
+  貓咪: "fas fa-cat",
+  小型寵物: "fas fa-otter",
+  熱銷品牌: "fas fa-star",
+  促銷活動: "fas fa-tags",
+  美容預約: "fa-solid fa-calendar-check",
+  寵物討論區: "fa-solid fa-comment",
 };
 </script>
 
@@ -43,4 +42,3 @@ i {
   color: #444;
 }
 </style>
-
