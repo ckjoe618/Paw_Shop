@@ -13,15 +13,8 @@
           分類：{{ product.categoryName }}
         </div>
 
-        <v-rating
-          :model-value="product.averageRating"
-          color="amber"
-          readonly
-          density="compact"
-        />
-        <div class="text-caption text-grey">
-          {{ product.totalReview }} 則評價
-        </div>
+        <v-rating :model-value="ratingInfo.averageRating" color="amber" readonly density="compact" />
+        <div class="text-caption text-grey">{{ ratingInfo.totalReview }} 則評價</div>
 
         <div class="my-4">
           <div class="text-h6 font-weight-bold text-red">
@@ -126,6 +119,7 @@ const showSnackbar = ref(false);
 const allProducts = ref([]);
 const authStore = useAuthStore();
 const recommendedProducts = ref([]);
+const ratingInfo = ref({ averageRating: 0, totalReview: 0 });
 
 const reviews = ref([
   {
@@ -179,7 +173,7 @@ function updateRecommendations() {
 }
 
 onMounted(async () => {
-  await Promise.all([fetchProduct(route.params.id), fetchAllProducts()]);
+  await Promise.all([fetchProduct(route.params.id), fetchAllProducts(), fetchRatingInfo(route.params.id)]);
   updateRecommendations();
 });
 
@@ -187,10 +181,20 @@ watch(
   () => route.params.id,
   async (newId) => {
     await fetchProduct(newId);
+    await fetchRatingInfo(newId);
     updateRecommendations();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 );
+
+async function fetchRatingInfo(id) {
+  try {
+    const res = await axios.get(`http://localhost:8080/product/${id}/rating-info`);
+    ratingInfo.value = res.data;
+  } catch (error) {
+    console.error("載入評價資訊失敗:", error);
+  }
+}
 
 //加入購物車
 async function addToCart() {

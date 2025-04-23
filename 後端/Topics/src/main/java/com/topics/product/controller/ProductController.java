@@ -1,11 +1,16 @@
 package com.topics.product.controller;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
+import com.topics.order.model.service.front.OrderDetailService;
 import com.topics.product.model.bean.ProductBean;
 import com.topics.product.model.dto.PurchaseItem;
+import com.topics.product.model.repository.ProductRepository;
 import com.topics.product.model.service.ProductService;
 import com.topics.product.model.service.PurchasingOrderService;
 
@@ -20,6 +25,12 @@ public class ProductController {
 	
 	@Autowired
 	private PurchasingOrderService purchasingOrderService;
+	
+	@Autowired
+	private ProductRepository productRepository;
+	
+	@Autowired
+	private OrderDetailService orderDetailService;
 	
 	// 查詢目前尚有庫存的商品（且未被刪除）
 	@GetMapping("/stock/available")
@@ -101,6 +112,24 @@ public class ProductController {
 	@ResponseBody
 	public List<ProductBean> getTopExpensiveProducts() {
 	    return pService.getTopExpensiveProducts();
+	}
+	
+	// 新增這支 API：查詢單一產品的平均星數與總評論數
+	@GetMapping("/{id}/rating-info")
+	@ResponseBody
+	public Map<String, Object> getRatingInfo(@PathVariable Integer id) {
+	    ProductBean product = pService.findProductById(id); // 安全取用
+	    return Map.of(
+	        "averageRating", product.getAverageRating(),
+	        "totalReview", product.getTotalReview()
+	    );
+	}
+	
+	@GetMapping("/init-ratings")
+	@ResponseBody
+	public String initializeAllRatings() {
+	    orderDetailService.initializeAllProductRatings();
+	    return "所有產品評價已初始化";
 	}
 
 }
