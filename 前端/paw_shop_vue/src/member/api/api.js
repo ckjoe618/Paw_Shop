@@ -71,9 +71,10 @@ export const apiAddShoppingCartItem = (data) =>
 //前台訂單
 export const apiFindOrdersByMemberId = () => api.get(`/api/order`);
 export const apiCancelOrder = (data) => api.put(`/api/order/${data}`);
+export const apiCreateOrder = (data) => api.post(`/api/order`, data);
 export const apiFindOrderDetails = (data) =>
   api.get(`/api/orderdetail/${data}`);
-export const apiCreateOrder = (data) => api.post(`/api/order`, data);
+export const apiUpdateOrderDetail = (data) => api.put(`/api/orderdetail`, data);
 
 //綠界
 export const apiECpay = (data) => api.post(`/api/ecpay/checkout`, data);

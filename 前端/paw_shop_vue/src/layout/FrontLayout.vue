@@ -14,7 +14,7 @@
 
     <!-- Main content -->
     <v-main class="pt-10">
-      <router-view />
+      <router-view :key="$route.fullPath" />
 
       <!-- Footer 區塊滿版 -->
       <v-sheet class="w-100">
@@ -30,15 +30,14 @@ import NavTabs from "@/components/NavTabs.vue";
 import FooterBar from "@/components/FooterBar.vue";
 
 const navItems = [
-  { label: "Product", link: "/products" },
-  { label: "Dog", link: "" },
-  { label: "Cat", link: "" },
-  { label: "Small Pet", link: "" },
-  { label: "+ Vet", link: "" },
-  { label: "Top Brands", link: "" },
-  { label: "Special Offers", link: "" },
-  { label: "Appointment", link: "/appointments" },
-  { label: "Forum", link: "" },
+  { label: "所有商品", link: "/products" },
+  { label: "狗狗", link: "" },
+  { label: "貓咪", link: "" },
+  { label: "小型寵物", link: "" },
+  { label: "熱銷品牌", link: "" },
+  { label: "促銷活動", link: "" },
+  { label: "美容預約", link: "/appointments" },
+  { label: "寵物討論區", link: "" },
 ];
 </script>
 

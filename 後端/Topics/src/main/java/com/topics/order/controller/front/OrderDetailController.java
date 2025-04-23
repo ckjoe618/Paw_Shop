@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.bean.OrderDetailBean;
 import com.topics.order.model.service.front.OrderDetailService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -31,6 +33,15 @@ public class OrderDetailController {
 		return "ok";
 	}
 	
+	//修改（評論）
+	@PutMapping
+	public OrderDetailBean updateOrderdetailComment(@RequestBody OrderDetailBean orderDetailBean) {
+		Integer orderDetailId = orderDetailBean.getOrderDetailId();
+		Integer rating = orderDetailBean.getRating();
+		String comment = orderDetailBean.getComment();
+		
+		return orderDetailService.updateOrderdetailComment(orderDetailId,rating, comment);
+	}
 	
 	//查詢
 	@GetMapping("/{orderId}")

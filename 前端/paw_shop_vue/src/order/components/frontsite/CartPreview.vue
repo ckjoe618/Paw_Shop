@@ -10,7 +10,18 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in items" :key="index">
-          <td>{{ item.product.productName }}</td>
+          <td>
+            <router-link
+              :to="{
+                name: 'ProductDetailPage',
+                params: { id: item.product.productId },
+              }"
+              style="color: black"
+              @click="emit('closeMenu')"
+            >
+              {{ item.product.productName }}
+            </router-link>
+          </td>
           <td
             style="
               text-align: center;
@@ -61,3 +72,4 @@ const checkout = () => {
   emit("closeMenu");
 };
 </script>
+<style scoped></style>

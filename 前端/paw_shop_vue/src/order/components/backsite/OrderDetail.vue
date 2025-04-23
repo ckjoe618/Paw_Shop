@@ -110,9 +110,25 @@
                 <td
                   class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
                 >
-                  updateTime
+                  更新時間
                 </td>
                 <td>{{ selectedOrder?.updateTime }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  綠界訂單編號
+                </td>
+                <td>{{ selectedOrder?.merchantTradeNo }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  綠界交易代碼
+                </td>
+                <td>{{ selectedOrder?.ecpayTradeNo }}</td>
               </tr>
             </tbody>
           </v-table>
