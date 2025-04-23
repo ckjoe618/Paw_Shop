@@ -18,13 +18,8 @@
       <div class="text-subtitle-1 font-weight-bold">
         NT$ {{ product.productPrice }}
       </div>
-      <v-rating
-        :model-value="product.averageRating"
-        color="amber"
-        readonly
-        dense
-      />
-      <div class="text-caption text-grey">{{ product.totalReview }} 則評價</div>
+      <v-rating :model-value="ratingInfo.averageRating" color="amber" readonly dense />
+      <div class="text-caption text-grey">{{ ratingInfo.totalReview }} 則評價</div>
       <div class="text-body-2 mt-1 product-desc">
         {{ truncatedDescription }}
       </div>
@@ -48,7 +43,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
 import { useRouter } from "vue-router";
 import { loadCart } from "@/order/components/frontsite/useCart";
 import { useAuthStore } from "@/member/stores/auth";
@@ -57,7 +53,9 @@ import {
   apiFindShoppingCartItem,
   apiUpdateShoppingCartItem,
 } from "@/member/api/api";
+
 const router = useRouter();
+const ratingInfo = ref({ averageRating: 0, totalReview: 0 });
 
 const props = defineProps({
   product: Object,
@@ -126,6 +124,11 @@ function goToDetail() {
 const truncatedDescription = computed(() => {
   const text = props.product.productDes || "";
   return text.length > 60 ? text.slice(0, 60) + "..." : text;
+});
+
+onMounted(async () => {
+  const res = await axios.get(`http://localhost:8080/product/${props.product.productId}/rating-info`);
+  ratingInfo.value = res.data;
 });
 </script>
 

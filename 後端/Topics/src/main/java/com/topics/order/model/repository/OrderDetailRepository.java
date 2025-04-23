@@ -16,4 +16,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailBean, In
 	// 查詢（依orderId）
 	public List<OrderDetailBean> findByOrder_OrderId(Integer orderId);
 
+	//查詢某產品所有評價用
+	List<OrderDetailBean> findByProductProductId(Integer productId);
 }
