@@ -11,7 +11,9 @@ public interface OrderRepository extends JpaRepository<OrderBean, Integer> {
 	// 查詢
 	@Query("SELECT o FROM OrderBean o WHERE o.orderStatus != '訂單失效'")
 	public List<OrderBean> findAllActiveOrder();
-
+	
+	//前台會員訂單查詢
+	public List<OrderBean> findByMember_MemberId(Integer memberId);
 
 	// 刪除（假刪除）
 	@Modifying

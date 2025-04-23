@@ -7,11 +7,11 @@
         cols="12"
         sm="6"
         md="4"
-        lg="3"
+        lg="4"
       >
         <v-card
           class="mx-auto hover-scale"
-          max-width="344"
+          max-width="400"
           elevation="6"
           rounded="xl"
         >
@@ -51,7 +51,7 @@ const items = ref([
     icon: "fas fa-user",
     image: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
     button: [
-      { label: "用戶管理", link: "" },
+      { label: "用戶管理", link: "/admin/member" },
       { label: "角色權限", link: "" },
     ],
   },
@@ -60,8 +60,8 @@ const items = ref([
     icon: "fas fa-store",
     image: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
     button: [
-      { label: "商品管理", link: "" },
-      { label: "訂單管理", link: "" },
+      { label: "商品管理", link: "/admin/products" },
+      { label: "訂單管理", link: "/admin/orders" },
     ],
   },
   {

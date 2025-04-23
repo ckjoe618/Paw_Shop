@@ -1,6 +1,10 @@
+
 package com.topics.appointment.model.bean;
 
 import java.util.List;
+
+import com.topics.member.model.entity.MemberBean;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,8 +31,8 @@ public class Appointment {
 	private int appointmentId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false)
-	private Owner owner;
+	@JoinColumn(name = "member_id", referencedColumnName = "memberId", nullable = false)
+	private MemberBean member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pet_id", referencedColumnName = "pet_id", nullable = false)
@@ -64,10 +68,10 @@ public class Appointment {
 	public Appointment() {
 	};
 
-	public Appointment(int appointmentId, Owner owner, Pet pet, String appointmentDate, String appointmentTimeslot,
+	public Appointment(int appointmentId, MemberBean member, Pet pet, String appointmentDate, String appointmentTimeslot,
 			int appointmentTotal, int appointmentStatus, int paymentStatus) {
 		this.appointmentId = appointmentId;
-		this.owner = owner;
+		this.member = member;
 		this.pet = pet;
 		this.appointmentDate = appointmentDate;
 		this.appointmentTimeslot = appointmentTimeslot;
@@ -76,9 +80,9 @@ public class Appointment {
 		this.paymentStatus = paymentStatus;
 	}
 
-	public Appointment(Owner owner, Pet pet, String appointmentDate, String appointmentTimeslot, int appointmentTotal,
+	public Appointment(MemberBean member, Pet pet, String appointmentDate, String appointmentTimeslot, int appointmentTotal,
 			int appointmentStatus, int paymentStatus) {
-		this.owner = owner;
+		this.member = member;
 		this.pet = pet;
 		this.appointmentDate = appointmentDate;
 		this.appointmentTimeslot = appointmentTimeslot;
@@ -87,4 +91,5 @@ public class Appointment {
 		this.paymentStatus = paymentStatus;
 	}
 
+	
 }

@@ -10,7 +10,7 @@ CREATE TABLE member (
 	account				NVARCHAR(50)		NOT NULL,
 	password			NVARCHAR(255)		NOT NULL,
 	create_account_date	DATETIME			DEFAULT GETDATE(),
-	role				NVARCHAR(20)		NOT NULL DEFAULT 'user',
+	role				NVARCHAR(20)		DEFAULT 'USER',
 	active_status		BIT					DEFAULT 1
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE address (
 	district			NVARCHAR(30),
 	address_detail		NVARCHAR(100),
 	created_date		DATETIME			DEFAULT GETDATE(),
-	default_status		BIT					DEFAULT 1,
+	default_status		BIT					DEFAULT 0,
 	CONSTRAINT FK_address_member FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
 

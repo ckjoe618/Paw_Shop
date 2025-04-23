@@ -32,12 +32,16 @@ public class MemberBean {
 	private String email;
 	private String phone;
 	private LocalDate birthDate;
-	private byte[] memberPhoto;
+	private String memberPhoto;
 	private String account;
 	private String password;
 	private LocalDateTime createAccountDate = LocalDateTime.now();
-	private String role;
+	private String role = "USER";
 	private boolean activeStatus = true;
+	
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<AddressBean> addressList;
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore

@@ -56,10 +56,79 @@
               </tr>
               <tr>
                 <td colspan="4"></td>
-                <td class="fw-bold">總計：${{ totalPrice }}</td>
+                <td class="fw-bold">商品總計 ${{ totalPrice }}</td>
                 <td>
                   <addbtn size="28" @click="showAddDetail = true">新增</addbtn>
                 </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </div>
+        <div class="mt-10">
+          <h4
+            class="text-subtitle-1 mb-2"
+            style="font-weight: bold; color: #4f4f4f"
+          >
+            <v-icon>mdi-store-marker</v-icon>收件資訊：
+          </h4>
+          <v-table class="elevation-1" density="comfortable">
+            <tbody>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                  style="width: 160px"
+                >
+                  收件人姓名
+                </td>
+                <td>{{ selectedOrder?.recipientName }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  收件人電話
+                </td>
+                <td>{{ selectedOrder?.recipientPhone }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  收件地址
+                </td>
+                <td>{{ selectedOrder?.recipientAddress }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  訂單運費
+                </td>
+                <td>{{ selectedOrder?.shippingFee }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  更新時間
+                </td>
+                <td>{{ selectedOrder?.updateTime }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  綠界訂單編號
+                </td>
+                <td>{{ selectedOrder?.merchantTradeNo }}</td>
+              </tr>
+              <tr>
+                <td
+                  class="bg-grey-lighten-4 font-weight-medium text-grey-darken-1"
+                >
+                  綠界交易代碼
+                </td>
+                <td>{{ selectedOrder?.ecpayTradeNo }}</td>
               </tr>
             </tbody>
           </v-table>
@@ -158,7 +227,7 @@ const fetchOrderDetails = async () => {
   if (props.order && props.order.orderId) {
     try {
       const res = await axios.get(
-        `http://localhost:8080/orderdetail/allorderdetails?orderId=${props.order.orderId}`
+        `http://localhost:8080/api/admin/orderdetail?orderId=${props.order.orderId}`
       );
       orderDetails.value = res.data;
     } catch (error) {
@@ -173,6 +242,9 @@ watch(
   },
   { immediate: true }
 );
+
+//收件資訊
+const selectedOrder = computed(() => props.order);
 
 //總計計算
 const totalPrice = computed(() => {
@@ -197,7 +269,7 @@ const confirmDelete = async (orderDetailId) => {
   orderDetails.value[index].status = "disabled";
   try {
     await axios.delete(
-      `http://localhost:8080/orderdetail/delete/${orderDetailId}`
+      `http://localhost:8080/api/admin/orderdetail/${orderDetailId}`
     );
   } catch (err) {
     console.error("刪除失敗", err);
@@ -223,7 +295,9 @@ watch(showAddDetail, (val) => {
 });
 onMounted(async () => {
   try {
-    const res = await axios.get("http://localhost:8080/product/available");
+    const res = await axios.get(
+      "http://localhost:8080/product/stock/available"
+    );
     productList.value = res.data.map((p) => ({
       ...p,
       customLabel: `${p.productId} - ${p.productName}`,
@@ -264,7 +338,7 @@ const submitDetail = async () => {
 
   try {
     const res = await axios.post(
-      "http://localhost:8080/orderdetail/add",
+      "http://localhost:8080/api/admin/orderdetail",
       newData
     );
     if (res.data) {

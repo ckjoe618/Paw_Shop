@@ -178,8 +178,7 @@ public class ArticleService {
         MemberBean member = article.getMember();
         String memberName = (member != null) ? member.getMemberName() : "未知會員";
         String memberPhoto = (member != null && member.getMemberPhoto() != null)
-                ? new String(member.getMemberPhoto(), StandardCharsets.UTF_8)
-                : null;
+                ? member.getMemberPhoto() : null;
         dto.setMemberName(memberName);
         dto.setMemberPhoto(memberPhoto);
 

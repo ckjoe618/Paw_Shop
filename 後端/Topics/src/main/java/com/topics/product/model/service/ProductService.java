@@ -113,5 +113,9 @@ public class ProductService {
 	public List<ProductBean> findAvailableStockProducts() {
 	    return pRepos.findByProductStockGreaterThanAndIsDeletedStatusFalse(0);
 	}
+	
+	public List<ProductBean> getTopExpensiveProducts() {
+	    return pRepos.findTop4ByOrderByProductPriceDesc();
+	}
 
 }

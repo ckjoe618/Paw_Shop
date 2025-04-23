@@ -122,7 +122,7 @@ watch(
     if (newId) {
       try {
         const res = await axios.get(
-          `http://localhost:8080/order/queryone/${newId}`
+          `http://localhost:8080/api/admin/order/queryone/${newId}`
         );
         Object.assign(form.value, res.data);
       } catch (e) {
@@ -144,11 +144,11 @@ const submitForm = async () => {
       // 編輯
       const newData = {
         ...form.value,
-        member: { memberId: form.value.memberId },
+        member: { memberId: form.value.member.memberId },
       };
-      console.log("送出資料:", JSON.stringify(form.value));
+      console.log(props.orderId);
       const response = await axios.put(
-        `http://localhost:8080/order/update/${props.orderId}`,
+        `http://localhost:8080/api/admin/order/update/${props.orderId}`,
         newData
       );
       console.log("訂單更新成功！", response.data);
@@ -160,7 +160,7 @@ const submitForm = async () => {
         member: { memberId: form.value.memberId },
       };
       const response = await axios.post(
-        "http://localhost:8080/order/add",
+        "http://localhost:8080/api/admin/order",
         newData
       );
       console.log("訂單建立成功！", response.data);

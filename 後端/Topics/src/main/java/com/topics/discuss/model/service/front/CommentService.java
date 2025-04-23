@@ -42,8 +42,8 @@ public class CommentService {
 
             MemberBean member = comment.getMember();
             dto.setMemberName(member.getMemberName());
-            byte[] rawPhoto = member.getMemberPhoto();
-            String memberPhoto = (rawPhoto != null) ? new String(rawPhoto, StandardCharsets.UTF_8) : null;
+            String memberPhoto = (member.getMemberPhoto() != null)
+                    ? member.getMemberPhoto() : null;
             dto.setMemberPhoto(memberPhoto);
 
             result.add(dto);
@@ -74,8 +74,8 @@ public class CommentService {
             MemberBean member = comment.getMember();
             dto.setMemberName(member.getMemberName());
 
-            byte[] rawPhoto = member.getMemberPhoto();
-            String memberPhoto = (rawPhoto != null) ? new String(rawPhoto, StandardCharsets.UTF_8) : null;
+            String memberPhoto = (member.getMemberPhoto() != null)
+                    ? member.getMemberPhoto() : null;
             dto.setMemberPhoto(memberPhoto);
 
             if (comment.getParentCommentId() == null || comment.getParentCommentId() == 0) {
@@ -147,8 +147,7 @@ public class CommentService {
         CommentBean updated = commentRepository.save(comment);
         MemberBean member = updated.getMember();
         String memberPhoto = (member.getMemberPhoto() != null)
-                ? new String(member.getMemberPhoto(), StandardCharsets.UTF_8)
-                : null;
+                ? member.getMemberPhoto() : null;
 
         return new CommentResponseDto(
                 updated.getCommentId(),

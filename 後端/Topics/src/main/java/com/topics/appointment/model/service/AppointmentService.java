@@ -1,17 +1,28 @@
 package com.topics.appointment.model.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.topics.appointment.model.bean.Appointment;
 import com.topics.appointment.model.bean.ItemDetails;
 import com.topics.appointment.model.bean.Items;
-import com.topics.appointment.model.bean.Owner;
 import com.topics.appointment.model.bean.PackageDetails;
 import com.topics.appointment.model.bean.Pet;
 import com.topics.appointment.model.bean.ServicePackage;
+import com.topics.appointment.model.repository.AppointmentRepository;
+import com.topics.appointment.model.repository.ItemDetailsRepository;
+import com.topics.appointment.model.repository.ItemsRepository;
+import com.topics.appointment.model.repository.OwnerRepository;
+import com.topics.appointment.model.repository.PackageDetailsRepository;
+import com.topics.appointment.model.repository.ServicePackageRepository;
+import com.topics.member.model.entity.MemberBean;
+
 import io.micrometer.common.util.StringUtils;
 
 @Service
@@ -40,9 +51,9 @@ public class AppointmentService {
 		for (Object[] row : result) {
 			Appointment appointment = new Appointment();
 			appointment.setAppointmentId((Integer) row[0]);
-			Owner owner = new Owner();
-			owner.setMemberId((Integer) row[1]);
-			appointment.setOwner(owner);
+			MemberBean member = new MemberBean();
+			member.setMemberId((Integer) row[1]);
+			appointment.setMember(member);
 			Pet pet = new Pet();
 			pet.setPetId((Integer) row[2]);
 			appointment.setPet(pet);
@@ -58,7 +69,7 @@ public class AppointmentService {
 		}
 		return appointments;
 	}
-
+	
 	@Transactional
 	public int insertAppointment(Appointment appointment) {
 		appointment.setAppointmentTotal(0);
@@ -110,9 +121,9 @@ public class AppointmentService {
 		for (Object[] row : result) {
 			Appointment appointment = new Appointment();
 			appointment.setAppointmentId((Integer) row[0]);
-			Owner owner = new Owner();
-			owner.setMemberId((Integer) row[1]);
-			appointment.setOwner(owner);
+			MemberBean member = new MemberBean();
+			member.setMemberId((Integer) row[1]);
+			appointment.setMember(member);
 			Pet pet = new Pet();
 			pet.setPetId((Integer) row[2]);
 			appointment.setPet(pet);
@@ -130,6 +141,36 @@ public class AppointmentService {
 	}
 
 	@Transactional
+	public List<Appointment> searchAppointmentById(int appointmentId){
+		List<Object[]> result = appointmentRepository. findAppointmentById(appointmentId);
+		List<Appointment> appointments = new ArrayList<>();
+		for (Object[] row : result) {
+			Appointment appointment = new Appointment();
+			appointment.setAppointmentId((Integer) row[0]);
+			MemberBean member = new MemberBean();
+			member.setMemberId((Integer) row[1]);
+			appointment.setMember(member);
+			Pet pet = new Pet();
+			pet.setPetId((Integer) row[2]);
+			appointment.setPet(pet);
+			appointment.setAppointmentDate(row[3] != null ? row[3].toString() : null);
+			appointment.setAppointmentTimeslot((String) row[4]);
+			appointment.setAppointmentTotal((Integer) row[5]);
+			appointment.setAppointmentStatus(((Number) row[6]).intValue());
+			appointment.setPaymentStatus(((Number) row[7]).intValue());
+			appointment.setServiceNames((String) row[8]);
+			String additionalPackages = (String) row[9];
+			appointment.setAdditionalPackages(StringUtils.isBlank(additionalPackages) ? "無加購服務" : additionalPackages);
+			appointments.add(appointment);
+		}
+		return appointments;
+	}
+	
+	 public void save(Appointment appointment) {
+	        appointmentRepository.save(appointment);
+	    }
+	 
+	@Transactional
 	public boolean deleteAppointment(int appointmentId) {
 		if (!appointmentRepository.existsById(appointmentId)) {
 			throw new IllegalArgumentException("No appointment found with ID: " + appointmentId);
@@ -141,6 +182,7 @@ public class AppointmentService {
 		return true;
 	}
 
+
 	@Transactional(readOnly = true)
 	public Appointment getAppointmentById(int appointmentId) {
 		return appointmentRepository.findById(appointmentId)
@@ -148,7 +190,7 @@ public class AppointmentService {
 	}
 
 	@Transactional(readOnly = true)
-	public Owner getOwnerById(int memberId) {
+	public MemberBean getOwnerById(int memberId) {
 		return ownerRepository.findById(memberId)
 				.orElseThrow(() -> new IllegalArgumentException("No owner found with ID: " + memberId));
 	}
@@ -164,42 +206,41 @@ public class AppointmentService {
 		existingAppointment.setAppointmentStatus(appointment.getAppointmentStatus());
 		existingAppointment.setPaymentStatus(appointment.getPaymentStatus());
 		itemDetailsRepository.deleteByAppointmentId(appointment.getAppointmentId());
-		if (itemDetails != null && !itemDetails.isEmpty()) {
-			for (ItemDetails itemDetail : itemDetails) {
-				ItemDetails existingItemDetail = itemDetailsRepository
-						.findByAppointmentIdAndItemId(appointment.getAppointmentId(), itemDetail.getItemId());
-				if (existingItemDetail != null) {
-					existingItemDetail.setItemDetailQuantity(itemDetail.getItemDetailQuantity());
-					existingItemDetail.setItem(itemDetail.getItem());
-					existingItemDetail.setAppointment(existingAppointment);
-					System.out.println("Updated item detail: " + existingItemDetail);
-				} else {
-					itemDetail.setAppointment(existingAppointment);
-					System.out.println("Inserting new item detail: " + itemDetail);
-					itemDetailsRepository.save(itemDetail);
-				}
-			}
-		}
-		packageDetailsRepository.deleteByAppointmentId(appointment.getAppointmentId());
-		if (packageDetails != null && !packageDetails.isEmpty()) {
-			for (PackageDetails packageDetail : packageDetails) {
-				PackageDetails existingPackageDetail = packageDetailsRepository
-						.findByAppointmentIdAndPackageId(appointment.getAppointmentId(), packageDetail.getPackageId());
-				if (existingPackageDetail != null) {
-					existingPackageDetail.setPackageDetailsQuantity(packageDetail.getPackageDetailsQuantity());
-					existingPackageDetail.setServicePackage(packageDetail.getServicePackage());
-					existingPackageDetail.setAppointment(existingAppointment);
-					System.out.println("Updated package detail: " + existingPackageDetail);
-				} else {
-					packageDetail.setAppointment(existingAppointment);
-					System.out.println("Inserting new package detail: " + packageDetail);
-					packageDetailsRepository.save(packageDetail);
-				}
-			}
-		}
-		existingAppointment.setItems(itemDetails);
-		existingAppointment.setPackages(packageDetails);
-		System.out.println("Saving updated appointment: " + existingAppointment);
+	    if (itemDetails != null && !itemDetails.isEmpty()) {
+	        for (ItemDetails itemDetail : itemDetails) {
+	            ItemDetails existingItemDetail = itemDetailsRepository.findByAppointmentIdAndItemId(appointment.getAppointmentId(), itemDetail.getItemId());
+	            if (existingItemDetail != null) {
+	                existingItemDetail.setItemDetailQuantity(itemDetail.getItemDetailQuantity());
+	                existingItemDetail.setItem(itemDetail.getItem());
+	                existingItemDetail.setAppointment(existingAppointment);
+	                System.out.println("Updated item detail: " + existingItemDetail);
+	            } else {
+	                itemDetail.setAppointment(existingAppointment);
+	                System.out.println("Inserting new item detail: " + itemDetail);
+	                itemDetailsRepository.save(itemDetail);
+	            }
+	        }
+	    }
+	    packageDetailsRepository.deleteByAppointmentId(appointment.getAppointmentId());
+	    if (packageDetails != null && !packageDetails.isEmpty()) {
+	        for (PackageDetails packageDetail : packageDetails) {
+	            PackageDetails existingPackageDetail = packageDetailsRepository
+	                    .findByAppointmentIdAndPackageId(appointment.getAppointmentId(), packageDetail.getPackageId());
+	            if (existingPackageDetail != null) {
+	                existingPackageDetail.setPackageDetailsQuantity(packageDetail.getPackageDetailsQuantity());
+	                existingPackageDetail.setServicePackage(packageDetail.getServicePackage());
+	                existingPackageDetail.setAppointment(existingAppointment);
+	                System.out.println("Updated package detail: " + existingPackageDetail);
+	            } else {
+	                packageDetail.setAppointment(existingAppointment);
+	                System.out.println("Inserting new package detail: " + packageDetail);
+	                packageDetailsRepository.save(packageDetail);
+	            }
+	        }
+	    }
+	    existingAppointment.setItems(itemDetails);
+	    existingAppointment.setPackages(packageDetails);
+	    System.out.println("Saving updated appointment: " + existingAppointment);
 		appointmentRepository.save(existingAppointment);
 		return true;
 	}
@@ -215,42 +256,42 @@ public class AppointmentService {
 	public List<Integer> getSelectedExtraPackages(int appointmentId) {
 		return packageDetailsRepository.findPackageIdsByAppointmentId(appointmentId);
 	}
-
+	
 	public List<ItemDetails> getItemSelectedIds(String[] services) {
-		List<ItemDetails> itemDetails = new ArrayList<>();
-		if (services != null && services.length > 0) {
-			for (String serviceId : services) {
-				int id = Integer.parseInt(serviceId);
+        List<ItemDetails> itemDetails = new ArrayList<>();
+        if (services != null && services.length > 0) {
+            for (String serviceId : services) {
+                int id = Integer.parseInt(serviceId);
 
-				Items item = itemsRepository.findById(id)
-						.orElseThrow(() -> new IllegalArgumentException("Item not found with ID: " + id));
+                Items item = itemsRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Item not found with ID: " + id));
 
-				ItemDetails itemDetail = new ItemDetails();
-				itemDetail.setItem(item);
-				itemDetail.setItemId(id);
-				itemDetail.setItemDetailQuantity(1);
-				itemDetails.add(itemDetail);
-			}
-		}
-		return itemDetails;
-	}
+                ItemDetails itemDetail = new ItemDetails();
+                itemDetail.setItem(item);               
+                itemDetail.setItemId(id);               
+                itemDetail.setItemDetailQuantity(1);    
+                itemDetails.add(itemDetail);
+            }
+        }
+        return itemDetails;
+    }
 
 	public List<PackageDetails> getPackageSelectedIds(String[] extraPackages) {
-		List<PackageDetails> packageDetails = new ArrayList<>();
-		if (extraPackages != null && extraPackages.length > 0) {
-			for (String packageId : extraPackages) {
-				int id = Integer.parseInt(packageId);
-				ServicePackage servicePackage = servicePackageRepository.findById(id)
-						.orElseThrow(() -> new IllegalArgumentException("ServicePackage not found with ID: " + id));
-				PackageDetails packageDetail = new PackageDetails();
-				packageDetail.setPackageId(id);
-				packageDetail.setServicePackage(servicePackage);
-				packageDetails.add(packageDetail);
-			}
-		}
-		return packageDetails;
+	    List<PackageDetails> packageDetails = new ArrayList<>();
+	    if (extraPackages != null && extraPackages.length > 0) {
+	        for (String packageId : extraPackages) {
+	            int id = Integer.parseInt(packageId);
+	            ServicePackage servicePackage = servicePackageRepository.findById(id)
+	                    .orElseThrow(() -> new IllegalArgumentException("ServicePackage not found with ID: " + id));
+	            PackageDetails packageDetail = new PackageDetails();
+	            packageDetail.setPackageId(id);
+	            packageDetail.setServicePackage(servicePackage); 
+	            packageDetails.add(packageDetail);
+	        }
+	    }
+	    return packageDetails;
 	}
-
+	
 	public boolean isServiceAlreadyAdded(int appointmentId, int serviceId) {
 		return itemDetailsRepository.existsByAppointment_AppointmentIdAndItem_ItemId(appointmentId, serviceId);
 	}
@@ -264,4 +305,36 @@ public class AppointmentService {
 				appointmentTimeslot);
 	}
 
+	public String getAppointmentStatus(int appointmentStatus) {
+        if (appointmentStatus == 0) {
+            return "未完成";
+        } else if (appointmentStatus == 1) {
+            return "已完成";
+        } else {
+            return "已取消";
+        }
+    }
+	 public List<Map<String, Object>> getAppointmentsDetails(int memberId, int appointmentStatus) {
+	        List<Object[]> results = appointmentRepository.findAppointmentDetailsByOwner_MemberIdAndAppointmentStatus(memberId, appointmentStatus);
+	        
+	        List<Map<String, Object>> appointments = new ArrayList<>();
+	        
+	        for (Object[] result : results) {
+	            Map<String, Object> appointmentMap = new LinkedHashMap<>();
+
+	            appointmentMap.put("appointmentId", result[0]);
+	            appointmentMap.put("petName", result[1]);
+	            appointmentMap.put("appointmentDate", result[2]);
+	            appointmentMap.put("appointmentTimeslot", result[3]);
+	            appointmentMap.put("appointmentTotal", result[4]);
+	            appointmentMap.put("paymentStatus", result[6]);
+	            appointmentMap.put("serviceNames", result[7]);
+	            appointmentMap.put("additionalPackages", result[8]);
+	            appointmentMap.put("appointmentStatus", result[5]);
+	            
+	            appointments.add(appointmentMap);
+	        }
+	        
+	        return appointments;
+	    }
 }

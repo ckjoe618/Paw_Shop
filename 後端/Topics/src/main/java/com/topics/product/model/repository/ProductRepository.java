@@ -18,4 +18,6 @@ public interface ProductRepository extends JpaRepository<ProductBean, Integer> {
 	// 查詢未被刪除的商品名稱 (模糊)
 	List<ProductBean> findByProductNameContainingAndIsDeletedStatusFalse(String keyword);
 
+	//顯示價格最高的前 4 筆商品
+	List<ProductBean> findTop4ByOrderByProductPriceDesc();
 }

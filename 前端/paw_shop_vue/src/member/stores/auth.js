@@ -1,35 +1,56 @@
 import { defineStore } from "pinia";
 
-export const useAuthStore = defineStore("auth", {
-  state: () => ({
-    token: localStorage.getItem("token") || "",
-    memberId: localStorage.getItem("memberId") || "",
-    role: localStorage.getItem("role") || "",
-    memberName: localStorage.getItem("memberName") || "",
-  }),
-  actions: {
-    login({ token, memberId, role, memberName }) {
-      this.token = token;
-      this.memberId = memberId;
-      this.role = role;
-      this.memberName = memberName;
+// 設定 pinia 的全域變數
+const keys = [
+  "token",
+  "memberId",
+  "memberName",
+  "email",
+  "phone",
+  "role",
+  "memberPhoto",
+  "address",
+];
 
-      // 儲存到 localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("memberId", memberId);
-      localStorage.setItem("role", role);
-      localStorage.setItem("memberName", memberName);
+export const useAuthStore = defineStore("auth", {
+  state: () =>
+    Object.fromEntries(
+      keys.map((key) => {
+        const raw = localStorage.getItem(key);
+        try {
+          return [key, JSON.parse(raw)];
+        } catch {
+          return [key, key === "address" ? {} : raw || ""];
+        }
+      })
+    ),
+  actions: {
+    login(data) {
+      keys.forEach((key) => {
+        this[key] = data[key];
+        const isObject = typeof data[key] === "object";
+        localStorage.setItem(
+          key,
+          isObject ? JSON.stringify(data[key]) : data[key]
+        );
+      });
     },
     logout() {
-      this.token = "";
-      this.memberId = "";
-      this.role = "";
-      this.memberName = "";
-      localStorage.clear();
+      keys.forEach((key) => {
+        this[key] = "";
+        localStorage.removeItem(key);
+      });
     },
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
     isAdmin: (state) => state.role === "ADMIN",
+    fullAddress: (state) => {
+      const addr = state.address;
+      if (!addr) return "";
+      return `${addr.zipcode || ""}${addr.city || ""}${addr.district || ""}${
+        addr.addressDetail || ""
+      }`;
+    },
   },
 });

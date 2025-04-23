@@ -1,10 +1,16 @@
 <template>
-  <v-card>
-    <v-card-title>
+  <v-card elevation="4" rounded="lg">
+    <v-card-title class="d-flex align-center">
       <v-icon class="mr-2">mdi-account-multiple</v-icon>
       會員列表
-      <!-- <v-spacer></v-spacer> -->
-      <!-- <v-btn color="primary" @click="$emit('refresh')">重新整理</v-btn> -->
+      <v-spacer></v-spacer>
+      <v-btn
+        color="primary"
+        variant="elevated"
+        @click="$emit('refresh')"
+        prepend-icon="mdi-refresh"
+        >重新整理</v-btn
+      >
     </v-card-title>
 
     <v-data-table
@@ -13,25 +19,32 @@
       :loading="loading"
       class="elevation-1"
       item-value="memberId"
+      no-data-text="目前沒有會員資料"
     >
       <template #loading>
         <v-skeleton-loader type="table-row@10" />
       </template>
 
-      <template #item.photo="{ item }">
+      <template #item.memberPhoto="{ item }">
         <v-avatar size="36">
-          <v-img :src="item.photo" />
+          <v-img :src="item.memberPhoto" />
         </v-avatar>
       </template>
 
       <template #item.activeStatus="{ item }">
-        <v-chip :color="item.activeStatus === true ? 'green' : 'grey'" dark>
-          {{ item.activeStatus === true ? "啟用" : "停用" }}
+        <v-chip
+          :color="item.activeStatus ? 'green' : 'grey'"
+          text-color="white"
+        >
+          {{ item.activeStatus ? "啟用" : "停用" }}
         </v-chip>
       </template>
 
       <template #item.role="{ item }">
-        <v-chip :color="item.role === 'ADMIN' ? 'red' : 'blue'" dark>
+        <v-chip
+          :color="item.role === 'ADMIN' ? 'red' : 'blue'"
+          text-color="white"
+        >
           {{ item.role }}
         </v-chip>
       </template>
@@ -45,7 +58,7 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn icon color="red" @click="$emit('deactivate', item)">
-          <v-icon>mdi-close-circle</v-icon>
+          <v-icon>mdi-delete</v-icon>
         </v-btn>
       </template>
     </v-data-table>
@@ -62,7 +75,7 @@ const props = defineProps({
 
 const headers = [
   { title: "ID", value: "memberId" },
-  { title: "頭像", value: "photo" },
+  { title: "頭像", value: "memberPhoto" },
   { title: "姓名", value: "memberName" },
   { title: "性別", value: "gender" },
   { title: "身分證", value: "idno" },
