@@ -1,5 +1,30 @@
 <template>
   <div class="grooming-wrapper">
+    <!-- 第一區塊：幻燈片 -->
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="@/appointment/assets/imags/petgrooming.png" class="d-block w-100" alt="溫馨美容空間" />
+          <div class="carousel-caption d-none d-md-block animate__animated animate__fadeInUp">
+     
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="@/appointment/assets/imags/petgrooming.png" class="d-block w-100" alt="專業服務" />
+          <div class="carousel-caption d-none d-md-block animate__animated animate__fadeInUp">
+            
+          </div>
+        </div>
+        <!-- 可再加入更多 -->
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+
     <div class="text-center mb-4 text-dark ">
       <h2>寵物美容</h2>
       <p class="lead">爪娃專業洗護你家毛小孩！</p>
@@ -24,7 +49,7 @@
     </div>
     <div class="row align-items-center g-4 section-spacing">
       <div class="row align-items-center g-4">
-        <div class=" col-md-4 ">
+        <div class=" col-md-6 ">
           <div class="image-box">
            <img
             v-if="selectedService"
@@ -51,86 +76,98 @@
           </div>
         </div>
       </div>
+       
+
       <!-- 說明區塊 -->
   <div class="col-md-6">
-    <div class="info-card bg-light p-4 h-100 d-flex flex-column justify-content-center rounded-end shadow-sm">
-      <h4 v-if="selectedService" class="text-success fw-bold">
+    <div class="info-card position-relative rounded overflow-hidden text-white">
+      <img src="@/appointment/assets/imags/talk.png" alt="背景圖" class="bg-image" />
+
+       <div class="overlay-content">
+      <h4 v-if="selectedService" class="fw-bold">
         {{ selectedService.title }}
       </h4>
       <p v-if="selectedService">{{ selectedService.description }}</p>
-      <p v-else class="text-muted">爪娃專業洗護你家毛小孩！</p>
+      <p v-else class="text-white-50">爪娃專業洗護你家毛小孩！</p>
     </div>
   </div>
-</div>
-    <div class="my-5"></div>
-      <div class="row justify-content-center text-start px-3 px-md-5 py-4">
-  <div class="col-12 col-md-10">
-    <div class="row gy-4">
-      <div class="row justify-content-center text-start px-3 px-md-5 py-4">
-      <!-- 專業美容師 -->
-      <div class="col-12 col-sm-6 col-md-3">
-        <div class="feature-box">
-          <h5 class="text-success fw-bold mb-3">專業美容師團隊</h5>
-          <ul class="custom-list">
-            <li>每位美容師皆通過專業訓練與認證</li>
-            <li>持續進修，掌握最新寵物美容趨勢</li>
-            <li>用愛與耐心，細心對待每一位毛孩</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- 舒適環境 -->
-      <div class="col-12 col-sm-6 col-md-3">
-        <div class="feature-box">
-          <h5 class="text-success fw-bold mb-3">安心舒適的美容環境</h5>
-          <ul class="custom-list">
-            <li>犬貓分區，避免交叉緊張</li>
-            <li>每次服務後皆徹底消毒清潔</li>
-            <li>打造讓毛孩放鬆的氛圍</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- 全預約制 -->
-      <div class="col-12 col-sm-6 col-md-3">
-        <div class="feature-box">
-          <h5 class="text-success fw-bold mb-3">預約制・專屬時段</h5>
-          <ul class="custom-list">
-            <li>一對一專屬時段，避免等待與趕場</li>
-            <li>不超接，確保美容品質與安全</li>
-            <li>細心觀察毛孩狀況，主動回報分享</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- 職人精神 -->
-      <div class="col-12 col-sm-6 col-md-3">
-        <div class="feature-box">
-          <h5 class="text-success fw-bold mb-3">用心呵護的毛小孩</h5>
-          <ul class="custom-list">
-            <li>開放陪同美容，安心陪伴不緊張</li>
-            <li>依照毛孩膚質與需求量身打造護理方式</li>
-          </ul>
-        </div>
-      </div>
-</div>
-    </div>
   </div>
 </div>
+<!-- 第三區塊：介紹環境 -->
+<section class="bg-light py-5">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <img src="@/appointment/assets/imags/space.png"  class="img-fluid rounded shadow animate__animated animate__zoomIn space-img" alt="環境介紹" />
+          </div>
+          <div class="col-md-6">
+            <h3 class="fw-bold">舒適明亮的環境</h3>
+            <p class="text-muted">我們打造安心、放鬆的美容空間，讓您身心都煥然一新 🌿</p>
+          </div>
+        </div>
+      </div>
+    </section>
+   
 <!-- 店家資訊區塊 -->
-<div class="store-info-container p-4 mt-5">
-  <h4 class="text-center text-success mb-4">店家資訊</h4>
-  <div class="store-info">
-    <ul class="list-unstyled">
-      <li><strong>地址：</strong> 桃園市中壢區新生路二段421號 </li>
-      <li><strong>電話：</strong>(03) 453-3013</li>
-      <li><strong>營業時間：</strong>週一至週日 10:00 - 22:00</li>
-      <li><strong>LINE 官方帳號：</strong>@pawcare</li>
-      <li><strong>交通資訊：</strong>中壢火車站→ 中壢客運17路(中壢– 高鐵青埔站) 即可到達</li>
-    </ul>
-  </div>
+<div class="store-info-container bg-white shadow-sm rounded p-4 mt-5">
+  <h4 class="text-center text-success fw-bold mb-4">📍 店家資訊</h4>
+  <ul class="list-unstyled store-info-list">
+    <li><i class="bi bi-geo-alt-fill text-danger me-2"></i><strong>地址：</strong>桃園市中壢區新生路二段421號</li>
+    <li><i class="bi bi-telephone-fill text-primary me-2"></i><strong>電話：</strong>(03) 453-3013</li>
+    <li><i class="bi bi-clock-fill text-warning me-2"></i><strong>營業時間：</strong>週一至週日 10:00 - 22:00</li>
+    <li><i class="bi bi-chat-dots-fill text-success me-2"></i><strong>LINE：</strong>@pawcare</li>
+    <li><i class="bi bi-bus-front-fill text-info me-2"></i><strong>交通：</strong>中壢火車站 → 中壢客運17路(中壢– 高鐵青埔站)</li>
+  </ul>
 </div>
 
+ <!-- 第四區塊：左右交錯介紹特色 -->
+ <section class="py-5">
+      <div class="container">
+        <div class="feature-card d-md-flex align-items-center">
+          <div class="col-md-6 px-4 py-3">
+            <h4 class="fw-bold">專業美容師團隊</h4>
+            <p>每位美容師皆通過專業訓練與認證</p>
+            <p>持續進修，掌握最新寵物美容趨勢</p>
+            <p>用愛與耐心，細心對待每一位毛孩</p>
+          </div>
+          <div class="col-md-6">
+            <img src="@/appointment/assets/imags/t01.png" class="img-fluid animate-img" />
+          </div>
+        </div>
+        <div class="row align-items-center flex-md-row-reverse">
+          <div class="col-md-6">
+            <h4 class="fw-bold">安心舒適的美容環境</h4>
+            <p>犬貓分區，避免交叉緊張</p>
+            <p>每次服務後皆徹底消毒清潔</p>
+            <p>打造讓毛孩放鬆的氛圍</p>
+          </div>
+          <div class="col-md-6">
+            <img src="@/appointment/assets/imags/t02.png" class="img-fluid animate-img" />
+          </div>
+        </div>
+        <div class="feature-card d-md-flex align-items-center">
+          <div class="col-md-6 px-4 py-3">
+            <h4 class="fw-bold">預約制・專屬時段</h4>
+            <p>一對一專屬時段，避免等待與趕場</p>
+            <p>不超接，確保美容品質與安全</p>
+            <p>細心觀察毛孩狀況，主動回報分享</p>       
+          </div>
+          <div class="col-md-6">
+            <img src="@/appointment/assets/imags/t03.png" class="img-fluid animate-img" />
+          </div>
+        </div>
+        <div class="row align-items-center flex-md-row-reverse">
+          <div class="col-md-6">
+            <h4 class="fw-bold">用心呵護的毛小孩</h4>
+            <p>開放陪同美容，安心陪伴不緊張</p>
+            <p>依照毛孩膚質與需求量身打造護理方式</p>
+          </div>
+          <div class="col-md-6">
+            <img src="@/appointment/assets/imags/t04.png" class="img-fluid animate-img" />
+          </div>
+        </div>
+      </div>
+    </section>
     </div>
 <check/>
   </div>
@@ -186,6 +223,10 @@ const services = [
 </script>
 
 <style scoped>
+.carousel-img {
+  height: 50px;
+  object-fit: cover;
+}
 h5 { font-size: 1.25rem; color: #388e3c; }
 .grooming-wrapper {
   background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
@@ -331,7 +372,73 @@ h5 {
 .store-info ul {
   padding-left: 20px;
 }
+.animate-img {
+  max-height: 300px;
+  object-fit: contain;
+  background: transparent; /* 背景透明 */
+  border: none;            /* 無邊框線條 */
+  box-shadow: none;        /* 無陰影 */
+}
 
+.feature-card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.info-card {
+  position: relative;
+  height: 480px;
+  width: 100%;             /* 撐滿父容器 */
+  max-width: 600px;        /* 可選：限制最大寬度 */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+  margin: auto;            /* 置中 */
+  font-family: 'Noto Sans TC', sans-serif; /* 清晰中文字體 */
+}
 
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 90%;
+  height: auto; /* 確保圖片填滿 div */
+  object-fit: cover; /* 讓圖片保持比例並覆蓋整個容器 */
+  z-index: 0; /* 讓圖片在底層 */
+}
+
+.overlay-content {
+  position: relative;
+  width: 85%;
+  z-index: 1; /* 讓文字位於圖片上方 */
+  padding: 2rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.overlay-content h4 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.overlay-content p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+img.space-img {
+  max-width: 100%;        /* 保持響應式 */
+  width: 100%;            /* 填滿欄位 */
+  height: auto;           /* 保持比例 */
+  max-height: 400px;      /* 限制高度，避免太大 */
+  object-fit: cover;      /* 裁切但保留比例 */
+  border-radius: 0.5rem;  /* 圓角美觀 */
+}
 
 </style>
