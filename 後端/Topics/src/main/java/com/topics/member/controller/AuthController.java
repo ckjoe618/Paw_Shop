@@ -43,40 +43,40 @@ public class AuthController {
 		return ResponseUtil.success(response);
 	}
 
-	@GetMapping("/oauth2/callback/google")
-	public ResponseEntity<?> googleCallback(@RequestParam String code) {
-		MemberDto loginMember = authService.loginByGoogle(code, clientId, clientSecret, redirectUri);
-		String token = JwtUtil.generateToken(String.valueOf(loginMember.getMemberId()));
-
-		Map<String, Object> response = new HashMap<>();
-		response.put("success", true);
-		response.put("token", token);
-		response.put("memberId", loginMember.getMemberId());
-		response.put("memberName", loginMember.getMemberName());
-		response.put("email", loginMember.getEmail());
-		response.put("phone", loginMember.getPhone());
-		response.put("role", loginMember.getRole());
-		response.put("memberPhoto", loginMember.getMemberPhoto());
-		response.put("address", loginMember.getAddress());
-
-		return ResponseUtil.success(response);
-	}
-
-	@SuppressWarnings("deprecation")
-	@GetMapping("/oauth2/authorize/google")
-	public ResponseEntity<Map<String, Object>> loginByGoogle() {
-		String base = "https://accounts.google.com/o/oauth2/v2/auth";
-		String url = UriComponentsBuilder.fromHttpUrl(base)
-				.queryParam("client_id", clientId)
-				.queryParam("redirect_uri", redirectUri)
-				.queryParam("response_type", "code")
-				.queryParam("scope", "openid email profile")
-				.build()
-				.toUriString();
-
-		Map<String, String> response = new HashMap<>();
-		response.put("url", url);
-		return ResponseUtil.success(response);
-	}
+//	@GetMapping("/oauth2/callback/google")
+//	public ResponseEntity<?> googleCallback(@RequestParam String code) {
+//		MemberDto loginMember = authService.loginByGoogle(code, clientId, clientSecret, redirectUri);
+//		String token = JwtUtil.generateToken(String.valueOf(loginMember.getMemberId()));
+//
+//		Map<String, Object> response = new HashMap<>();
+//		response.put("success", true);
+//		response.put("token", token);
+//		response.put("memberId", loginMember.getMemberId());
+//		response.put("memberName", loginMember.getMemberName());
+//		response.put("email", loginMember.getEmail());
+//		response.put("phone", loginMember.getPhone());
+//		response.put("role", loginMember.getRole());
+//		response.put("memberPhoto", loginMember.getMemberPhoto());
+//		response.put("address", loginMember.getAddress());
+//
+//		return ResponseUtil.success(response);
+//	}
+//
+//	@SuppressWarnings("deprecation")
+//	@GetMapping("/oauth2/authorize/google")
+//	public ResponseEntity<Map<String, Object>> loginByGoogle() {
+//		String base = "https://accounts.google.com/o/oauth2/v2/auth";
+//		String url = UriComponentsBuilder.fromHttpUrl(base)
+//				.queryParam("client_id", clientId)
+//				.queryParam("redirect_uri", redirectUri)
+//				.queryParam("response_type", "code")
+//				.queryParam("scope", "openid email profile")
+//				.build()
+//				.toUriString();
+//
+//		Map<String, String> response = new HashMap<>();
+//		response.put("url", url);
+//		return ResponseUtil.success(response);
+//	}
 
 }
