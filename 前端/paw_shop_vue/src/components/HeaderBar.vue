@@ -53,7 +53,7 @@
     </div>
 
     <!-- 收藏按鈕 -->
-    <v-btn icon class="text-white mx-1">
+    <v-btn icon class="text-white mx-1" @click="goToFavorites">
       <v-icon size="28">mdi-heart-outline</v-icon>
     </v-btn>
 
@@ -194,6 +194,10 @@ const closeSearch = () => {
   }, 300); // 與動畫時間同步
   search.value = "";
 };
+
+function goToFavorites() {
+  router.push("/favorites");
+}
 
 const handleClickOutside = (e) => {
   if (searchContainer.value && !searchContainer.value.contains(e.target)) {

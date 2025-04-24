@@ -89,6 +89,10 @@ const routes = [
         path: "checkin",
         component: () => import("@/appointment/components/CheckinPage.vue"),
       },
+      {
+        path: "/favorites",
+        component: () => import("@/product/frontsite/FavoriteListPage.vue"),
+      }
     ],
   },
   {
