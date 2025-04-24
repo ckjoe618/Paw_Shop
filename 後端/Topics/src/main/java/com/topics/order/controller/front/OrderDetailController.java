@@ -49,6 +49,9 @@ public class OrderDetailController {
 		return orderDetailService.getAllDetails(orderId);
 	}
 	
-	
+	@GetMapping("/comments/{productId}")
+	public List<OrderDetailBean> getComments(@PathVariable Integer productId) {
+	    return orderDetailService.getCommentsByProductId(productId);
+	}
 
 }
