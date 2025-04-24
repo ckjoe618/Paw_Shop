@@ -1,6 +1,7 @@
 package com.topics.discuss.controller.front;
 
 import com.topics.discuss.model.dto.request.ArticleUpdateDto;
+import com.topics.discuss.model.dto.response.ArticlePreviewDto;
 import com.topics.discuss.model.entity.ArticleBean;
 import com.topics.discuss.model.dto.request.ArticleRequestDto;
 import com.topics.discuss.model.dto.response.ArticleDetailDto;
@@ -22,10 +23,17 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    // 查詢全部文章
+    // 後台查詢全部文章
     @GetMapping
     public ResponseEntity<List<ArticleListDto>> getAllArticles() {
         return ResponseEntity.ok(articleService.getAllArticlesWithCategoryName());
+    }
+
+    // 前台查詢全部文章
+    @GetMapping("/previews")
+    public ResponseEntity<List<ArticlePreviewDto>> getAllArticlePreviews(@RequestParam(defaultValue = "latest") String sort) {
+        List<ArticlePreviewDto> previews = articleService.getArticlePreview(sort);
+        return ResponseEntity.ok(previews);
     }
 
     // 查詢單筆文章

@@ -1,6 +1,7 @@
 package com.topics.discuss.model.service.front;
 
 import com.topics.discuss.model.dto.request.ArticleUpdateDto;
+import com.topics.discuss.model.dto.response.ArticlePreviewDto;
 import com.topics.discuss.model.entity.ArticleBean;
 import com.topics.discuss.model.entity.ArticleCategory;
 import com.topics.discuss.model.dto.request.ArticleRequestDto;
@@ -35,7 +36,7 @@ public class ArticleService {
 //        return articleRepository.findByDeletedFalseOrderByCreatedDateDesc();
 //    }
 
-    // 查全部文章(含分類)
+    // 後台查全部文章(含分類)
     public List<ArticleListDto> getAllArticlesWithCategoryName() {
         List<ArticleBean> articles = articleRepository.findByDeletedFalseOrderByCreatedDateDesc();
 
@@ -66,6 +67,15 @@ public class ArticleService {
             result.add(dto);
         }
         return result;
+    }
+
+    // 前台查詢全部文章摘要(熱門、最新)
+    public List<ArticlePreviewDto> getArticlePreview(String sort) {
+        if ("popular".equalsIgnoreCase(sort)) {
+            return articleRepository.findAllArticlePreviewsOrderByViewCount();
+        } else {
+            return articleRepository.findAllArticlePreviewsOrderByCreatedDate();
+        }
     }
 
     // 查詢所有分類
