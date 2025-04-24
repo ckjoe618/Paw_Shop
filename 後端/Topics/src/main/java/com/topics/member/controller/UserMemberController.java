@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
-import com.topics.member.model.service.MemberService;
+import com.topics.member.model.service.UserMemberService;
 import com.topics.member.utils.ResponseUtil;
 import com.topics.member.utils.SecurityUtil;
 
@@ -26,17 +26,27 @@ import com.topics.member.utils.SecurityUtil;
 public class UserMemberController {
 
 	@Autowired
-	private MemberService memberService;
+	private UserMemberService userMemberService;
 
 	@PutMapping("/member/{id}")
 	public ResponseEntity<?> updateMemberById(@PathVariable Integer id,
 			@RequestPart("data") MemberBean entity,
 			@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 		SecurityUtil.checkUserLogin(id);
-		// 處理圖片
+		MemberDto member = userMemberService.findMemberById(id);
+		String oldPhoto = member.getMemberPhoto();
+		
 		if (file != null && !file.isEmpty()) {
+			
+			if (oldPhoto != null && oldPhoto.contains("/images/uploads/")) {
+				int idx = oldPhoto.lastIndexOf("/images/uploads/");
+			    String oldFileName = oldPhoto.substring(idx + "/images/uploads/".length());
+			    Path deletePath = Paths.get("uploads/images/", oldFileName);
+			    Files.deleteIfExists(deletePath);
+			}
+			
 			String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-			Path uploadPath = Paths.get("src/main/resources/assets/images/uploads/");
+			Path uploadPath = Paths.get("uploads/images/");
 			Files.createDirectories(uploadPath);
 			Path filePath = uploadPath.resolve(filename);
 			Files.write(filePath, file.getBytes());
@@ -45,13 +55,19 @@ public class UserMemberController {
 			entity.setMemberPhoto(photoPath);
 		}
 
-		MemberDto member = memberService.updateMemberById(id, entity);
+		MemberDto memberNew = userMemberService.updateMemberById(id, entity);
+		return ResponseUtil.success(memberNew);
+	}
+
+	@PutMapping("/member/json/{id}")
+	public ResponseEntity<?> updateMemberByIdWithJson(@PathVariable Integer id, @RequestBody MemberBean entity) {
+		MemberDto member = userMemberService.updateMemberById(id, entity);
 		return ResponseUtil.success(member);
 	}
 
 	@PostMapping("/member")
 	public ResponseEntity<?> insertMember(@RequestBody MemberBean entity) {
-		MemberDto member = memberService.insertMember(entity);
+		MemberDto member = userMemberService.insertMember(entity);
 		return ResponseUtil.created(member);
 	}
 

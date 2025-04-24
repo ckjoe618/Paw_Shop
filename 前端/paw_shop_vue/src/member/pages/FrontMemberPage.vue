@@ -40,7 +40,7 @@
             <v-text-field
               label="電話"
               v-model="form.phone"
-              :rules="[rules.required]"
+              :rules="[rules.required, rules.phone]"
             />
           </v-col>
         </v-row>
@@ -76,11 +76,11 @@ const form = ref({
   memberName: authStore.memberName,
   email: authStore.email,
   phone: authStore.phone,
-  gender: authStore.gender,
 });
 
 const rules = {
   required: (v) => !!v || "欄位為必填",
+  phone: (v) => /^09\d{8}$/.test(v) || "手機號碼格式錯誤",
 };
 
 const handleFileChange = (e) => {
@@ -102,13 +102,8 @@ const saveProfile = async () => {
   loading.value = true;
   try {
     const data = await api.apiUpdateMember(form.value, uploadFile.value);
-    // 更新 Pinia 內容
-    authStore.memberName = data.memberName;
-    authStore.phone = data.phone;
-    if (data.memberPhoto) {
-      authStore.memberPhoto = data.memberPhoto;
-      previewPhoto.value = data.memberPhoto;
-    }
+    authStore.update(data);
+    previewPhoto.value = data.memberPhoto || previewPhoto.value;
     uploadFile.value = null;
   } finally {
     loading.value = false;

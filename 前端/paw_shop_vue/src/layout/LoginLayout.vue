@@ -62,6 +62,19 @@
       >
         登入
       </v-btn>
+
+      <v-btn
+        class="mb-2"
+        color="red"
+        size="large"
+        variant="outlined"
+        block
+        @click="handleGoogleLogin"
+      >
+        <v-icon left>mdi-google</v-icon>
+        使用 Google 登入
+      </v-btn>
+
       <v-btn
         class="mb-2"
         color="blue"
@@ -116,15 +129,19 @@ const handlerAdminLogin = () => performLogin("lzx5", "123456");
 // 使用者快速登入
 const handlerUserLogin = () => performLogin("wxm1", "123456");
 
+// Google 登入
+const handleGoogleLogin = async () => {
+  const data = await api.apiGoogleLogin();
+  window.location.href = data.url;
+};
+
 // 統一登入模式
 const performLogin = async (loginId, password) => {
   loading.value = true;
   try {
     const data = await api.apiLogin({ loginId, password });
-    console.log(data);
     authStore.login({ ...data });
     await syncCartToBackend();
-    console.log(authStore.fullAddress);
     router.push(route.query.redirect || "/");
   } finally {
     loading.value = false;

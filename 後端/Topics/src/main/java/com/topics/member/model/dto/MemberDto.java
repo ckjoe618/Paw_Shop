@@ -6,7 +6,6 @@ import org.springframework.beans.BeanUtils;
 import com.topics.member.model.entity.MemberBean;
 import lombok.Getter;
 import lombok.Setter;
-//import java.util.Base64;
 
 @Getter
 @Setter
@@ -27,15 +26,22 @@ public class MemberDto {
 	private AddressDto address;
 
 	public MemberDto(MemberBean entity) {
-		BeanUtils.copyProperties(entity, this); // 將 Member 轉型成 MemberDto
-		// this.phone = "data:image/png;base64," +
-		// Base64.getEncoder().encodeToString(entity.getMemberPhoto()); // 將 base64 編碼成
-		// String
+		BeanUtils.copyProperties(entity, this);
 	}
 
 	public MemberDto(MemberBean entity, AddressDto address) {
-		BeanUtils.copyProperties(entity, this); // 將 Member 轉型成 MemberDto
+		BeanUtils.copyProperties(entity, this);
 		this.address = address;
+	}
+	
+	public String getMemberPhoto() {
+		if (memberPhoto == null || memberPhoto.isBlank()) {
+			String seed = memberName != null 
+					? memberName 
+					: "member" + (memberId != null ? memberId : "0");
+			return "https://api.dicebear.com/9.x/adventurer/svg?seed=" + seed;
+		}
+		return "http://localhost:8080" + memberPhoto;
 	}
 
 }

@@ -184,7 +184,7 @@ const toggleSearch = () => {
 
 const logout = () => {
   authStore.logout();
-  router.push("/");
+  router.replace("/home");
 };
 
 const closeSearch = () => {

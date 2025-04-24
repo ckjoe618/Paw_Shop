@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
-import com.topics.member.model.service.MemberService;
+import com.topics.member.model.service.AdminMemberService;
 import com.topics.member.utils.ResponseUtil;
 import com.topics.member.utils.SecurityUtil;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AdminMemberController {
 
 	@Autowired
-	private MemberService memberService;
+	private AdminMemberService memberService;
 
 	@GetMapping("/member")
 	public ResponseEntity<Map<String, Object>> findMemberAll() {

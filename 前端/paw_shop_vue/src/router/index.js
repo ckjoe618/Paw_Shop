@@ -13,6 +13,10 @@ const routes = [
     meta: { requiresGuest: true },
   },
   {
+    path: "/oauth2/callback/google",
+    component: () => import("@/layout/OAuthGoogleCallback.vue"),
+  },
+  {
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [

@@ -26,7 +26,9 @@ export const apiUpdateMember = (data, file = null) => {
       })
     );
   }
-  return handleResponse(api.put(`/api/user/member/${data.memberId}`, data)); // 沒有圖片 → 使用 JSON 格式
+  return handleResponse(
+    api.put(`/api/user/member/json/${data.memberId}`, data)
+  ); // 沒有圖片 → 使用 JSON 格式
 };
 // 單筆會員刪除
 export const apiDeleteMember = (data) =>
@@ -34,3 +36,10 @@ export const apiDeleteMember = (data) =>
 // Login
 export const apiLogin = (data) =>
   handleResponse(api.post("/api/auth/login", data));
+
+// Google login
+export const apiGoogleLogin = () =>
+  handleResponse(api.get("/api/auth/oauth2/authorize/google"));
+
+export const apiLoginByGoogleCallback = (data) =>
+  handleResponse(api.get(`/api/auth/oauth2/callback/google?code=${data}`));

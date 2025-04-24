@@ -194,26 +194,13 @@ const form = ref({
   account: "",
   password: "",
   confirmPassword: "",
-  memberPhoto: "",
 });
 
 const images = ref([
-  {
-    src: dog01,
-    title: "活力汪星人 🐶",
-  },
-  {
-    src: cat01,
-    title: "慵懶喵星人 🐱",
-  },
-  {
-    src: dog02,
-    title: "忠誠夥伴 🐾",
-  },
-  {
-    src: cat02,
-    title: "貓眼迷人 ✨",
-  },
+  { src: dog01 },
+  { src: cat01 },
+  { src: dog02 },
+  { src: cat02 },
 ]);
 
 const rules = {
@@ -231,15 +218,6 @@ const submit = async () => {
     return;
   }
   loading.value = true;
-  // 預設圖片api
-  const displayName =
-    form.value.memberName.length >= 2
-      ? form.value.memberName.slice(1)
-      : form.value.memberName;
-  form.value.memberPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    displayName
-  )}&background=ffffff&color=215d1e&rounded=true&size=256`;
-
   try {
     await api.apiAddMember(form.value);
     router.push("/login");

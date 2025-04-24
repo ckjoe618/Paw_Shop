@@ -1,10 +1,6 @@
 <template>
   <v-container fluid>
-    <MemberSearchPanel
-      @search="handleSearch"
-      @clear="clearSearch"
-      class="mb-4"
-    />
+    <MemberSearchPanel @search="handleSearch" class="mb-4" />
 
     <MemberTable
       :members="filteredMembers"
@@ -72,12 +68,6 @@ const handleSearch = async ({ keyword = "", role, status }) => {
         : true;
     return matchKey && matchRole && matchStatus;
   });
-};
-
-// 處理清除搜尋事件
-const clearSearch = () => {
-  // 建立一份淺拷貝
-  filteredMembers.value = [...members.value];
 };
 
 // 處理編輯事件
