@@ -189,18 +189,17 @@ const cvsInfo = ref(null);
 const openCvsMap = () => {
   const form = document.createElement("form");
   form.method = "POST";
-  form.action = "https://emap.pcsc.com.tw/EMapSDK/EMapSDK.aspx";
+  form.action = "https://logistics-stage.ecpay.com.tw/Express/map";
   form.target = "cvsMapWindow";
 
   const params = {
-    MerchantID: "2000132", // 綠界提供的測試帳號
+    MerchantID: "2000132",
     MerchantTradeNo: `TEST${Date.now()}`,
     LogisticsType: "CVS",
-    LogisticsSubType: "FAMI", // 全家超商
+    LogisticsSubType: "UNIMART",
     IsCollection: "N",
-    ServerReplyURL: "https://localhost/dummy", // 建議填個假的避免出錯
-    ExtraData: "",
-    Device: 0,
+    ServerReplyURL:
+      "https://dde0-111-249-4-158.ngrok-free.app/ecpay/cvsMapReply",
   };
 
   for (const key in params) {
@@ -213,22 +212,21 @@ const openCvsMap = () => {
 
   document.body.appendChild(form);
 
-  const win = window.open("", "cvsMapWindow", "width=800,height=600");
-  if (win) {
-    console.log("已開啟新視窗並送出表單");
-    form.submit();
-  } else {
-    alert("請允許瀏覽器開啟新視窗");
-  }
+  window.open("", "cvsMapWindow", "width=500,height=600");
 
+  form.submit();
   document.body.removeChild(form);
 };
 // 接收綠界回傳門市資訊（window.postMessage）
 onMounted(() => {
   window.addEventListener("message", (event) => {
     if (event.origin !== "https://emap.pcsc.com.tw") return;
-    cvsInfo.value = event.data;
-    console.log("綠界門市回傳：", event.data);
+    cvsInfo.value = {
+      storeID: event.data.storeID,
+      storeName: event.data.storeName,
+      storeAddress: event.data.storeAddress,
+    };
+    console.log("綠界門市回傳：", cvsInfo.value);
   });
 });
 

@@ -25,7 +25,7 @@
           <div class="d-flex align-center" style="gap: 8px">
             <v-btn
               size="small"
-              @click="cancelOrder(item)"
+              @click="showCancelDialog(item)"
               :color="canCancel(item.orderStatus) ? '#F5EDE1' : '#808080'"
               :disabled="!canCancel(item.orderStatus)"
               >取消訂單</v-btn
@@ -35,6 +35,13 @@
       </v-data-table>
     </div>
   </v-container>
+  <!-- 取消訂單dialog -->
+  <OrderCancelDialog
+    :visible="dialogVisible"
+    :order-id="cancelTargetOrder?.orderId"
+    @update:visible="dialogVisible = $event"
+    @confirm="confirmCancel"
+  />
 
   <!-- 訂單明細dialog -->
   <v-dialog v-model="seeDetails" max-width="800px">
@@ -246,6 +253,7 @@ import {
   apiFindOrderDetails,
   apiUpdateOrderDetail,
 } from "@/member/api/api";
+import OrderCancelDialog from "@/order/components/frontsite/OrderCancelDialog.vue";
 
 const headers = [
   { title: "訂購日期", key: "transactionTime" },
@@ -345,13 +353,19 @@ onMounted(() => {
 });
 
 //取消訂單
-const cancelOrder = async (item) => {
-  const confirm = window.confirm(`確定要取消編號 ${item.orderId} 的訂單？`);
-  if (!confirm) return;
+const dialogVisible = ref(false);
+const cancelTargetOrder = ref(null);
+
+const showCancelDialog = (item) => {
+  cancelTargetOrder.value = item;
+  dialogVisible.value = true;
+};
+
+const confirmCancel = async () => {
   try {
-    const res = await apiCancelOrder(item.orderId);
+    const res = await apiCancelOrder(cancelTargetOrder.value.orderId);
     console.log("取消成功", res.data);
-    item.orderStatus = "訂單取消";
+    cancelTargetOrder.value.orderStatus = "訂單取消";
   } catch (error) {
     console.error("取消訂單失敗", error);
   }
