@@ -20,7 +20,7 @@ onMounted(async () => {
 
   try {
     const data = await api.apiLoginByGoogleCallback(code);
-    authStore.login({ ...data });
+    authStore.login(data);
     router.replace("/home");
   } catch (error) {
     console.error("Google 登入失敗", error);

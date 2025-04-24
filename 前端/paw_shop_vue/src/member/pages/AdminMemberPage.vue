@@ -1,5 +1,15 @@
 <template>
   <v-container fluid>
+    <v-row align="center" class="mb-4" style="gap: 12px">
+      <h2 class="mb-0">會員資訊</h2>
+      <AddBtn
+        label="新增會員"
+        variant="elevated"
+        icon-size="25"
+        @click="createDialog = true"
+      />
+    </v-row>
+
     <MemberSearchPanel @search="handleSearch" class="mb-4" />
 
     <MemberTable
@@ -15,6 +25,8 @@
       :member="selectedMember"
       @updated="fetchMembers"
     />
+
+    <MemberCreateDialog v-model:dialog="createDialog" @created="fetchMembers" />
   </v-container>
 </template>
 
@@ -24,12 +36,15 @@ import * as api from "@/member/api/memberApi/AdminApi.js";
 import MemberTable from "@/member/components/MemberTable.vue";
 import MemberEditDialog from "@/member/components/MemberEditDialog.vue";
 import MemberSearchPanel from "@/member/components/MemberSearchPanel.vue";
+import MemberCreateDialog from "@/member/components/MemberCreateDialog.vue";
+import AddBtn from "@/order/components/buttons/addbtn.vue";
 
 const members = ref([]);
 const filteredMembers = ref([]);
+const selectedMember = ref([]);
 const loading = ref(false);
 const editDialog = ref(false);
-const selectedMember = ref(null);
+const createDialog = ref(false);
 
 // 取得會員資料
 const fetchMembers = async () => {
@@ -38,15 +53,13 @@ const fetchMembers = async () => {
     const data = await api.apiFindMemberAll();
     members.value = data;
     filteredMembers.value = [...data];
-  } catch (error) {
-    console.error("載入會員失敗", error);
   } finally {
     loading.value = false;
   }
 };
 
 // 處理搜尋事件
-const handleSearch = async ({ keyword = "", role, status }) => {
+const handleSearch = async ({ keyword, role, status }) => {
   filteredMembers.value = members.value.filter((member) => {
     let matchKey = true;
 

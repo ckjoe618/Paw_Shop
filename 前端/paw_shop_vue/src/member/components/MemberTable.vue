@@ -1,18 +1,5 @@
 <template>
   <v-card elevation="4" rounded="lg">
-    <v-card-title class="d-flex align-center">
-      <v-icon class="mr-2">mdi-account-multiple</v-icon>
-      會員列表
-      <v-spacer></v-spacer>
-      <v-btn
-        color="primary"
-        variant="elevated"
-        @click="$emit('refresh')"
-        prepend-icon="mdi-refresh"
-        >重新整理</v-btn
-      >
-    </v-card-title>
-
     <v-data-table
       :headers="headers"
       :items="members"
@@ -53,11 +40,15 @@
         {{ new Date(item.birthDate).toLocaleDateString() }}
       </template>
 
+      <template #item.createAccountDate="{ item }">
+        {{ dayjs(item.createAccountDate).format("YYYY/M/D HH:mm") }}
+      </template>
+
       <template #item.actions="{ item }">
-        <v-btn icon color="blue" @click="$emit('edit', item)">
+        <v-btn icon color="primary" @click="$emit('edit', item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn icon color="red" @click="$emit('deactivate', item)">
+        <v-btn icon color="error" @click="$emit('deactivate', item)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </template>
@@ -67,6 +58,7 @@
 
 <script setup>
 import { defineProps } from "vue";
+import dayjs from "dayjs";
 
 const props = defineProps({
   members: Array,
@@ -82,7 +74,7 @@ const headers = [
   { title: "Email", value: "email" },
   { title: "電話", value: "phone" },
   { title: "生日", value: "birthDate" },
-  { title: "角色", value: "role" },
+  { title: "權限", value: "role" },
   { title: "建立時間", value: "createAccountDate" },
   { title: "狀態", value: "activeStatus" },
   { title: "操作", value: "actions", sortable: false },

@@ -33,11 +33,11 @@ public class MemberDto {
 		BeanUtils.copyProperties(entity, this);
 		this.address = address;
 	}
-	
+
 	public String getMemberPhoto() {
 		if (memberPhoto == null || memberPhoto.isBlank()) {
-			String seed = memberName != null 
-					? memberName 
+			String seed = memberName != null
+					? memberName
 					: "member" + (memberId != null ? memberId : "0");
 			return "https://api.dicebear.com/9.x/adventurer/svg?seed=" + seed;
 		}

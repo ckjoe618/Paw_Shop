@@ -1,12 +1,6 @@
 import api from "@/member/api/axiosInterceptor";
 import { handleResponse } from "../handleResponse";
 
-// 全部會員查詢
-export const apiFindMemberAll = () =>
-  handleResponse(api.get("/api/user/member"));
-// 單筆會員查詢
-export const apiFindMember = (data) =>
-  handleResponse(api.get(`/api/user/member/${data}`));
 // 新增會員
 export const apiAddMember = (data) =>
   handleResponse(api.post("/api/user/member", data));
@@ -36,10 +30,9 @@ export const apiDeleteMember = (data) =>
 // Login
 export const apiLogin = (data) =>
   handleResponse(api.post("/api/auth/login", data));
-
 // Google login
 export const apiGoogleLogin = () =>
   handleResponse(api.get("/api/auth/oauth2/authorize/google"));
-
+// Google Callback
 export const apiLoginByGoogleCallback = (data) =>
   handleResponse(api.get(`/api/auth/oauth2/callback/google?code=${data}`));

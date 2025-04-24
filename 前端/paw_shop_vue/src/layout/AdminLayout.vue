@@ -7,7 +7,8 @@
           width="120"
           height="120"
           alt="logo"
-          class="mb-6"
+          class="mb-6 logo-hover"
+          @click="router.push('/admin')"
         />
         <v-list v-model:opened="openedGroups">
           <v-list-group
@@ -114,9 +115,9 @@ import { ref } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";
 
+const openedGroups = ref(["使用者"]);
 const authStore = useAuthStore();
 const drawer = ref(true);
-const openedGroups = ref(["使用者"]);
 
 const logout = () => {
   authStore.logout();
@@ -127,10 +128,7 @@ const items = ref([
   {
     title: "使用者",
     icon: "mdi-account",
-    children: [
-      { label: "用戶管理", link: "/admin/member" },
-      { label: "角色權限", link: "/" },
-    ],
+    children: [{ label: "用戶管理", link: "/admin/member" }],
   },
   {
     title: "賣場",
@@ -168,4 +166,13 @@ const items = ref([
 ]);
 </script>
 
-<style scoped></style>
+<style scoped>
+.logo-hover {
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.logo-hover:hover {
+  transform: scale(1.08);
+  opacity: 0.85;
+}
+</style>

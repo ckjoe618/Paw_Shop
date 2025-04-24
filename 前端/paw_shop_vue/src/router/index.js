@@ -30,7 +30,7 @@ const routes = [
       },
       {
         path: "member/profile",
-        component: () => import("@/member/pages/FrontMemberPage.vue"),
+        component: () => import("@/member/pages/MemberCenterPage.vue"),
         meta: { requiresAuth: true },
       },
       {
@@ -77,12 +77,10 @@ const routes = [
       },
       {
         path: "products",
-        name: "ProductListView",
         component: () => import("@/product/frontsite/ProductListView.vue"),
       },
       {
         path: "/products/:id",
-        name: "ProductDetailPage",
         component: () => import("@/product/frontsite/ProductDetailPage.vue"),
       },
       {
@@ -92,7 +90,7 @@ const routes = [
       {
         path: "/favorites",
         component: () => import("@/product/frontsite/FavoriteListPage.vue"),
-      }
+      },
     ],
   },
   {

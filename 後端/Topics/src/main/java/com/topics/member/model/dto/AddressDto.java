@@ -23,4 +23,5 @@ public class AddressDto {
 			this.memberId = entity.getMember().getMemberId();
 		}
 	}
+	
 }

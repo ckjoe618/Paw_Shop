@@ -32,19 +32,18 @@ public class AdminMemberService {
 		return new MemberDto(memberNew);
 	}
 
-	public MemberDto deleteMemberById(Integer id) {
+	public void deleteMemberById(Integer id) {
 		MemberBean member = memberRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("找不到該會員"));
 		member.setActiveStatus(false);
-		MemberBean save = memberRepository.save(member);
-		return new MemberDto(save);
+		memberRepository.save(member);
 	}
 
-	public List<MemberDto> findMember() {
-		List<MemberDto> members = memberRepository.findAll().stream()
+	public List<MemberDto> findMemberAll() {
+		List<MemberDto> memberList = memberRepository.findAll().stream()
 				.map(m -> new MemberDto(m))
 				.toList();
-		return members;
+		return memberList;
 	}
 
 }

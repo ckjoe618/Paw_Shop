@@ -13,7 +13,7 @@
     </v-sheet>
 
     <!-- Main content -->
-    <v-main class="pt-10">
+    <v-main>
       <router-view :key="$route.fullPath" />
 
       <!-- Footer 區塊滿版 -->

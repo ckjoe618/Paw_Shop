@@ -50,10 +50,7 @@ const items = ref([
     title: "使用者",
     icon: "fas fa-user",
     image: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
-    button: [
-      { label: "用戶管理", link: "/admin/member" },
-      { label: "角色權限", link: "" },
-    ],
+    button: [{ label: "用戶管理", link: "/admin/member" }],
   },
   {
     title: "賣場",

@@ -16,7 +16,7 @@
         <v-select
           v-model="role"
           :items="['ADMIN', 'USER']"
-          label="角色"
+          label="權限"
           clearable
         />
       </v-col>
@@ -41,11 +41,13 @@
 <script setup>
 import { ref, watch } from "vue";
 
-const keyword = ref("");
+const keyword = ref(null);
 const role = ref(null);
 const status = ref(null);
 
 const emit = defineEmits(["search", "clear"]);
+
+watch([keyword, role, status], () => emitSearch());
 
 const emitSearch = () => {
   emit("search", {
@@ -59,8 +61,4 @@ const emitClear = () => {
   keyword.value = "";
   emitSearch();
 };
-
-watch([keyword, role, status], () => {
-  emitSearch();
-});
 </script>
