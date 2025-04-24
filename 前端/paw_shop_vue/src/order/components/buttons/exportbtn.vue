@@ -1,6 +1,7 @@
 <template>
   <v-btn
     :icon="icon !== undefined"
+    color="green"
     :size="size"
     :density="density"
     @click="$emit('click')"
@@ -13,7 +14,7 @@
 defineProps({
   icon: {
     type: String,
-    default: "mdi-plus",
+    default: "mdi-application-export",
   },
   color: {
     type: String,
