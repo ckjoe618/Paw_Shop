@@ -1,12 +1,21 @@
 <template>
   <v-card class="mx-auto my-4 hover-card" max-width="374" @click="goToDetail">
-    <v-img
-      :src="product.productPhoto"
-      height="250"
-      cover
-      class="product-image"
-    />
-
+    <div style="position: relative;">
+      <v-img
+        :src="product.productPhoto"
+        height="250"
+        cover
+        class="product-image"
+      />
+      <v-btn
+        icon
+        class="favorite-btn"
+        @click.stop="toggleFavorite"
+        :color="isFavorite ? 'red' : 'grey'"
+      >
+        <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+      </v-btn>
+    </div>
     <v-card-item>
       <v-card-title class="text-truncate">{{
         product.productName
@@ -18,8 +27,8 @@
       <div class="text-subtitle-1 font-weight-bold">
         NT$ {{ product.productPrice }}
       </div>
-      <v-rating :model-value="ratingInfo.averageRating" color="amber" readonly dense />
-      <div class="text-caption text-grey">{{ ratingInfo.totalReview }} 則評價</div>
+      <v-rating v-if="showRating" :model-value="ratingInfo.averageRating" color="amber" readonly dense />
+      <div v-if="showRating" class="text-caption text-grey">{{ ratingInfo.totalReview }} 則評價</div>
       <div class="text-body-2 mt-1 product-desc">
         {{ truncatedDescription }}
       </div>
@@ -47,6 +56,7 @@ import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { loadCart } from "@/order/components/frontsite/useCart";
+import api from "@/member/api/axiosInterceptor"; // ✅ 使用自訂 axios 實例
 import { useAuthStore } from "@/member/stores/auth";
 import {
   apiAddShoppingCartItem,
@@ -59,10 +69,49 @@ const ratingInfo = ref({ averageRating: 0, totalReview: 0 });
 
 const props = defineProps({
   product: Object,
+  showRating: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const showSnackbar = ref(false);
 const authStore = useAuthStore();
+const isFavorite = ref(false);
+
+
+async function checkFavorite() {
+  if (!authStore.isLoggedIn) return;
+
+  try {
+    const res = await api.get("/api/collections");
+    const favorites = res.data;
+    isFavorite.value = favorites.some(
+      (item) => item.productId === props.product.productId
+    );
+  } catch (err) {
+    console.error("❌ 載入收藏狀態失敗", err);
+  }
+}
+
+async function toggleFavorite() {
+  if (!authStore.isLoggedIn) {
+    alert("請先登入才能收藏商品！");
+    return;
+  }
+
+  const url = `/api/collections/${props.product.productId}`;
+  try {
+    if (isFavorite.value) {
+      await api.delete(url);
+    } else {
+      await api.post(url);
+    }
+    isFavorite.value = !isFavorite.value;
+  } catch (err) {
+    console.error("❌ 收藏操作失敗", err);
+  }
+}
 
 async function addToCart() {
   const item = {
@@ -129,6 +178,7 @@ const truncatedDescription = computed(() => {
 onMounted(async () => {
   const res = await axios.get(`http://localhost:8080/product/${props.product.productId}/rating-info`);
   ratingInfo.value = res.data;
+  await checkFavorite();
 });
 </script>
 
@@ -159,5 +209,12 @@ onMounted(async () => {
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
 }
 </style>
