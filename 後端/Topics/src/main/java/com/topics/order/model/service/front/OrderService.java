@@ -52,6 +52,9 @@ public class OrderService {
 	            detail.setProduct(product);
 	            detail.setUnitPrice(product.getProductPrice());
 	            detail.setSubtotal(product.getProductPrice() * detail.getQuantity());
+	            
+	            product.setProductStock(product.getProductStock() - detail.getQuantity());
+	    		productRepository.save(product);
 	        }
 	    }
 		
