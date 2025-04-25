@@ -27,7 +27,7 @@ public class AddressService {
 		return new AddressDto(saved);
 	}
 
-	public AddressDto updateAddressById(AddressBean address, Integer id) {
+	public AddressDto updateAddressById(Integer id, AddressBean address) {
 		AddressBean addressNew = addressRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("找不到該地址"));
 
@@ -37,7 +37,7 @@ public class AddressService {
 		addressNew.setCity(address.getCity().replace("台", "臺"));
 		addressNew.setDistrict(address.getDistrict().replace("台", "臺"));
 		addressNew.setAddressDetail(address.getAddressDetail().replace("台", "臺"));
-		addressNew.setDefaultStatus(address.isDefaultStatus());
+//		addressNew.setDefaultStatus(address.isDefaultStatus());
 		AddressBean save = addressRepository.save(addressNew);
 		return new AddressDto(save);
 	}
@@ -57,7 +57,7 @@ public class AddressService {
 	}
 
 	public List<AddressDto> findAddressByMemberId(Integer memberId) {
-		List<AddressDto> address = addressRepository.findAddressById(memberId).stream()
+		List<AddressDto> address = addressRepository.findAddressByMemberId(memberId).stream()
 				.map(a -> new AddressDto(a))
 				.toList();
 		return address;

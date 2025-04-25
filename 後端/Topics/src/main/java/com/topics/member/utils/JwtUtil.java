@@ -22,7 +22,7 @@ public class JwtUtil {
 		return Jwts.builder() // 使用 builder 模式設定 token
 				.subject(memberId) // 設定 token 主題 (Subject)，用以標識使用者
 				.issuedAt(new Date()) // 設定 token 發行時間
-				.expiration(new Date(System.currentTimeMillis() + EXPIRATION_IN_SECONDS * 1000)) // 設定 token 到期日期
+				.expiration(new Date(System.currentTimeMillis() + EXPIRATION_IN_SECONDS * 1000 * 7 * 24)) // 設定 token 到期日期
 				.signWith(SECRET_KEY) // 使用密鑰對 token 進行簽名
 				.compact(); // 生成 JWT token
 	}

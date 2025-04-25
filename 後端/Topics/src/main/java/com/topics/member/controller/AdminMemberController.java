@@ -1,7 +1,6 @@
 package com.topics.member.controller;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +45,7 @@ public class AdminMemberController {
 	}
 
 	@GetMapping("/member")
-	public ResponseEntity<Map<String, Object>> findMemberAll() {
+	public ResponseEntity<?> findMemberAll() {
 		List<MemberDto> memberList = adminMemberService.findMemberAll();
 		return ResponseUtil.success(memberList);
 	}

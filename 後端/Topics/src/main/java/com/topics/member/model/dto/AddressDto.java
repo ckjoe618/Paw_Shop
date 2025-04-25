@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class AddressDto {
 
+	private Integer addressId;
 	private Integer memberId;
 	private String recipientName;
 	private String phone;

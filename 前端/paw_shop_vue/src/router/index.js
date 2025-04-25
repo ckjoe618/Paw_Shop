@@ -37,9 +37,27 @@ const routes = [
         component: () => import("@/pages/FrontHome.vue"),
       },
       {
-        path: "member/profile",
+        path: "member",
         component: () => import("@/member/pages/MemberCenterPage.vue"),
         meta: { requiresAuth: true },
+        children: [
+          {
+            path: "",
+            redirect: "/member/profile",
+          },
+          {
+            path: "profile",
+            component: () => import("@/member/components/ProfileForm.vue"),
+          },
+          {
+            path: "address",
+            component: () => import("@/member/pages/MemberAddress.vue"),
+          },
+          // {
+          //   path: "password",
+          //   component: () => import("@/member/components/PasswordPage.vue"),
+          // }
+        ],
       },
       {
         path: "appointments",

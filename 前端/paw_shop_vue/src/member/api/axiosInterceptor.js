@@ -9,6 +9,8 @@ const api = axios.create({
 
 // 防止 token 錯誤重複跳轉用的旗標
 let isHandlingTokenError = false;
+// 加這個防止 alert 重複出現
+let hasShownAlert = false;
 
 // 加入 request interceptor：自動加上 token
 api.interceptors.request.use(
@@ -26,9 +28,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const status = error?.response?.status;
-    const message =
-      error?.response?.data?.message || error.message || "系統錯誤";
+    const status = error.response.status;
+    const message = error.response.data.message || error.message || "系統錯誤";
 
     // 根據錯誤狀態碼做不同處理
     const authStore = useAuthStore();
@@ -36,19 +37,26 @@ api.interceptors.response.use(
     // 401 未授權處理（避免重複彈窗與跳轉）
     if (status === 401 && !isHandlingTokenError) {
       isHandlingTokenError = true;
+
+      if (!hasShownAlert) {
+        hasShownAlert = true;
+        alert("登入已過期，請重新登入");
+      }
       authStore.logout();
-      window.location.href = "/login";
+      router.push("/login");
+      // 可延遲一段時間後重置 flag，避免短時間重複觸發
+      setTimeout(() => {
+        isHandlingTokenError = false;
+        hasShownAlert = false;
+      }, 3000);
       return;
     }
 
-    if (status != 401) {
+    if (!hasShownAlert && status !== 401) {
       alert(message);
     }
 
     switch (status) {
-      case 400:
-        // 錯誤參數
-        break;
       case 403:
         // 沒有權限，導到無權限提示頁
         router.push("/unauthorized");
@@ -63,12 +71,11 @@ api.interceptors.response.use(
         break;
       default:
         // 其他錯誤
-        if (!status) {
+        if (!status && !hasShownAlert) {
           alert("無法連線到伺服器，請檢查網路或稍後再試");
         }
         break;
     }
-
     return Promise.reject(error); // 保留錯誤傳遞
   }
 );

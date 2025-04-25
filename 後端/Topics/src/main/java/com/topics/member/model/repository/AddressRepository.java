@@ -10,8 +10,8 @@ import com.topics.member.model.entity.AddressBean;
 
 public interface AddressRepository extends JpaRepository<AddressBean, Integer> {
 
-	@Query("from AddressBean WHERE member.memberId = :memberId")
-	List<AddressBean> findAddressById(@Param("memberId") Integer id);
+	@Query("from AddressBean WHERE member.memberId = :memberId AND activeStatus = true")
+	List<AddressBean> findAddressByMemberId(@Param("memberId") Integer id);
 
 	@Query("from AddressBean WHERE member.memberId = :memberId AND defaultStatus = true AND activeStatus = true")
 	AddressBean findActiveAddressByMemberId(@Param("memberId") Integer memberId);

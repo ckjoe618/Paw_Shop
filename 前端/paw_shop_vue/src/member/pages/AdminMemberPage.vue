@@ -85,7 +85,7 @@ const handleSearch = async ({ keyword, role, status }) => {
 
 // 處理編輯事件
 const openEditDialog = (member) => {
-  selectedMember.value = member;
+  selectedMember.value = { ...member };
   editDialog.value = true;
 };
 

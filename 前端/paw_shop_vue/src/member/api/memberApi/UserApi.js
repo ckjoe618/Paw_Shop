@@ -42,3 +42,15 @@ export const apiForgotPassword = (data) =>
 // 重設密碼
 export const apiResetPassword = (data) =>
   handleResponse(api.post("/api/auth/reset-password", data));
+// 查詢地址
+export const apiFindAddress = (data) =>
+  handleResponse(api.get(`/api/user/address/${data}`));
+// 新增地址
+export const apiAddAddress = (data) =>
+  handleResponse(api.post("/api/user/address", data));
+// 修改地址
+export const apiUpdateAddress = (data) =>
+  handleResponse(api.put(`/api/user/address/${data.memberId}`, data));
+// 刪除地址
+export const apiDeleteAddress = (data) =>
+  handleResponse(api.delete(`/api/user/address/${data}`));

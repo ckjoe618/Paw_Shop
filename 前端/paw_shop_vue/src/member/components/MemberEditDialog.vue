@@ -89,26 +89,21 @@ const rules = {
 };
 
 watch(
-  () => props.member,
+  dialog,
   (val) => {
-    localMember.value = { ...val };
+    if (val) {
+      localMember.value = { ...props.member };
+    } else {
+      setTimeout(() => {
+        formRef.value?.resetValidation();
+        localMember.value = {};
+      });
+    }
   },
   { immediate: true }
 );
 
-watch(dialog, (val) => {
-  if (!val) {
-    formRef.value.resetValidation();
-    localMember.value = {};
-  } else {
-    // 重新打開 dialog 時，把 props.member 值套進去
-    localMember.value = { ...props.member };
-  }
-});
-
-const close = () => {
-  emit("update:dialog", false);
-};
+const close = () => emit("update:dialog", false);
 
 const submit = async () => {
   const valid = await formRef.value.validate();

@@ -11,18 +11,19 @@
             <v-list-item
               v-for="item in menuItems"
               :key="item.route"
-              :active="item.route === selected"
-              @click="selected = item.route"
+              :to="item.route"
+              :active="$route.path === item.route"
               class="rounded"
+              link
             >
               <v-list-item-title>{{ item.label }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-col>
 
-        <!-- 右側內容顯示區塊 -->
+        <!-- 右側內容區：動態子路由 -->
         <v-col cols="12" md="9" class="pa-6">
-          <component :is="currentComponent" />
+          <router-view />
         </v-col>
       </v-row>
     </v-card>
@@ -30,25 +31,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
-import ProfileForm from "@/member/components/ProfileForm.vue";
+import { useRoute } from "vue-router";
 
 const authStore = useAuthStore();
-const selected = ref("profile");
+const $route = useRoute();
 
 const menuItems = [
-  { label: "個人檔案", route: "profile" },
-  { label: "地址", route: "address" },
-  { label: "通知設定", route: "notifications" },
+  { label: "個人檔案", route: "/member/profile" },
+  { label: "地址", route: "/member/address" },
+  // { label: "通知設定", route: "/member/notifications" },
 ];
-
-const currentComponent = computed(() => {
-  switch (selected.value) {
-    case "profile":
-      return ProfileForm;
-    default:
-      return { template: "<div>此功能尚未實作</div>" };
-  }
-});
 </script>
