@@ -47,47 +47,38 @@
       </v-card>
 
       <v-btn
-        class="mb-8"
-        color="blue"
+        class="mb-4"
+        color="primary"
         size="large"
-        variant="tonal"
+        variant="elevated"
         block
         :loading="loading"
         @click="handlerLogin"
       >
-        登入
+        Log in
       </v-btn>
 
-      <v-btn
-        class="mb-2"
-        color="red"
-        size="large"
-        variant="outlined"
-        block
-        @click="handleGoogleLogin"
-      >
-        <v-icon left>mdi-google</v-icon>
+      <!-- 分隔線 -->
+      <div class="d-flex align-center my-4">
+        <v-divider class="flex-grow-1"></v-divider>
+        <span class="mx-3 text-medium-emphasis text-caption">or</span>
+        <v-divider class="flex-grow-1"></v-divider>
+      </div>
+
+      <!-- Google 登入 -->
+      <v-btn class="mb-2" variant="outlined" block @click="handleGoogleLogin">
+        <img
+          :src="GoogleLogo"
+          alt="Google"
+          style="height: 20px; margin-right: 8px; vertical-align: middle"
+        />
         使用 Google 登入
       </v-btn>
 
-      <v-btn
-        class="mb-2"
-        color="blue"
-        size="large"
-        variant="outlined"
-        block
-        @click="handlerAdminLogin"
-      >
+      <v-btn class="mb-2" variant="outlined" block @click="handlerAdminLogin">
         管理員一鍵登入
       </v-btn>
-      <v-btn
-        class="mb-8"
-        color="blue"
-        size="large"
-        variant="outlined"
-        block
-        @click="handlerUserLogin"
-      >
+      <v-btn class="mb-2" variant="outlined" block @click="handlerUserLogin">
         使用者一鍵登入
       </v-btn>
 
@@ -101,6 +92,7 @@
 </template>
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
+import GoogleLogo from "@/member/assets/images/Google_logo.png";
 import { ref } from "vue";
 import * as api from "@/member/api/memberApi/UserApi.js";
 import { useRoute, useRouter } from "vue-router";
