@@ -22,7 +22,6 @@ public class AdminMemberService {
 	public MemberDto updateMemberById(Integer id, MemberBean entity) {
 		MemberBean member = memberRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("找不到該會員"));
-
 		member.setMemberName(entity.getMemberName());
 		member.setEmail(entity.getEmail());
 		member.setPhone(entity.getPhone());
@@ -32,11 +31,12 @@ public class AdminMemberService {
 		return new MemberDto(memberNew);
 	}
 
-	public void deleteMemberById(Integer id) {
+	public MemberDto deleteMemberById(Integer id) {
 		MemberBean member = memberRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("找不到該會員"));
 		member.setActiveStatus(false);
-		memberRepository.save(member);
+		MemberBean memberNew = memberRepository.save(member);
+		return new MemberDto(memberNew);
 	}
 
 	public List<MemberDto> findMemberAll() {

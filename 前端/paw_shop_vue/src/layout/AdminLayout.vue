@@ -142,7 +142,7 @@ const items = ref([
     title: "美容預約",
     icon: "mdi-calendar-account",
     children: [
-      { label: "預約紀錄", link: "/" },
+      { label: "預約紀錄", link: "/admin/appointments" },
       { label: "服務項目資訊", link: "/" },
     ],
   },

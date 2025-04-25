@@ -217,9 +217,6 @@ watch(cartMenuVisible, async (val) => {
     await loadCart();
   }
 });
-// onMounted(() => {
-//   loadCart();
-// });
 
 const handleSearch = () => {
   if (search.trim() !== "") {
@@ -227,6 +224,10 @@ const handleSearch = () => {
     closeSearch();
   }
 };
+
+onMounted(() => {
+  loadCart();
+});
 </script>
 
 <style scoped>

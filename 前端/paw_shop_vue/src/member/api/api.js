@@ -1,5 +1,4 @@
 import api from "@/member/api/axiosInterceptor";
-import { handleResponse } from "./handleResponse";
 
 // 預約
 // 全部預約查詢

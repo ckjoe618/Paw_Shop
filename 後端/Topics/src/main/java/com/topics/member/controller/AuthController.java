@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.topics.member.model.dto.AuthDto;
 import com.topics.member.model.dto.MemberDto;
+import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.service.AuthService;
+import com.topics.member.model.service.UserMemberService;
 import com.topics.member.utils.JwtUtil;
 import com.topics.member.utils.ResponseUtil;
+import com.topics.utils.EmailService;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,12 @@ public class AuthController {
 
 	@Autowired
 	private AuthService authService;
+
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserMemberService userMemberService;
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody AuthDto info) {
@@ -81,5 +90,23 @@ public class AuthController {
 //		response.put("url", url);
 //		return ResponseUtil.success(response);
 //	}
+
+	@PostMapping("/forgot-password")
+	public ResponseEntity<Map<String, Object>> forgotPassword(@RequestBody Map<String, String> data) {
+		String email = data.get("email");
+		System.out.println(email);
+		userMemberService.findMemberByEmail(email);
+		String token = JwtUtil.generateResetToken(email);
+		String resetUrl = "http://localhost:5173/reset-password?token=" + token;
+		emailService.sendResetPasswordEmail(email, resetUrl);
+		return ResponseUtil.success("重設密碼連結已寄出");
+	}
+
+	@PostMapping("/reset-password")
+	public ResponseEntity<?> resetPassword(@RequestBody AuthDto info) {
+		String email = JwtUtil.getSubject(info.getToken());
+		userMemberService.resetPasswordByEmail(email, info.getPassword());
+		return ResponseUtil.success("密碼重設成功");
+	}
 
 }

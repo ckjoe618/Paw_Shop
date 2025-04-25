@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-row align="center" class="mb-4" style="gap: 12px">
       <h2 class="mb-0">會員資訊</h2>
       <AddBtn

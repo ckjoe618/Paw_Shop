@@ -66,7 +66,7 @@ const items = ref([
     icon: "fas fa-cut",
     image: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
     button: [
-      { label: "預約紀錄", link: "" },
+      { label: "預約紀錄", link: "/admin/appointments" },
       { label: "服務項目資訊", link: "" },
     ],
   },

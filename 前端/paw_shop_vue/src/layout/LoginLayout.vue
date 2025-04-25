@@ -23,14 +23,9 @@
       >
         密碼
 
-        <a
-          class="text-caption text-decoration-none text-blue"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          忘記密碼?</a
-        >
+        <RouterLink to="/forgot-password" class="forgot-password-link">
+          忘記密碼？
+        </RouterLink>
       </div>
 
       <v-text-field
@@ -180,5 +175,17 @@ const performLogin = async (loginId, password) => {
 
 .register-link:hover .register-icon {
   transform: translateX(4px);
+}
+.forgot-password-link {
+  font-size: 0.75rem;
+  text-decoration: none;
+  color: #1976d2; /* Vuetify primary blue */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #0d47a1; /* 深一點的藍色 */
+  text-decoration: underline;
 }
 </style>

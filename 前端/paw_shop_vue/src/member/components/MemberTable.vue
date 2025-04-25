@@ -45,18 +45,18 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-btn icon color="primary" @click="$emit('edit', item)">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-        <v-btn icon color="error" @click="$emit('deactivate', item)">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
+        <div class="d-flex align-center" style="gap: 8px">
+          <Editbtn @click="$emit('edit', item)" />
+          <Deletebtn @click="$emit('deactivate', item)" />
+        </div>
       </template>
     </v-data-table>
   </v-card>
 </template>
 
 <script setup>
+import Editbtn from "@/order/components/buttons/formEditbtn.vue";
+import Deletebtn from "@/order/components/buttons/formDeletebtn.vue";
 import { defineProps } from "vue";
 import dayjs from "dayjs";
 

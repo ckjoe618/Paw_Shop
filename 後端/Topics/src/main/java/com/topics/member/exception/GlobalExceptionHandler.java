@@ -54,4 +54,9 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
 		return ResponseUtil.error(HttpStatus.BAD_REQUEST, "參數驗證錯誤");
 	}
+	
+	@ExceptionHandler(EmailSendException.class)
+	public ResponseEntity<?> handleEmailSendException(EmailSendException ex) {
+	    return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, "寄送 Email 發生錯誤，請稍後再試");
+	}
 }

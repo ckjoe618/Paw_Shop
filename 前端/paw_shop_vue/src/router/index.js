@@ -14,7 +14,15 @@ const routes = [
   },
   {
     path: "/oauth2/callback/google",
-    component: () => import("@/layout/OAuthGoogleCallback.vue"),
+    component: () => import("@/components/OAuthGoogleCallback.vue"),
+  },
+  {
+    path: "/forgot-password",
+    component: () => import("@/layout/ForgotPasswordLayout.vue"),
+  },
+  {
+    path: "/reset-password",
+    component: () => import("@/components/ResetPassword.vue"),
   },
   {
     path: "/",

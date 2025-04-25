@@ -44,6 +44,9 @@
       <template #item.memberId="{ item }">
         {{ item.member?.memberId }}
       </template>
+      <template #item.transactionTime="{ item }">
+        {{ dayjs(item.transactionTime).format("YYYY/M/D HH:mm") }}
+      </template>
       <template #item.actions="{ item }">
         <div class="d-flex align-center" style="gap: 8px">
           <formCheckbtn @click="openDetailDialog(item)" />
@@ -96,6 +99,7 @@ import formEditbtn from "../../order/components/buttons/formEditbtn.vue";
 import OrderForm from "../../order/components/backsite/OrderForm.vue";
 import OrderDetail from "../../order/components/backsite/OrderDetail.vue";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const router = useRouter();
 

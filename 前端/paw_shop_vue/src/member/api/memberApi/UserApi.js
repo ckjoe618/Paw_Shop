@@ -36,3 +36,9 @@ export const apiGoogleLogin = () =>
 // Google Callback
 export const apiLoginByGoogleCallback = (data) =>
   handleResponse(api.get(`/api/auth/oauth2/callback/google?code=${data}`));
+// 忘記密碼
+export const apiForgotPassword = (data) =>
+  handleResponse(api.post("/api/auth/forgot-password", data));
+// 重設密碼
+export const apiResetPassword = (data) =>
+  handleResponse(api.post("/api/auth/reset-password", data));

@@ -10,6 +10,7 @@ public class JwtUtil {
 
 	private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("DoNotGoGentleIntoThatGoodSecurityKey".getBytes());
 	private static final int EXPIRATION_IN_SECONDS = 60 * 60; // 1小時
+	private static final int RESET_EXPIRATION_IN_SECONDS = 15 * 60; // 15 分鐘
 
 	/**
 	 * 產生 JWT Token。
@@ -21,7 +22,16 @@ public class JwtUtil {
 		return Jwts.builder() // 使用 builder 模式設定 token
 				.subject(memberId) // 設定 token 主題 (Subject)，用以標識使用者
 				.issuedAt(new Date()) // 設定 token 發行時間
-				.expiration(new Date(System.currentTimeMillis() + EXPIRATION_IN_SECONDS * 10000)) // 設定 token 到期日期
+				.expiration(new Date(System.currentTimeMillis() + EXPIRATION_IN_SECONDS * 1000)) // 設定 token 到期日期
+				.signWith(SECRET_KEY) // 使用密鑰對 token 進行簽名
+				.compact(); // 生成 JWT token
+	}
+
+	public static String generateResetToken(String email) {
+		return Jwts.builder() // 使用 builder 模式設定 token
+				.subject(email) // 設定 token 主題 (Subject)，用以標識使用者
+				.issuedAt(new Date()) // 設定 token 發行時間
+				.expiration(new Date(System.currentTimeMillis() + RESET_EXPIRATION_IN_SECONDS * 1000)) // 設定 token 到期日期
 				.signWith(SECRET_KEY) // 使用密鑰對 token 進行簽名
 				.compact(); // 生成 JWT token
 	}

@@ -9,5 +9,6 @@ public class AuthDto {
 	
 	private String loginId;
 	private String password;
+	private String token;
 
 }

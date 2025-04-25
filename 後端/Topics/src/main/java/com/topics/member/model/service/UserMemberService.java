@@ -33,4 +33,22 @@ public class UserMemberService {
 				.orElseThrow(() -> new NotFoundException("找不到該會員"));
 		return new MemberDto(member);
 	}
+	
+	public MemberDto findMemberByEmail(String email) {
+		MemberBean member = memberRepository.findByEmail(email);
+		if (member == null) {
+			throw new NotFoundException("找不到該信箱");
+		}
+		return new MemberDto(member);
+	}
+
+	public MemberDto resetPasswordByEmail(String email, String password) {
+		MemberBean member = memberRepository.findByEmail(email);
+		if (member == null) {
+			throw new NotFoundException("找不到該信箱");
+		}
+		member.setPassword(password);
+		MemberBean memebrNew = memberRepository.save(member);
+		return new MemberDto(memebrNew);
+	}
 }
