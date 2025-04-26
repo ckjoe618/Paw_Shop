@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.topics.member.model.dto.MemberDto;
-import com.topics.member.security.AuthHolder;
 import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.service.front.OrderService;
+import com.topics.security.AuthHolder;
 
 @RestController
 @RequestMapping("/api/order")

@@ -3,7 +3,8 @@ package com.topics.member.model.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.topics.member.exception.NotFoundException;
+
+import com.topics.exception.NotFoundException;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.repository.MemberRepository;

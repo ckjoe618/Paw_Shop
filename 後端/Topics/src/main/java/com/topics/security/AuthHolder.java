@@ -1,4 +1,4 @@
-package com.topics.member.security;
+package com.topics.security;
 
 import com.topics.member.model.dto.MemberDto;
 

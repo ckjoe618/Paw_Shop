@@ -1,4 +1,4 @@
-package com.topics.member.exception;
+package com.topics.exception;
 
 public class NotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

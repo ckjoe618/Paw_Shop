@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.repository.OrderRepository;
-import com.topics.utils.EmailService;
+import com.topics.utils.EmailUtil;
 
 @RestController
 @RequestMapping("/api/ecpay")
@@ -20,7 +20,7 @@ public class EcpayCallbackController {
     private OrderRepository orderRepository;
     
     @Autowired
-    private EmailService emailService;
+    private EmailUtil emailService;
 
     // 綠界會在付款完成後呼叫這個（必須是 POST）
     @PostMapping("/return")

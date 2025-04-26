@@ -1,8 +1,8 @@
-package com.topics.member.utils;
+package com.topics.utils;
 
-import com.topics.member.exception.ForbiddenException;
+import com.topics.exception.ForbiddenException;
 import com.topics.member.model.dto.MemberDto;
-import com.topics.member.security.AuthHolder;
+import com.topics.security.AuthHolder;
 
 public class SecurityUtil {
 

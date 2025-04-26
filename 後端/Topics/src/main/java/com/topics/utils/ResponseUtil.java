@@ -1,4 +1,4 @@
-package com.topics.member.utils;
+package com.topics.utils;
 
 import java.util.Map;
 import org.springframework.http.HttpStatus;

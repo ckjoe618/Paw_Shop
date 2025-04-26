@@ -24,8 +24,8 @@ import com.topics.member.model.entity.AddressBean;
 import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.service.AddressService;
 import com.topics.member.model.service.UserMemberService;
-import com.topics.member.utils.ResponseUtil;
-import com.topics.member.utils.SecurityUtil;
+import com.topics.utils.ResponseUtil;
+import com.topics.utils.SecurityUtil;
 
 @RestController
 @RequestMapping("/api/user")

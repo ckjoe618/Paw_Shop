@@ -9,9 +9,10 @@ import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.service.AuthService;
 import com.topics.member.model.service.UserMemberService;
-import com.topics.member.utils.JwtUtil;
-import com.topics.member.utils.ResponseUtil;
-import com.topics.utils.EmailService;
+import com.topics.utils.EmailUtil;
+import com.topics.utils.JwtUtil;
+import com.topics.utils.ResponseUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class AuthController {
 	private AuthService authService;
 
 	@Autowired
-	private EmailService emailService;
+	private EmailUtil emailService;
 
 	@Autowired
 	private UserMemberService userMemberService;

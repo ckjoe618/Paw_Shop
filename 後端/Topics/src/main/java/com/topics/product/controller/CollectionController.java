@@ -1,9 +1,9 @@
 package com.topics.product.controller;
 
-import com.topics.member.security.AuthHolder;
 import com.topics.product.model.bean.CollectionBean;
 import com.topics.product.model.dto.CollectionDto;
 import com.topics.product.model.service.CollectionService;
+import com.topics.security.AuthHolder;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

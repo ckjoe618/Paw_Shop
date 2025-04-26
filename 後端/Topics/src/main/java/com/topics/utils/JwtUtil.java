@@ -1,4 +1,4 @@
-package com.topics.member.utils;
+package com.topics.utils;
 
 import java.util.Date;
 import javax.crypto.SecretKey;

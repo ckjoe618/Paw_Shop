@@ -1,13 +1,14 @@
-package com.topics.member.security;
+package com.topics.security;
 
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.topics.member.exception.NotFoundException;
+import com.topics.exception.NotFoundException;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.repository.MemberRepository;
-import com.topics.member.utils.JwtUtil;
+import com.topics.utils.JwtUtil;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;

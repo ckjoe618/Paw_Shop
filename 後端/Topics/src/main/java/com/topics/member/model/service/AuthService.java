@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import com.topics.member.exception.LoginFailException;
+
+import com.topics.exception.LoginFailException;
 import com.topics.member.model.dto.AddressDto;
 import com.topics.member.model.dto.AuthDto;
 import com.topics.member.model.dto.MemberDto;
