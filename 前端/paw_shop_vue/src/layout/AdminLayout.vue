@@ -87,7 +87,6 @@
         </template>
 
         <v-list density="compact" nav>
-          <v-list-item title="Settings" />
           <v-list-item title="Logout" @click="logout" />
         </v-list>
       </v-menu>

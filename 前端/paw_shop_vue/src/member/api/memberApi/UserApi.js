@@ -51,6 +51,9 @@ export const apiAddAddress = (data) =>
 // 修改地址
 export const apiUpdateAddress = (data) =>
   handleResponse(api.put(`/api/user/address/${data.memberId}`, data));
+// 修改預設地址
+export const apiUpdateDefaultAddress = (data) =>
+  handleResponse(api.put(`/api/user/address/default/${data}`));
 // 刪除地址
 export const apiDeleteAddress = (data) =>
   handleResponse(api.delete(`/api/user/address/${data}`));

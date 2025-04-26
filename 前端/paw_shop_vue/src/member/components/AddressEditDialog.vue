@@ -20,16 +20,22 @@
             label="郵遞區號"
             v-model="localAddress.zipcode"
             :rules="[rules.required, rules.zipcode]"
+            readonly
           />
-          <v-text-field
+          <v-select
             label="城市"
             v-model="localAddress.city"
+            :items="cities"
             :rules="[rules.required]"
+            @update:modelValue="onCityChange"
           />
-          <v-text-field
+          <v-select
             label="區域"
             v-model="localAddress.district"
+            :items="districts"
             :rules="[rules.required]"
+            :disabled="!localAddress.city"
+            @update:modelValue="onDistrictChange"
           />
           <v-text-field
             label="詳細地址"
@@ -54,6 +60,7 @@
 </template>
 
 <script setup>
+import { cityDistrictsZipcode } from "@/member/assets/taiwan_city_district_zipcode.js";
 import { ref, watch, computed } from "vue";
 import * as api from "@/member/api/memberApi/UserApi";
 
@@ -61,6 +68,8 @@ const formRef = ref(null);
 const isValid = ref(false);
 const loading = ref(false);
 const localAddress = ref({});
+const districts = ref([]);
+const cities = Object.keys(cityDistrictsZipcode);
 
 const props = defineProps({
   dialog: Boolean,
@@ -94,6 +103,26 @@ watch(
   },
   { immediate: true }
 );
+
+const onCityChange = (city) => {
+  districts.value = Object.keys(cityDistrictsZipcode[city] || {});
+  if (districts.value.length > 0) {
+    localAddress.value.district = districts.value[0];
+    localAddress.value.zipcode = cityDistrictsZipcode[city][districts.value[0]];
+  } else {
+    localAddress.value.district = "";
+    localAddress.value.zipcode = "";
+  }
+};
+
+const onDistrictChange = (district) => {
+  const city = localAddress.value.city;
+  if (city && district) {
+    localAddress.value.zipcode = cityDistrictsZipcode[city][district] || "";
+  } else {
+    localAddress.value.zipcode = "";
+  }
+};
 
 const close = () => emit("update:dialog", false);
 

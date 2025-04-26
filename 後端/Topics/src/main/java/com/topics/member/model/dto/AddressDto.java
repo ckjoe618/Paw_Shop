@@ -17,6 +17,7 @@ public class AddressDto {
 	private String city;
 	private String district;
 	private String addressDetail;
+	private boolean defaultStatus;
 
 	public AddressDto(AddressBean entity) {
 		if (entity != null) {

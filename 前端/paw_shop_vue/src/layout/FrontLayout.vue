@@ -2,7 +2,6 @@
   <v-app>
     <!-- HeaderBar 本身是 v-app-bar  -->
     <HeaderBar />
-
     <!-- Sticky NavTabs -->
     <v-sheet
       class="w-100"
@@ -11,16 +10,11 @@
     >
       <NavTabs :items="navItems" />
     </v-sheet>
-
     <!-- Main content -->
     <v-main>
       <router-view :key="$route.fullPath" />
-
-      <!-- Footer 區塊滿版 -->
-      <v-sheet class="w-100">
-        <FooterBar />
-      </v-sheet>
     </v-main>
+    <FooterBar />
   </v-app>
 </template>
 

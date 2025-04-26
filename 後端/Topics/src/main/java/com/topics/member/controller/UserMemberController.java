@@ -92,12 +92,18 @@ public class UserMemberController {
 		return ResponseUtil.created(address);
 	}
 
-	// 沒有寫預設地址
 	@PutMapping("/address/{id}")
 	public ResponseEntity<?> updateAddressById(@PathVariable Integer id, @RequestBody AddressBean entity) {
 		AddressDto address = addressService.updateAddressById(id, entity);
 		return ResponseUtil.success(address);
 	}
+	
+	@PutMapping("/address/default/{id}")
+	public ResponseEntity<?> updateDefaultAddress(@PathVariable Integer id) {
+		addressService.updateDefaultAddress(id);
+		return ResponseUtil.success("預設地址更新成功");
+	}
+	
 
 	@DeleteMapping("/address/{id}")
 	public ResponseEntity<?> updateAddressById(@PathVariable Integer id) {

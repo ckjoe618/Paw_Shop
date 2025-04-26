@@ -1,49 +1,47 @@
 <template>
   <div>
-    <!-- 延伸頁腳：整合導覽、服務、法規、社群、下載、付款方式等 -->
     <v-sheet class="py-12" color="#215d1e">
       <v-container>
         <v-row>
           <v-col cols="12" sm="6" md="3">
-            <h4 class="mb-2 font-weight-bold">Services</h4>
-            <div class="text-subtitle-2 mb-1">My Account</div>
-            <div class="text-subtitle-2 mb-1">Help Center</div>
-            <div class="text-subtitle-2 mb-1">Order Tracking</div>
-            <div class="text-subtitle-2 mb-1">Shipping Info</div>
-            <div class="text-subtitle-2 mb-1">Returns & Refunds</div>
+            <h4 class="mb-2 font-weight-bold">服務項目</h4>
+            <div class="text-subtitle-2 mb-1">我的帳戶</div>
+            <div class="text-subtitle-2 mb-1">幫助中心</div>
+            <div class="text-subtitle-2 mb-1">訂單追蹤</div>
+            <div class="text-subtitle-2 mb-1">運送資訊</div>
+            <div class="text-subtitle-2 mb-1">退貨與退款</div>
           </v-col>
 
           <v-col cols="12" sm="6" md="3">
-            <h4 class="mb-2 font-weight-bold">Shopping</h4>
-            <div class="text-subtitle-2 mb-1">Special Offers</div>
-            <div class="text-subtitle-2 mb-1">Clearance</div>
-            <div class="text-subtitle-2 mb-1">Repeat Orders</div>
-            <div class="text-subtitle-2 mb-1">Gift Cards</div>
+            <h4 class="mb-2 font-weight-bold">購物指南</h4>
+            <div class="text-subtitle-2 mb-1">特別優惠</div>
+            <div class="text-subtitle-2 mb-1">清倉出清</div>
+            <div class="text-subtitle-2 mb-1">重複訂購</div>
+            <div class="text-subtitle-2 mb-1">禮物卡</div>
           </v-col>
 
           <v-col cols="12" sm="6" md="3">
-            <h4 class="mb-2 font-weight-bold">Legal & Info</h4>
-            <div class="text-subtitle-2 mb-1">Privacy Policy</div>
-            <div class="text-subtitle-2 mb-1">Terms & Conditions</div>
-            <div class="text-subtitle-2 mb-1">Cookies</div>
-            <div class="text-subtitle-2 mb-1">Company Info</div>
+            <h4 class="mb-2 font-weight-bold">法律與資訊</h4>
+            <div class="text-subtitle-2 mb-1">隱私權政策</div>
+            <div class="text-subtitle-2 mb-1">使用條款</div>
+            <div class="text-subtitle-2 mb-1">Cookie政策</div>
+            <div class="text-subtitle-2 mb-1">公司資訊</div>
           </v-col>
 
           <v-col cols="12" sm="6" md="3">
-            <h4 class="mb-2 font-weight-bold">Connect</h4>
+            <h4 class="mb-2 font-weight-bold">社群連結</h4>
             <div class="d-flex align-center mb-2">
-              <v-btn icon><i class="fab fa-facebook-f"></i></v-btn>
-              <v-btn icon><i class="fab fa-instagram"></i></v-btn>
-              <v-btn icon><i class="fab fa-youtube"></i></v-btn>
-              <v-btn icon><i class="fab fa-line"></i></v-btn>
+              <v-btn icon class="mr-2"><i class="fab fa-facebook-f"></i></v-btn>
+              <v-btn icon class="mr-2"><i class="fab fa-instagram"></i></v-btn>
+              <v-btn icon class="mr-2"><i class="fab fa-youtube"></i></v-btn>
+              <v-btn icon class="mr-2"><i class="fab fa-line"></i></v-btn>
             </div>
           </v-col>
         </v-row>
       </v-container>
     </v-sheet>
 
-    <!-- 傳統頁腳底部 -->
-    <v-footer color="green darken-4" dark class="pa-6">
+    <v-footer color="green darken-4" dark>
       <v-container>
         <v-row>
           <v-col cols="12" sm="6">
@@ -53,15 +51,15 @@
           <v-col cols="12" sm="6" class="d-flex justify-end">
             <v-btn variant="text" size="small" class="footer-btn">
               <i class="fas fa-info-circle mr-1"></i>
-              <span>About</span>
+              <span>關於我們</span>
             </v-btn>
             <v-btn variant="text" size="small" class="footer-btn">
               <i class="fas fa-question-circle mr-1"></i>
-              <span>Help</span>
+              <span>幫助中心</span>
             </v-btn>
             <v-btn variant="text" size="small" class="footer-btn">
               <i class="fas fa-envelope mr-1"></i>
-              <span>Contact</span>
+              <span>聯絡我們</span>
             </v-btn>
           </v-col>
         </v-row>

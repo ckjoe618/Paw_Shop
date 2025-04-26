@@ -14,6 +14,14 @@
       <v-btn icon @click="$emit('delete', address)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
+      <v-btn
+        icon
+        v-if="!isDefault"
+        @click="$emit('set-default', address)"
+        color="green"
+      >
+        <v-icon>mdi-star-outline</v-icon>
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -21,5 +29,6 @@
 <script setup>
 defineProps({
   address: Object,
+  isDefault: Boolean,
 });
 </script>

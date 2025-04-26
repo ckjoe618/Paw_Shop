@@ -38,9 +38,18 @@ public class AddressService {
 		addressNew.setCity(address.getCity().replace("台", "臺"));
 		addressNew.setDistrict(address.getDistrict().replace("台", "臺"));
 		addressNew.setAddressDetail(address.getAddressDetail().replace("台", "臺"));
-//		addressNew.setDefaultStatus(address.isDefaultStatus());
 		AddressBean save = addressRepository.save(addressNew);
 		return new AddressDto(save);
+	}
+	
+	public void updateDefaultAddress(Integer id) {
+		AddressBean addressNew = addressRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("找不到該地址"));
+		
+		Integer memberId = addressNew.getMember().getMemberId();
+		addressRepository.clearDefaultByMemberId(memberId);
+		addressNew.setDefaultStatus(true);
+		addressRepository.save(addressNew);
 	}
 
 	public AddressDto deleteAddressById(Integer id) {
