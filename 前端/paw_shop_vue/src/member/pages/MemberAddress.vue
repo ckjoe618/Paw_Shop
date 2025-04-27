@@ -73,7 +73,6 @@ import AddressEditDialog from "@/member/components/AddressEditDialog.vue";
 import draggable from "vuedraggable";
 
 const authStore = useAuthStore();
-
 const addresses = ref([]);
 const dialog = ref(false);
 const dialogMode = ref("add");
@@ -81,8 +80,6 @@ const editedAddress = ref(null);
 
 const fetchAddresses = async () => {
   const data = await api.apiFindAddress(authStore.memberId);
-  console.log(data);
-
   addresses.value = data;
 };
 

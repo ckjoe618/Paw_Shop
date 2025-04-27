@@ -40,6 +40,6 @@ const $route = useRoute();
 const menuItems = [
   { label: "個人檔案", route: "/member/profile" },
   { label: "地址", route: "/member/address" },
-  // { label: "通知設定", route: "/member/notifications" },
+  { label: "修改密碼", route: "/member/password" },
 ];
 </script>

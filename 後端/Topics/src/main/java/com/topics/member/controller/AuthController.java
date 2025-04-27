@@ -12,7 +12,6 @@ import com.topics.member.model.service.UserMemberService;
 import com.topics.utils.EmailUtil;
 import com.topics.utils.JwtUtil;
 import com.topics.utils.ResponseUtil;
-
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +76,7 @@ public class AuthController {
 //
 //	@SuppressWarnings("deprecation")
 //	@GetMapping("/oauth2/authorize/google")
-//	public ResponseEntity<Map<String, Object>> loginByGoogle() {
+//	public ResponseEntity<?> loginByGoogle() {
 //		String base = "https://accounts.google.com/o/oauth2/v2/auth";
 //		String url = UriComponentsBuilder.fromHttpUrl(base)
 //				.queryParam("client_id", clientId)
@@ -93,9 +92,8 @@ public class AuthController {
 //	}
 
 	@PostMapping("/forgot-password")
-	public ResponseEntity<Map<String, Object>> forgotPassword(@RequestBody Map<String, String> data) {
+	public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> data) {
 		String email = data.get("email");
-		System.out.println(email);
 		userMemberService.findMemberByEmail(email);
 		String token = JwtUtil.generateResetToken(email);
 		String resetUrl = "http://localhost:5173/reset-password?token=" + token;

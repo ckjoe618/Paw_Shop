@@ -3,45 +3,50 @@
     <v-row>
       <!-- 左欄：會員資訊 -->
       <v-col cols="12" md="8">
-        <v-row class="mb-2">
-          <v-col cols="12" class="d-flex align-center">
-            <span class="text-subtitle-1 font-weight-medium mr-2"
-              >使用者帳號:</span
-            >
-            <span class="text-body-1 text-grey-darken-1">{{
-              authStore.account
-            }}</span>
-          </v-col>
-          <v-col cols="12" class="d-flex align-center">
-            <span class="text-subtitle-1 font-weight-medium mr-2">Email:</span>
-            <span class="text-body-1 text-grey-darken-1">{{ form.email }}</span>
-          </v-col>
-        </v-row>
-
         <v-text-field
           label="姓名"
           v-model="form.memberName"
           :rules="[rules.required]"
         />
 
+        <v-row class="mb-2">
+          <v-col cols="12" class="d-flex align-center">
+            <span class="text-subtitle-1 font-weight-medium mr-2">性別:</span>
+            <span class="text-body-1 text-grey-darken-1">{{
+              form.gender
+            }}</span>
+          </v-col>
+        </v-row>
+
+        <v-row class="mb-2">
+          <v-col cols="12" class="d-flex align-center">
+            <span class="text-subtitle-1 font-weight-medium mr-2">Email:</span>
+            <span class="text-body-1 text-grey-darken-1">{{ form.email }}</span>
+          </v-col>
+        </v-row>
+
+        <v-row class="mb-2">
+          <v-col cols="12" class="d-flex align-center">
+            <span class="text-subtitle-1 font-weight-medium mr-2">身分證:</span>
+            <span class="text-body-1 text-grey-darken-1">{{ form.idno }}</span>
+          </v-col>
+        </v-row>
+
         <v-text-field
           label="手機號碼"
           v-model="form.phone"
+          maxlength="10"
           :rules="[rules.required, rules.phone]"
         />
 
-        <v-radio-group v-model="form.gender" inline class="mt-2">
-          <label class="text-subtitle-1 font-weight-medium">性別</label>
-          <v-radio label="男性" value="男" />
-          <v-radio label="女性" value="女" />
-        </v-radio-group>
-
-        <v-text-field
-          label="生日"
-          v-model="form.birthDate"
-          type="date"
-          :rules="[rules.required]"
-        />
+        <v-row class="mb-2">
+          <v-col cols="12" class="d-flex align-center">
+            <span class="text-subtitle-1 font-weight-medium mr-2">生日:</span>
+            <span class="text-body-1 text-grey-darken-1">
+              {{ new Date(form.birthDate).toLocaleDateString() }}
+            </span>
+          </v-col>
+        </v-row>
 
         <div class="text-center mt-6">
           <v-btn

@@ -27,6 +27,7 @@
     />
 
     <MemberCreateDialog v-model:dialog="createDialog" @created="fetchMembers" />
+    <DeleteConfirmDialog ref="deleteConfirmRef" />
   </v-container>
 </template>
 
@@ -37,6 +38,7 @@ import MemberTable from "@/member/components/MemberTable.vue";
 import MemberEditDialog from "@/member/components/MemberEditDialog.vue";
 import MemberSearchPanel from "@/member/components/MemberSearchPanel.vue";
 import MemberCreateDialog from "@/member/components/MemberCreateDialog.vue";
+import DeleteConfirmDialog from "@/member/components/DeleteConfirmDialog.vue";
 import AddBtn from "@/order/components/buttons/addbtn.vue";
 
 const members = ref([]);
@@ -45,6 +47,7 @@ const selectedMember = ref([]);
 const loading = ref(false);
 const editDialog = ref(false);
 const createDialog = ref(false);
+const deleteConfirmRef = ref(null);
 
 // 取得會員資料
 const fetchMembers = async () => {
@@ -91,10 +94,13 @@ const openEditDialog = (member) => {
 
 // 處理停用事件
 const handleDeactivate = async (member) => {
-  if (confirm(`確定要停用 ${member.memberName} 嗎？`)) {
+  const isConfirm = await deleteConfirmRef.value.openDialog({
+    title: "停用會員",
+    message: `確定要停用 ${member.memberName} 嗎？`,
+  });
+  if (isConfirm) {
     await api.apiDeleteMember(member.memberId);
-    alert("會員已成功停用");
-    await fetchMembers();
+    fetchMembers();
   }
 };
 

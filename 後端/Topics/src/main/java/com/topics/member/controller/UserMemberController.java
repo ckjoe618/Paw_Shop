@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.topics.member.model.dto.AddressDto;
+import com.topics.member.model.dto.AuthDto;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.AddressBean;
 import com.topics.member.model.entity.MemberBean;
@@ -37,12 +38,18 @@ public class UserMemberController {
 	@Autowired
 	private AddressService addressService;
 
-	@PutMapping("/member/{id}")
-	public ResponseEntity<?> updateMemberById(@PathVariable Integer id,
+	@PostMapping("/member")
+	public ResponseEntity<?> insertMember(@RequestBody MemberBean entity) {
+		MemberDto member = userMemberService.insertMember(entity);
+		return ResponseUtil.created(member);
+	}
+
+	@PutMapping("/member/{memberId}")
+	public ResponseEntity<?> updateMemberById(@PathVariable Integer memberId,
 			@RequestPart("data") MemberBean entity,
 			@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
-		SecurityUtil.checkUserLogin(id);
-		MemberDto member = userMemberService.findMemberById(id);
+		SecurityUtil.checkUserLogin(memberId);
+		MemberDto member = userMemberService.findMemberById(memberId);
 		String oldPhoto = member.getMemberPhoto();
 
 		if (file != null && !file.isEmpty()) {
@@ -64,51 +71,56 @@ public class UserMemberController {
 			entity.setMemberPhoto(photoPath);
 		}
 
-		MemberDto memberNew = userMemberService.updateMemberById(id, entity);
+		MemberDto memberNew = userMemberService.updateMemberById(memberId, entity);
 		return ResponseUtil.success(memberNew);
 	}
 
-	@PutMapping("/member/json/{id}")
-	public ResponseEntity<?> updateMemberByIdWithJson(@PathVariable Integer id, @RequestBody MemberBean entity) {
-		MemberDto member = userMemberService.updateMemberById(id, entity);
+	@PutMapping("/member/json/{memberId}")
+	public ResponseEntity<?> updateMemberByIdWithJson(@PathVariable Integer memberId, @RequestBody MemberBean entity) {
+		SecurityUtil.checkUserLogin(memberId);
+		MemberDto member = userMemberService.updateMemberById(memberId, entity);
 		return ResponseUtil.success(member);
 	}
 
-	@PostMapping("/member")
-	public ResponseEntity<?> insertMember(@RequestBody MemberBean entity) {
-		MemberDto member = userMemberService.insertMember(entity);
-		return ResponseUtil.created(member);
-	}
-
-	@GetMapping("/address/{id}")
-	public ResponseEntity<?> findAddressByMemberId(@PathVariable Integer id) {
-		List<AddressDto> addressList = addressService.findAddressByMemberId(id);
+	@GetMapping("/address/{memberId}")
+	public ResponseEntity<?> findAddressByMemberId(@PathVariable Integer memberId) {
+		SecurityUtil.checkUserLogin(memberId);
+		List<AddressDto> addressList = addressService.findAddressByMemberId(memberId);
 		return ResponseUtil.success(addressList);
 	}
 
 	@PostMapping("/address")
-	public ResponseEntity<?> insertAddressByMemberId(@RequestBody AddressBean entity) {
-		AddressDto address = addressService.insertAddress(entity, entity.getMember().getMemberId());
+	public ResponseEntity<?> insertAddressByMemberId(@RequestBody AddressDto entity) {
+		SecurityUtil.checkUserLogin(entity.getMemberId());
+		AddressDto address = addressService.insertAddress(entity);
 		return ResponseUtil.created(address);
 	}
 
-	@PutMapping("/address/{id}")
-	public ResponseEntity<?> updateAddressById(@PathVariable Integer id, @RequestBody AddressBean entity) {
-		AddressDto address = addressService.updateAddressById(id, entity);
+	@PutMapping("/address/{memberId}")
+	public ResponseEntity<?> updateAddressById(@PathVariable Integer memberId, @RequestBody AddressBean entity) {
+		SecurityUtil.checkUserLogin(memberId);
+		AddressDto address = addressService.updateAddressByAddressId(entity);
 		return ResponseUtil.success(address);
 	}
-	
-	@PutMapping("/address/default/{id}")
-	public ResponseEntity<?> updateDefaultAddress(@PathVariable Integer id) {
-		addressService.updateDefaultAddress(id);
+
+	@PutMapping("/address/default/{addressId}")
+	public ResponseEntity<?> updateDefaultAddress(@PathVariable Integer addressId) {
+		SecurityUtil.checkUserLoginForAddress(addressId);
+		addressService.updateDefaultAddress(addressId);
 		return ResponseUtil.success("預設地址更新成功");
 	}
-	
 
-	@DeleteMapping("/address/{id}")
-	public ResponseEntity<?> updateAddressById(@PathVariable Integer id) {
-		AddressDto address = addressService.deleteAddressById(id);
-		return ResponseUtil.success(address);
+	@DeleteMapping("/address/{addressId}")
+	public ResponseEntity<?> updateAddressById(@PathVariable Integer addressId) {
+		SecurityUtil.checkUserLoginForAddress(addressId);
+		addressService.deleteAddressById(addressId);
+		return ResponseUtil.success("刪除地址成功");
 	}
 
+	@PutMapping("/password/{memberId}")
+	public ResponseEntity<?> putMethodName(@PathVariable Integer memberId, @RequestBody AuthDto entity) {
+		SecurityUtil.checkUserLogin(memberId);
+		userMemberService.updatePasswordByMemberId(memberId, entity);
+		return ResponseUtil.success("修改密碼成功");
+	}
 }
