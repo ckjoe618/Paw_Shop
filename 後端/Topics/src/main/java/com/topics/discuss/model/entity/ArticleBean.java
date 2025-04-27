@@ -1,11 +1,14 @@
-package com.topics.discuss.model.bean;
+package com.topics.discuss.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.topics.member.model.entity.MemberBean;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,39 +21,42 @@ public class ArticleBean {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "article_id")
 	private int articleId;
 
 	@Column(name = "member_id")
 	private int memberId;
 
-	@Column(name = "title")
 	private String title;
 
-	@Column(name = "content")
+	@Column(columnDefinition = "text")
 	private String content;
 
-	@Column(name = "category_id")
 	private int categoryId;
 
-	@Column(name = "view_count_num")
-	private int viewCountNum;
+	private int viewCount;
 
-	@Column(name = "is_pinned_status")
-	private boolean isPinnedStatus;
+	private boolean pinned;
 
-	@Column(name = "is_featured_status")
-	private boolean isFeaturedStatus;
+	private boolean featured;
 
-	@Column(name = "created_date")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@Column(columnDefinition = "datetime2")
+	@CreationTimestamp
 	private LocalDateTime createdDate;
 
-	@Column(name = "updated_date")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@Column(columnDefinition = "datetime2")
 	private LocalDateTime updatedDate;
 
-	@Column(name = "is_deleted_status")
-	private boolean isDeletedStatus;
+	private boolean deleted;
+
+	private int commentCount;
+
+	@Column(columnDefinition = "datetime2")
+	private LocalDateTime lastCommentDate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id", insertable = false, updatable = false)
+	private MemberBean member;
 
 }

@@ -1,4 +1,5 @@
 // 建立 APP
+import "@/plugins/axios";
 import { createApp } from "vue";
 import App from "./App.vue";
 const app = createApp(App);

@@ -1,6 +1,6 @@
-package com.topics.discuss.model.service;
+package com.topics.discuss.model.service.back;
 
-import com.topics.discuss.model.bean.ArticleBean;
+import com.topics.discuss.model.entity.ArticleBean;
 import com.topics.discuss.model.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class ArticleService {
+public class AdminArticleService {
 
 	@Autowired
 	private ArticleRepository articleRepo;
@@ -23,8 +23,6 @@ public class ArticleService {
 	}
 
 	public ArticleBean insertArticle(ArticleBean article) {
-		article.setCreatedDate(LocalDateTime.now());
-		article.setUpdatedDate(LocalDateTime.now());
 		return articleRepo.save(article);
 	}
 
@@ -38,9 +36,9 @@ public class ArticleService {
 		existing.setTitle(updated.getTitle());
 		existing.setContent(updated.getContent());
 		existing.setCategoryId(updated.getCategoryId());
-		existing.setViewCountNum(updated.getViewCountNum());
-		existing.setPinnedStatus(updated.isPinnedStatus());
-		existing.setFeaturedStatus(updated.isFeaturedStatus());
+		existing.setViewCount(updated.getViewCount());
+		existing.setPinned(updated.isPinned());
+		existing.setFeatured(updated.isFeatured());
 		existing.setUpdatedDate(LocalDateTime.now()); // 更新時間自己補上
 
 		return articleRepo.save(existing); // 儲存更新後的資料

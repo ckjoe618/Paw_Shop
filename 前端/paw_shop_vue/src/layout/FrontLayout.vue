@@ -31,7 +31,7 @@ const navItems = [
   { label: "熱銷品牌", link: "" },
   { label: "促銷活動", link: "" },
   { label: "美容預約", link: "/appointments" },
-  { label: "寵物討論區", link: "" },
+  { label: "寵物討論區", link: "/discuss" },
 ];
 </script>
 
