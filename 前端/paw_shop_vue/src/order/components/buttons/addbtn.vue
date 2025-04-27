@@ -1,11 +1,5 @@
 <template>
-  <v-btn
-    :icon="icon !== undefined"
-    :color="color"
-    :size="size"
-    :density="density"
-    @click="$emit('click')"
-  >
+  <v-btn :icon="icon !== undefined" :size="size" @click="$emit('click')">
     <v-icon :size="iconSize">{{ icon }}</v-icon>
   </v-btn>
 </template>

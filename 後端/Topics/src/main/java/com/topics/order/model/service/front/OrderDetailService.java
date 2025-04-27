@@ -75,4 +75,8 @@ public class OrderDetailService {
     public void initializeAllProductRatings() {
         productRepository.findAll().forEach(p -> updateProductRatingStats(p.getProductId()));
     }
+    
+    public List<OrderDetailBean> getCommentsByProductId(Integer productId) {
+        return orderDetailRepository.findByProductProductIdAndCommentIsNotNull(productId);
+    }
 }

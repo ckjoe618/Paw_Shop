@@ -3,6 +3,7 @@
     <v-row align="center" class="d-flex" style="gap: 16px">
       <h2 class="mb-0">所有訂單</h2>
       <addbtn icon-size="25" @click="showCreateDialog = true" />
+      <exportbtn icon-size="25" @click="exportCsv" />
     </v-row>
 
     <v-row class="mt-4" justify="center" align="center" style="gap: 32px">
@@ -43,6 +44,9 @@
       <template #item.memberId="{ item }">
         {{ item.member?.memberId }}
       </template>
+      <template #item.transactionTime="{ item }">
+        {{ dayjs(item.transactionTime).format("YYYY/M/D HH:mm") }}
+      </template>
       <template #item.actions="{ item }">
         <div class="d-flex align-center" style="gap: 8px">
           <formCheckbtn @click="openDetailDialog(item)" />
@@ -52,6 +56,7 @@
       </template>
     </v-data-table>
 
+    <!-- 新增/編輯訂單 -->
     <v-dialog v-model="showCreateDialog" max-width="600px">
       <v-card>
         <v-card-title>{{
@@ -87,12 +92,14 @@ import { useRouter } from "vue-router";
 import OrderDeleteDialog from "../../order/components/backsite/OrderDeleteDialog.vue";
 import DatePicker from "../../order/components/date/DatePicker.vue";
 import addbtn from "../../order/components/buttons/addbtn.vue";
+import exportbtn from "../../order/components/buttons/exportbtn.vue";
 import formCheckbtn from "../../order/components/buttons/formCheckbtn.vue";
 import formDeletebtn from "../../order/components/buttons/formDeletebtn.vue";
 import formEditbtn from "../../order/components/buttons/formEditbtn.vue";
 import OrderForm from "../../order/components/backsite/OrderForm.vue";
 import OrderDetail from "../../order/components/backsite/OrderDetail.vue";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const router = useRouter();
 
@@ -220,6 +227,54 @@ const updatePriceTotal = (newTotal) => {
       priceTotal: newTotal,
     });
   }
+};
+
+//匯出檔案
+const exportCsv = () => {
+  const headers = [
+    "訂單編號",
+    "會員編號",
+    "訂單金額",
+    "交易時間",
+    "訂單狀態",
+    "付款方式",
+    "取貨方式",
+    "物流編號",
+    "收件人姓名",
+    "收件人電話",
+    "收件人地址",
+    "運費",
+    "更新時間",
+  ];
+  const rows = orders.value.map((order) => [
+    order.orderId,
+    order.member.memberId,
+    order.priceTotal,
+    order.transactionTime,
+    order.orderStatus,
+    order.paymentMethod,
+    order.pickupMethod,
+    order.trackingNum,
+    order.recipientName,
+    order.recipientPhone,
+    order.recipientAddress,
+    order.shippingFee,
+    order.updateTime,
+  ]);
+
+  let csvContent = "";
+  csvContent += headers.join(",") + "\n";
+  csvContent += rows.map((e) => e.join(",")).join("\n");
+
+  const blob = new Blob(["\uFEFF" + csvContent], {
+    type: "text/csv;charset=utf-8;",
+  }); // 加 BOM 解決中文亂碼
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.setAttribute("download", "訂單列表.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 onMounted(reloadOrders);

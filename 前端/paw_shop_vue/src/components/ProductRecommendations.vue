@@ -11,7 +11,7 @@
         sm="6"
         md="3"
       >
-        <ProductCard :product="product" />
+        <ProductCard :product="product" :showRating="false"/>
       </v-col>
     </v-row>
   </v-container>

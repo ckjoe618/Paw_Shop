@@ -23,14 +23,9 @@
       >
         密碼
 
-        <a
-          class="text-caption text-decoration-none text-blue"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          忘記密碼?</a
-        >
+        <RouterLink to="/forgot-password" class="forgot-password-link">
+          忘記密碼？
+        </RouterLink>
       </div>
 
       <v-text-field
@@ -52,34 +47,38 @@
       </v-card>
 
       <v-btn
-        class="mb-8"
-        color="blue"
+        class="mb-4"
+        color="primary"
         size="large"
-        variant="tonal"
+        variant="elevated"
         block
         :loading="loading"
         @click="handlerLogin"
       >
-        登入
+        Log in
       </v-btn>
-      <v-btn
-        class="mb-2"
-        color="blue"
-        size="large"
-        variant="outlined"
-        block
-        @click="handlerAdminLogin"
-      >
+
+      <!-- 分隔線 -->
+      <div class="d-flex align-center my-4">
+        <v-divider class="flex-grow-1"></v-divider>
+        <span class="mx-3 text-medium-emphasis text-caption">or</span>
+        <v-divider class="flex-grow-1"></v-divider>
+      </div>
+
+      <!-- Google 登入 -->
+      <v-btn class="mb-2" variant="outlined" block @click="handleGoogleLogin">
+        <img
+          :src="GoogleLogo"
+          alt="Google"
+          style="height: 20px; margin-right: 8px; vertical-align: middle"
+        />
+        使用 Google 登入
+      </v-btn>
+
+      <v-btn class="mb-2" variant="outlined" block @click="handlerAdminLogin">
         管理員一鍵登入
       </v-btn>
-      <v-btn
-        class="mb-8"
-        color="blue"
-        size="large"
-        variant="outlined"
-        block
-        @click="handlerUserLogin"
-      >
+      <v-btn class="mb-2" variant="outlined" block @click="handlerUserLogin">
         使用者一鍵登入
       </v-btn>
 
@@ -93,6 +92,7 @@
 </template>
 <script setup>
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
+import GoogleLogo from "@/member/assets/images/Google_logo.png";
 import { ref } from "vue";
 import * as api from "@/member/api/memberApi/UserApi.js";
 import { useRoute, useRouter } from "vue-router";
@@ -116,15 +116,21 @@ const handlerAdminLogin = () => performLogin("lzx5", "123456");
 // 使用者快速登入
 const handlerUserLogin = () => performLogin("wxm1", "123456");
 
+// Google 登入
+const handleGoogleLogin = async () => {
+  const data = await api.apiGoogleLogin();
+  window.location.href = data.url;
+};
+
 // 統一登入模式
 const performLogin = async (loginId, password) => {
   loading.value = true;
   try {
     const data = await api.apiLogin({ loginId, password });
+    authStore.login(data);
     console.log(data);
-    authStore.login({ ...data });
+
     await syncCartToBackend();
-    console.log(authStore.fullAddress);
     router.push(route.query.redirect || "/");
   } finally {
     loading.value = false;
@@ -161,5 +167,17 @@ const performLogin = async (loginId, password) => {
 
 .register-link:hover .register-icon {
   transform: translateX(4px);
+}
+.forgot-password-link {
+  font-size: 0.75rem;
+  text-decoration: none;
+  color: #1976d2; /* Vuetify primary blue */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #0d47a1; /* 深一點的藍色 */
+  text-decoration: underline;
 }
 </style>

@@ -34,8 +34,8 @@ import com.topics.appointment.model.service.PetService;
 import com.topics.appointment.model.service.PricingService;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.MemberBean;
-import com.topics.member.security.AuthHolder;
-import com.topics.member.utils.SecurityUtil;
+import com.topics.security.AuthHolder;
+import com.topics.utils.SecurityUtil;
 
 import jakarta.servlet.http.HttpSession;
 
