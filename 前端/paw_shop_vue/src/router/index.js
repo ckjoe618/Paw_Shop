@@ -117,6 +117,19 @@ const routes = [
         path: "/favorites",
         component: () => import("@/product/frontsite/FavoriteListPage.vue"),
       },
+      {
+        path: "discuss",
+        component: () => import("@/discuss/pages/front/articleListPage.vue"),
+      },
+      {
+        path: "discuss/post",
+        component: () => import("@/discuss/pages/front/postArticlePage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "discuss/:articleId",
+        component: () => import("@/discuss/pages/front/articleDetailPage.vue"),
+      },
     ],
   },
   {
@@ -142,7 +155,7 @@ const routes = [
       },
       {
         path: "discuss",
-        component: () => import("@/discuss/pages/ArticleListPage.vue"),
+        component: () => import("@/discuss/pages/backend/ArticleListPage.vue"),
       },
       {
         path: "products",
