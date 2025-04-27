@@ -27,6 +27,7 @@ public class AdminMemberController {
 
 	@PostMapping("/member")
 	public ResponseEntity<?> insertMember(@RequestBody MemberBean entity) {
+		SecurityUtil.checkAdminPermission();
 		MemberDto member = adminMemberService.insertMember(entity);
 		return ResponseUtil.created(member);
 	}
@@ -47,6 +48,7 @@ public class AdminMemberController {
 
 	@GetMapping("/member")
 	public ResponseEntity<?> findMemberAll() {
+		SecurityUtil.checkAdminPermission();
 		List<MemberDto> memberList = adminMemberService.findMemberAll();
 		return ResponseUtil.success(memberList);
 	}

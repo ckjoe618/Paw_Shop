@@ -19,11 +19,13 @@ public class AddressDto {
 	private String addressDetail;
 	private boolean defaultStatus;
 
+	public AddressDto() {}
+
 	public AddressDto(AddressBean entity) {
 		if (entity != null) {
 			BeanUtils.copyProperties(entity, this);
 			this.memberId = entity.getMember().getMemberId();
 		}
 	}
-	
+
 }

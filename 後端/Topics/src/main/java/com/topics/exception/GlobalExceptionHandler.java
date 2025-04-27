@@ -59,6 +59,11 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(EmailSendException.class)
 	public ResponseEntity<?> handleEmailSendException(EmailSendException ex) {
-	    return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, "寄送 Email 發生錯誤，請稍後再試");
+	    return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+	}
+	
+	@ExceptionHandler(PasswordErrorException.class)
+	public ResponseEntity<?> handlePasswordErrorException(PasswordErrorException ex) {
+		return ResponseUtil.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 	}
 }

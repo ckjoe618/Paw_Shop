@@ -57,3 +57,6 @@ export const apiUpdateDefaultAddress = (data) =>
 // 刪除地址
 export const apiDeleteAddress = (data) =>
   handleResponse(api.delete(`/api/user/address/${data}`));
+// 修改密碼
+export const apiUpdatePassword = (data) =>
+  handleResponse(api.put(`/api/user/password/${data.memberId}`, data));

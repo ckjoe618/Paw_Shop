@@ -53,10 +53,10 @@ const routes = [
             path: "address",
             component: () => import("@/member/pages/MemberAddress.vue"),
           },
-          // {
-          //   path: "password",
-          //   component: () => import("@/member/components/PasswordPage.vue"),
-          // }
+          {
+            path: "password",
+            component: () => import("@/member/components/ChangePassword.vue"),
+          },
         ],
       },
       {

@@ -14,6 +14,7 @@
           <v-text-field
             label="電話"
             v-model="localAddress.phone"
+            maxlength="10"
             :rules="[rules.required, rules.phone]"
           />
           <v-text-field
@@ -39,6 +40,7 @@
           />
           <v-text-field
             label="詳細地址"
+            ref="focusRef"
             v-model="localAddress.addressDetail"
             :rules="[rules.required]"
           />
@@ -60,16 +62,21 @@
 </template>
 
 <script setup>
-import { cityDistrictsZipcode } from "@/member/assets/taiwan_city_district_zipcode.js";
+import { cityList } from "@/member/assets/city.js";
+import { addressList } from "@/member/assets/zipcodes.js";
 import { ref, watch, computed } from "vue";
 import * as api from "@/member/api/memberApi/UserApi";
+import { useAuthStore } from "../stores/auth";
+
+const auth = useAuthStore();
 
 const formRef = ref(null);
 const isValid = ref(false);
 const loading = ref(false);
 const localAddress = ref({});
+const cities = ref(cityList.map((city) => city.name));
 const districts = ref([]);
-const cities = Object.keys(cityDistrictsZipcode);
+const focusRef = ref(false);
 
 const props = defineProps({
   dialog: Boolean,
@@ -94,34 +101,56 @@ watch(
   (val) => {
     if (val) {
       localAddress.value = { ...props.address };
+      if (localAddress.value.city) {
+        updateDistricts(localAddress.value.city);
+      }
     } else {
       setTimeout(() => {
         formRef.value?.resetValidation();
         localAddress.value = {};
+        districts.value = [];
+        focusRef.value = false;
       });
     }
   },
   { immediate: true }
 );
 
-const onCityChange = (city) => {
-  districts.value = Object.keys(cityDistrictsZipcode[city] || {});
-  if (districts.value.length > 0) {
+// 選城市時，更新區域下拉
+const onCityChange = (cityName) => {
+  localAddress.value.city = cityName;
+  updateDistricts(cityName);
+  // 如果只有一個區，直接選起來＋自動帶zipcode
+  if (districts.value.length === 1) {
     localAddress.value.district = districts.value[0];
-    localAddress.value.zipcode = cityDistrictsZipcode[city][districts.value[0]];
+    const found = addressList.find(
+      (item) => item.county === cityName && item.city === districts.value[0]
+    );
+    localAddress.value.zipcode = found ? found.zipcode : "";
   } else {
     localAddress.value.district = "";
     localAddress.value.zipcode = "";
   }
 };
 
-const onDistrictChange = (district) => {
-  const city = localAddress.value.city;
-  if (city && district) {
-    localAddress.value.zipcode = cityDistrictsZipcode[city][district] || "";
-  } else {
-    localAddress.value.zipcode = "";
-  }
+// 更新區域選單
+const updateDistricts = (cityName) => {
+  districts.value = addressList
+    .filter((item) => item.county === cityName)
+    .map((item) => item.city);
+};
+
+// 選區域時，自動帶入郵遞區號
+const onDistrictChange = (districtName) => {
+  const cityName = localAddress.value.city;
+  const found = addressList.find(
+    (item) => item.county === cityName && item.city === districtName
+  );
+  localAddress.value.zipcode = found ? found.zipcode : "";
+  // 自動聚焦到詳細地址欄
+  setTimeout(() => {
+    focusRef.value?.focus();
+  });
 };
 
 const close = () => emit("update:dialog", false);
