@@ -14,7 +14,7 @@
 defineProps({
   icon: {
     type: String,
-    default: "mdi-application-export",
+    default: "mdi-export-variant",
   },
   color: {
     type: String,

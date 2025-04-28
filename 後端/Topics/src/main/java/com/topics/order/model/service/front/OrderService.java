@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.topics.exception.NotFoundException;
 import com.topics.member.model.entity.MemberBean;
 import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.bean.OrderDetailBean;
@@ -79,9 +80,9 @@ public class OrderService {
 	//取消訂單
 	@Transactional
 	public void cancelOrder(Integer orderid) {
-		Optional<OrderBean> op = orderRepository.findById(orderid);
-		if (op.isPresent()) {
-			OrderBean cancelingOrder = op.get();
+		OrderBean cancelingOrder = orderRepository.findById(orderid)
+				.orElseThrow(() -> new NotFoundException("找不到訂單"));
+		
 			if (!"訂單取消".equals(cancelingOrder.getOrderStatus())) {
 				cancelingOrder.setOrderStatus("訂單取消");
 				orderRepository.save(cancelingOrder);
@@ -99,7 +100,6 @@ public class OrderService {
 					}
 				}
 			}
-		}
 		
 	}
 

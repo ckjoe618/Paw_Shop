@@ -60,7 +60,7 @@
 
 <script setup>
 import { ref, watch, computed } from "vue";
-import * as api from "@/member/api/memberApi/AdminApi.js";
+import * as api from "@/api/memberApi/AdminApi.js";
 
 const formRef = ref(null);
 const isValid = ref(false);

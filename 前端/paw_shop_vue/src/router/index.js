@@ -107,6 +107,7 @@ const routes = [
       },
       {
         path: "/products/:id",
+        name: "ProductDetailPage",
         component: () => import("@/product/frontsite/ProductDetailPage.vue"),
       },
       {
@@ -116,6 +117,19 @@ const routes = [
       {
         path: "/favorites",
         component: () => import("@/product/frontsite/FavoriteListPage.vue"),
+      },
+      {
+        path: "discuss",
+        component: () => import("@/discuss/pages/front/articleListPage.vue"),
+      },
+      {
+        path: "discuss/post",
+        component: () => import("@/discuss/pages/front/postArticlePage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "discuss/:articleId",
+        component: () => import("@/discuss/pages/front/articleDetailPage.vue"),
       },
     ],
   },
@@ -139,6 +153,10 @@ const routes = [
       {
         path: "member",
         component: () => import("@/member/pages/AdminMemberPage.vue"),
+      },
+      {
+        path: "discuss",
+        component: () => import("@/discuss/pages/backend/ArticleListPage.vue"),
       },
       {
         path: "products",

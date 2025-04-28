@@ -42,7 +42,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import * as api from "@/member/api/memberApi/UserApi";
+import * as api from "@/api/memberApi/UserApi";
 
 const isValid = ref(false);
 const formRef = ref(null);
