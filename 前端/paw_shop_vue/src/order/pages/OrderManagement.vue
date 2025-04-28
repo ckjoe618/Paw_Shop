@@ -1,7 +1,69 @@
 <template>
   <v-container class="pt-16">
     <div class="orderManage-container">
-      <v-data-table
+      <h2 class="text-h5 mb-4">我的訂單</h2>
+      <v-tabs v-model="selectedTab" grow>
+        <v-tab v-for="tab in tabs" :key="tab.value" :value="tab.value">
+          {{ tab.label }}
+        </v-tab>
+      </v-tabs>
+      <v-table class="elevation-1" density="comfortable">
+        <thead style="font-size: 18px">
+          <tr style="background-color: #f5f5f5">
+            <th>訂購日期</th>
+            <th>訂單編號</th>
+            <th>付款方式</th>
+            <th>付款狀態</th>
+            <th>取貨方式</th>
+            <th>處理進度</th>
+            <th>訂單金額</th>
+            <th>訂單明細</th>
+            <th>取消訂單</th>
+          </tr>
+        </thead>
+        <tbody style="font-size: 16px">
+          <tr v-for="item in orders" :key="item.orderId">
+            <td>{{ item.transactionTime?.substring(0, 10) }}</td>
+            <td>{{ item.orderId }}</td>
+            <td>{{ item.paymentMethod }}</td>
+            <td>{{ item.paymentStatus }}</td>
+            <td>{{ item.pickupMethod }}</td>
+            <td>{{ item.orderStatus }}</td>
+            <td>${{ item.priceTotal }}</td>
+            <td>
+              <div class="d-flex align-center" style="gap: 8px">
+                <v-btn
+                  size="small"
+                  color="#E2E9E2"
+                  @click="openDetailsDialog(item)"
+                  >查看</v-btn
+                >
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-center" style="gap: 8px">
+                <v-btn
+                  size="small"
+                  @click="showCancelDialog(item)"
+                  :color="canCancel(item.orderStatus) ? '#F5EDE1' : '#808080'"
+                  :disabled="!canCancel(item.orderStatus)"
+                >
+                  取消訂單
+                </v-btn>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+      <!-- 分頁控制器 -->
+      <div class="d-flex justify-center my-4">
+        <v-pagination
+          v-model="currentPage"
+          :length="pageCount"
+          total-visible="5"
+        ></v-pagination>
+      </div>
+      <!-- <v-data-table
         :headers="headers"
         :items="orders"
         class="elevation-1"
@@ -32,7 +94,7 @@
             >
           </div>
         </template>
-      </v-data-table>
+      </v-data-table> -->
     </div>
   </v-container>
   <!-- 取消訂單dialog -->
@@ -59,7 +121,7 @@
           <v-table density="comfortable">
             <thead>
               <tr>
-                <th class="text-left">商品編號</th>
+                <th class="text-left"></th>
                 <th class="text-left">商品名稱</th>
                 <th class="text-left">數量</th>
                 <th class="text-left">單價</th>
@@ -91,7 +153,7 @@
                       : ''
                   "
                 >
-                  <td>{{ item.product.productId }}</td>
+                  <td><img :src="item.product.productPhoto" width="60" /></td>
                   <td>{{ item.product.productName }}</td>
                   <td>{{ item.quantity }}</td>
                   <td>${{ item.unitPrice }}</td>
@@ -139,7 +201,7 @@
                             />
 
                             <div class="text-right mt-2">
-                              <!-- ✅ 如果已評論，顯示灰色 chip -->
+                              <!-- 如果已評論，顯示灰色 chip -->
                               <v-chip
                                 v-if="item.commented"
                                 color="grey lighten-2"
@@ -149,7 +211,7 @@
                                 已評論
                               </v-chip>
 
-                              <!-- ✅ 如果未評論，但尚未評分，顯示 Tooltip 提示 -->
+                              <!-- 如果未評論，但尚未評分，顯示 Tooltip 提示 -->
                               <v-tooltip
                                 v-else-if="item.rating <= 0"
                                 text="請先給予評分"
@@ -167,7 +229,7 @@
                                 </template>
                               </v-tooltip>
 
-                              <!-- ✅ 如果未評論且評分有效，顯示可送出的按鈕 -->
+                              <!-- 如果未評論且評分有效，顯示可送出的按鈕 -->
                               <v-btn
                                 v-else
                                 size="small"
@@ -254,18 +316,18 @@ import {
   apiUpdateOrderDetail,
 } from "@/api/api";
 import OrderCancelDialog from "@/order/components/frontsite/OrderCancelDialog.vue";
+import Swal from "sweetalert2";
 
-const headers = [
-  { title: "訂購日期", key: "transactionTime" },
-  { title: "訂單編號", key: "orderId" },
-  { title: "付款方式", key: "paymentMethod", sortable: false },
-  { title: "付款狀態", key: "paymentStatus", sortable: false },
-  { title: "取貨方式", key: "pickupMethod", sortable: false },
-  { title: "處理進度", key: "orderStatus", sortable: false },
-  { title: "訂單金額", key: "priceTotal" },
-  { title: "訂單明細", key: "details", sortable: false },
-  { title: "取消訂單", key: "cancel", sortable: false },
+//tabs
+const tabs = [
+  { label: "全部", value: "ALL" },
+  { label: "未付款", value: "未付款" },
+  { label: "付款完成", value: "付款完成" },
+  { label: "付款失敗", value: "付款失敗" },
+  { label: "已取消", value: "已取消" },
 ];
+
+const selectedTab = ref("ALL");
 
 //查詢所有會員訂單
 const orders = ref([]);
@@ -277,6 +339,17 @@ const fetchOrders = async () => {
     console.error("取得訂單失敗：", error);
   }
 };
+//分頁
+const currentPage = ref(1);
+const itemsPerPage = 10;
+
+const paginatedOrders = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return orders.value.slice(start, end);
+});
+
+const pageCount = computed(() => Math.ceil(orders.value.length / itemsPerPage));
 
 //查看明細
 const seeDetails = ref(false);
@@ -366,6 +439,12 @@ const confirmCancel = async () => {
     const res = await apiCancelOrder(cancelTargetOrder.value.orderId);
     console.log("取消成功", res.data);
     cancelTargetOrder.value.orderStatus = "訂單取消";
+    await Swal.fire({
+      icon: "success",
+      title: "已成功取消訂單",
+      showConfirmButton: false,
+      timer: 1000,
+    });
   } catch (error) {
     console.error("取消訂單失敗", error);
   }
