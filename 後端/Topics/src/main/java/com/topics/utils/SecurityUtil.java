@@ -43,5 +43,13 @@ public class SecurityUtil {
 			throw new ForbiddenException("無權限修改其他會員的資料");
 		}
 	}
+	public static void checkLogin() {
+		MemberDto member = AuthHolder.getMember();
+		if (member == null) {
+			throw new ForbiddenException("尚未登入");
+		}
+		
+	}
+
 
 }

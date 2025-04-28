@@ -91,7 +91,7 @@ public class AppointmentController {
 
 	@GetMapping("/querybookingtime/{appointmentDate}")
 	public ResponseEntity<Map<String, Object>> handleQueryBookingTime(@PathVariable String appointmentDate) {
-		SecurityUtil.checkAdminPermission();
+		SecurityUtil.checkLogin();
 		List<String> bookedTimeslots = appointmentService.getBookedTimeslots(appointmentDate);
 		Map<String, Object> responseData = new HashMap<>();
 		responseData.put("bookedTimeslots", bookedTimeslots);
@@ -100,7 +100,7 @@ public class AppointmentController {
 
 	@GetMapping("/querypet/{memberId}")
 	public ResponseEntity<Object> handleQueryPetById(@PathVariable("memberId") String memberIdStr) {
-		SecurityUtil.checkAdminPermission();
+		SecurityUtil.checkLogin();
 		if (memberIdStr == null || memberIdStr.trim().isEmpty()) {
 			return ResponseEntity.badRequest().body("memberId 不能為空");
 		}
@@ -129,7 +129,7 @@ public class AppointmentController {
 	@PostMapping("/appointment")
 	@ResponseBody
 	public ResponseEntity<?> insertAppointmentById(@RequestBody Map<String, Object> payload, HttpSession session) {
-		SecurityUtil.checkAdminPermission();
+		SecurityUtil.checkLogin();
 	    String memberIdStr = String.valueOf(payload.get("memberId"));
 	    Integer memberId = null;
 
