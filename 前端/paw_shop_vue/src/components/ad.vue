@@ -16,10 +16,10 @@
 </template>
 
 <script setup>
-import img1 from "@/order/assets/pictures/1_Carousel_Travel_Desktop.png";
-import img2 from "@/order/assets/pictures/2_Desktop_Carousel_IndoorToys.png";
-import img3 from "@/order/assets/pictures/3_Desktop_Carousel_CalmingAids.png";
-import img4 from "@/order/assets/pictures/4_Carousel_Desktop_HarryPotter.png";
+import img1 from "@/order/assets/pictures/homepic3.png";
+import img2 from "@/order/assets/pictures/homepic2.png";
+import img3 from "@/order/assets/pictures/homepic1.png";
+import img4 from "@/order/assets/pictures/homepic4.png";
 
 const carouselImages = [img1, img2, img3, img4];
 </script>

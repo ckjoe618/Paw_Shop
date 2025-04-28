@@ -11,9 +11,9 @@
       <v-text-field
         v-model="form.member.memberId"
         label="會員編號"
-        :rules="[numberRule]"
         variant="solo"
-        disabled
+        :rules="[numberRule]"
+        :disabled="!!form.orderId"
       ></v-text-field>
       <v-text-field
         v-model="form.priceTotal"
@@ -65,6 +65,7 @@
         v-model="form.trackingNum"
         label="物流編號"
         variant="solo"
+        maxlength="10"
         :rules="[trackingNumRule]"
       ></v-text-field>
 
@@ -92,7 +93,7 @@ const emit = defineEmits(["success", "cancel"]);
 
 const form = ref({
   member: {
-    memberId: null,
+    memberId: "",
   },
   priceTotal: "",
   paymentMethod: "",
@@ -130,7 +131,16 @@ watch(
       }
     } else {
       // 僅在開啟 dialog 且 orderId 為空的當下清空
-      Object.keys(form.value).forEach((key) => (form.value[key] = ""));
+      // Object.keys(form.value).forEach((key) => (form.value[key] = ""));
+      form.value = {
+        member: { memberId: "" },
+        priceTotal: "",
+        paymentMethod: "",
+        paymentStatus: "",
+        orderStatus: "",
+        pickupMethod: "",
+        trackingNum: "",
+      };
     }
   },
   { immediate: true }
@@ -146,7 +156,6 @@ const submitForm = async () => {
         ...form.value,
         member: { memberId: form.value.member.memberId },
       };
-      console.log(props.orderId);
       const response = await axios.put(
         `http://localhost:8080/api/admin/order/update/${props.orderId}`,
         newData
@@ -157,8 +166,9 @@ const submitForm = async () => {
       // 新增
       const newData = {
         ...form.value,
-        member: { memberId: form.value.memberId },
+        member: { memberId: form.value.member.memberId },
       };
+      console.log("新增的資料：", newData);
       const response = await axios.post(
         "http://localhost:8080/api/admin/order",
         newData

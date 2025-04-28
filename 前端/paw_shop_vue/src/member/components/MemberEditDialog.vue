@@ -21,6 +21,7 @@
           <v-text-field
             label="電話"
             v-model="localMember.phone"
+            maxlength="10"
             :rules="[rules.required, rules.phone]"
           />
           <v-select
@@ -60,8 +61,10 @@
 
 <script setup>
 import { ref, watch, computed } from "vue";
-import * as api from "@/member/api/memberApi/AdminApi.js";
+import { useAuthStore } from "../stores/auth";
+import * as api from "@/api/memberApi/AdminApi.js";
 
+const authStore = useAuthStore();
 const formRef = ref(null);
 const isValid = ref(false);
 const loading = ref(false);
@@ -112,7 +115,10 @@ const submit = async () => {
   }
   loading.value = true;
   try {
-    await api.apiUpdateMember(localMember.value);
+    const data = await api.apiUpdateMember(localMember.value);
+    if (localMember.value.memberId == authStore.memberId) {
+      authStore.update(data);
+    }
     emit("updated");
     close();
   } finally {

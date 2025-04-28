@@ -1,4 +1,4 @@
-import api from "@/member/api/axiosInterceptor";
+import api from "@/api/axiosInterceptor";
 import { handleResponse } from "../handleResponse";
 
 // 新增會員

@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto my-4 hover-card" max-width="374" @click="goToDetail">
-    <div style="position: relative;">
+    <div style="position: relative">
       <v-img
         :src="product.productPhoto"
         height="250"
@@ -13,7 +13,7 @@
         @click.stop="toggleFavorite"
         :color="isFavorite ? 'red' : 'grey'"
       >
-        <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+        <v-icon>{{ isFavorite ? "mdi-heart" : "mdi-heart-outline" }}</v-icon>
       </v-btn>
     </div>
     <v-card-item>
@@ -27,8 +27,16 @@
       <div class="text-subtitle-1 font-weight-bold">
         NT$ {{ product.productPrice }}
       </div>
-      <v-rating v-if="showRating" :model-value="ratingInfo.averageRating" color="amber" readonly dense />
-      <div v-if="showRating" class="text-caption text-grey">{{ ratingInfo.totalReview }} 則評價</div>
+      <v-rating
+        v-if="showRating"
+        :model-value="ratingInfo.averageRating"
+        color="amber"
+        readonly
+        dense
+      />
+      <div v-if="showRating" class="text-caption text-grey">
+        {{ ratingInfo.totalReview }} 則評價
+      </div>
       <div class="text-body-2 mt-1 product-desc">
         {{ truncatedDescription }}
       </div>
@@ -56,13 +64,13 @@ import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { loadCart } from "@/order/components/frontsite/useCart";
-import api from "@/member/api/axiosInterceptor"; // ✅ 使用自訂 axios 實例
+import api from "@/api/axiosInterceptor"; // ✅ 使用自訂 axios 實例
 import { useAuthStore } from "@/member/stores/auth";
 import {
   apiAddShoppingCartItem,
   apiFindShoppingCartItem,
   apiUpdateShoppingCartItem,
-} from "@/member/api/api";
+} from "@/api/api";
 
 const router = useRouter();
 const ratingInfo = ref({ averageRating: 0, totalReview: 0 });
@@ -78,7 +86,6 @@ const props = defineProps({
 const showSnackbar = ref(false);
 const authStore = useAuthStore();
 const isFavorite = ref(false);
-
 
 async function checkFavorite() {
   if (!authStore.isLoggedIn) return;
@@ -176,7 +183,9 @@ const truncatedDescription = computed(() => {
 });
 
 onMounted(async () => {
-  const res = await axios.get(`http://localhost:8080/product/${props.product.productId}/rating-info`);
+  const res = await axios.get(
+    `http://localhost:8080/product/${props.product.productId}/rating-info`
+  );
   ratingInfo.value = res.data;
   await checkFavorite();
 });

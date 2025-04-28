@@ -130,10 +130,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {
-  apishowUpdateAppointment,
-  apiUpdateAppointment,
-} from "@/member/api/api";
+import { apishowUpdateAppointment, apiUpdateAppointment } from "@/api/api";
 
 const route = useRoute();
 const router = useRouter();

@@ -2,7 +2,7 @@
   <v-container>
     <div class="text-start">
       <h3 class="text-h6 font-weight-medium mb-1">
-        <i class="fa-solid fa-clipboard-question mr-2"></i> How To Buy
+        <i class="fa-solid fa-clipboard-question mr-2"></i> 如何購買
       </h3>
       <div class="accordion accordion-flush" id="home-qa">
         <div class="accordion-item">

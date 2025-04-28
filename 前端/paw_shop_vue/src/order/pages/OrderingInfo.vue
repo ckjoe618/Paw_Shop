@@ -155,7 +155,7 @@ import {
   apiCreateOrder,
   apiFindShoppingCartItem,
   apiDeleteAllShoppingCartItem,
-} from "@/member/api/api";
+} from "@/api/api";
 import { loadCart } from "@/order/components/frontsite/useCart";
 
 //訂購資料

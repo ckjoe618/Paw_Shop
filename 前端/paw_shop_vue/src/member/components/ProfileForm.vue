@@ -3,11 +3,14 @@
     <v-row>
       <!-- 左欄：會員資訊 -->
       <v-col cols="12" md="8">
-        <v-text-field
-          label="姓名"
-          v-model="form.memberName"
-          :rules="[rules.required]"
-        />
+        <v-row class="mb-2">
+          <v-col cols="12" class="d-flex align-center">
+            <span class="text-subtitle-1 font-weight-medium mr-2">姓名:</span>
+            <span class="text-body-1 text-grey-darken-1">{{
+              form.memberName
+            }}</span>
+          </v-col>
+        </v-row>
 
         <v-row class="mb-2">
           <v-col cols="12" class="d-flex align-center">
@@ -18,12 +21,11 @@
           </v-col>
         </v-row>
 
-        <v-row class="mb-2">
-          <v-col cols="12" class="d-flex align-center">
-            <span class="text-subtitle-1 font-weight-medium mr-2">Email:</span>
-            <span class="text-body-1 text-grey-darken-1">{{ form.email }}</span>
-          </v-col>
-        </v-row>
+        <v-text-field
+          label="Email"
+          v-model="form.email"
+          :rules="[rules.required, rules.email]"
+        />
 
         <v-row class="mb-2">
           <v-col cols="12" class="d-flex align-center">
@@ -88,7 +90,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
-import * as api from "@/member/api/memberApi/UserApi.js";
+import * as api from "@/api/memberApi/UserApi.js";
 
 const authStore = useAuthStore();
 const formRef = ref(null);
@@ -109,6 +111,7 @@ const form = ref({
 
 const rules = {
   required: (v) => !!v || "欄位為必填",
+  email: (v) => /.+@.+\..+/.test(v) || "Email 格式錯誤",
   phone: (v) => /^09\d{8}$/.test(v) || "手機號碼格式錯誤",
 };
 

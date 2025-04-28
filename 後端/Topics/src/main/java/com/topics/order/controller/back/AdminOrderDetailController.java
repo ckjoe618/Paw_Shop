@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.topics.order.model.bean.OrderDetailBean;
+import com.topics.order.model.bean.OrderDetailRequestDTO;
 import com.topics.order.model.service.back.AdminOrderDetailService;
 
 @RestController
@@ -22,8 +23,8 @@ public class AdminOrderDetailController {
 
 	// 新增
 	@PostMapping
-	public OrderDetailBean insertOrderDetail(@RequestBody OrderDetailBean orderDetailBean) {
-		return orderDetailService.insertOrderDetail(orderDetailBean);
+	public OrderDetailBean insertOrderDetail(@RequestBody OrderDetailRequestDTO requestDTO) {
+		return orderDetailService.insertOrderDetail(requestDTO);
 	}
 
 	// 刪除

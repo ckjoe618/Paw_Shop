@@ -15,7 +15,6 @@ import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.service.AdminMemberService;
 import com.topics.utils.ResponseUtil;
 import com.topics.utils.SecurityUtil;
-
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController

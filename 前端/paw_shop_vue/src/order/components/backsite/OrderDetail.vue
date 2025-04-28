@@ -328,10 +328,8 @@ const onProductSelect = (product) => {
 
 const submitDetail = async () => {
   const newData = {
-    order: { orderId: props.order.orderId },
-    product: {
-      productId: form.value.productId,
-    },
+    orderId: props.order.orderId,
+    productId: form.value.productId,
     unitPrice: form.value.unitPrice,
     quantity: form.value.quantity,
   };

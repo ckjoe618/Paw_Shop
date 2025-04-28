@@ -7,6 +7,7 @@ const api = axios.create({
   timeout: 5000,
 });
 
+const authStore = useAuthStore();
 // 防止 token 錯誤重複跳轉用的旗標
 let isHandlingTokenError = false;
 // 加這個防止 alert 重複出現
@@ -15,7 +16,6 @@ let hasShownAlert = false;
 // 加入 request interceptor：自動加上 token
 api.interceptors.request.use(
   (config) => {
-    const authStore = useAuthStore();
     if (authStore.token) {
       config.headers.Authorization = `Bearer ${authStore.token}`;
     }

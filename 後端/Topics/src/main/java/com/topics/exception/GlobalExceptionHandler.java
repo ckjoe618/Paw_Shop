@@ -5,9 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import com.topics.utils.ResponseUtil;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 
@@ -56,12 +54,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
 		return ResponseUtil.error(HttpStatus.BAD_REQUEST, "參數驗證錯誤");
 	}
-	
+
 	@ExceptionHandler(EmailSendException.class)
 	public ResponseEntity<?> handleEmailSendException(EmailSendException ex) {
-	    return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+		return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
 	}
-	
+
 	@ExceptionHandler(PasswordErrorException.class)
 	public ResponseEntity<?> handlePasswordErrorException(PasswordErrorException ex) {
 		return ResponseUtil.error(HttpStatus.BAD_REQUEST, ex.getMessage());

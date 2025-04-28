@@ -92,11 +92,6 @@
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.example</groupId>
-			<artifactId>Topics</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 		<!--  email tool  -->
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
