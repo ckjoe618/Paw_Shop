@@ -1,5 +1,5 @@
 <template>
-  <v-container class="text-center py-12">
+  <v-container class="text-center py-12 mt-10">
     <v-card class="pa-8 mx-auto" max-width="500" elevation="2" rounded="xl">
       <v-icon size="80" color="success" class="mb-4"
         >mdi-check-circle-outline</v-icon
