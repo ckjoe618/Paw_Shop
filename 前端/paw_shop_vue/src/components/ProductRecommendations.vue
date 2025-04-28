@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h3 class="text-h6 font-weight-medium mb-2">
-      <i class="fas fa-thumbs-up mr-2"></i>Top Recommendations
+      <i class="fas fa-thumbs-up mr-2"></i> 精選推薦
     </h3>
     <v-row>
       <v-col

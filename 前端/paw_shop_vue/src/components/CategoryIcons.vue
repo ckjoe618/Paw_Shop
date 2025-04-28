@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-start">
     <h3 class="text-h6 font-weight-medium mb-1">
-      <v-icon>mdi-store-search</v-icon> Shop for your pet
+      <v-icon>mdi-store-search</v-icon> 寵物類別
     </h3>
 
     <v-row justify="center">

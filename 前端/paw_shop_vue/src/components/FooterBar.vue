@@ -4,19 +4,18 @@
       <v-container>
         <v-row>
           <v-col cols="12" sm="6" md="3">
-            <h4 class="mb-2 font-weight-bold">服務項目</h4>
-            <div class="text-subtitle-2 mb-1">我的帳戶</div>
+            <h4 class="mb-2 font-weight-bold">服務</h4>
+            <div class="text-subtitle-2 mb-1">帳號中心</div>
             <div class="text-subtitle-2 mb-1">幫助中心</div>
-            <div class="text-subtitle-2 mb-1">訂單追蹤</div>
-            <div class="text-subtitle-2 mb-1">運送資訊</div>
-            <div class="text-subtitle-2 mb-1">退貨與退款</div>
+            <div class="text-subtitle-2 mb-1">物流追蹤</div>
+            <div class="text-subtitle-2 mb-1">購物須知</div>
+            <div class="text-subtitle-2 mb-1">常見問答</div>
           </v-col>
 
           <v-col cols="12" sm="6" md="3">
-            <h4 class="mb-2 font-weight-bold">購物指南</h4>
-            <div class="text-subtitle-2 mb-1">特別優惠</div>
-            <div class="text-subtitle-2 mb-1">清倉出清</div>
-            <div class="text-subtitle-2 mb-1">重複訂購</div>
+            <h4 class="mb-2 font-weight-bold">購物</h4>
+            <div class="text-subtitle-2 mb-1">特別企劃</div>
+            <div class="text-subtitle-2 mb-1">新品報報</div>
             <div class="text-subtitle-2 mb-1">禮物卡</div>
           </v-col>
 
@@ -24,8 +23,8 @@
             <h4 class="mb-2 font-weight-bold">法律與資訊</h4>
             <div class="text-subtitle-2 mb-1">隱私權政策</div>
             <div class="text-subtitle-2 mb-1">使用條款</div>
-            <div class="text-subtitle-2 mb-1">Cookie政策</div>
-            <div class="text-subtitle-2 mb-1">公司資訊</div>
+            <div class="text-subtitle-2 mb-1">Cookies</div>
+            <div class="text-subtitle-2 mb-1">公司介紹</div>
           </v-col>
 
           <v-col cols="12" sm="6" md="3">
