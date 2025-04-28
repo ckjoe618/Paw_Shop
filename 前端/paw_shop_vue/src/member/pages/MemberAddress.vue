@@ -67,7 +67,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
-import * as api from "@/member/api/memberApi/UserApi";
+import * as api from "@/api/memberApi/UserApi";
 import AddressCard from "@/member/components/AddressCard.vue";
 import AddressEditDialog from "@/member/components/AddressEditDialog.vue";
 import draggable from "vuedraggable";

@@ -202,7 +202,7 @@ import {
   apiFindShoppingCartItem,
   apiUpdateShoppingCartItem,
   apiDeleteShoppingCartItem,
-} from "@/member/api/api";
+} from "@/api/api";
 import { useCheckoutStore } from "@/order/stores/checkoutStore";
 const checkoutStore = useCheckoutStore();
 

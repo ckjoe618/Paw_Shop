@@ -12,7 +12,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { apiAppointmentcheckIn } from "@/member/api/api";
+import { apiAppointmentcheckIn } from "@/api/api";
 import QrCodeDisplay from "@/appointment/components/QrCodeDisplay.vue";
 
 const route = useRoute();

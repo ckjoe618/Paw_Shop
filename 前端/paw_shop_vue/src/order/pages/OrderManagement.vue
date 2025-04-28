@@ -314,7 +314,7 @@ import {
   apiCancelOrder,
   apiFindOrderDetails,
   apiUpdateOrderDetail,
-} from "@/member/api/api";
+} from "@/api/api";
 import OrderCancelDialog from "@/order/components/frontsite/OrderCancelDialog.vue";
 import Swal from "sweetalert2";
 

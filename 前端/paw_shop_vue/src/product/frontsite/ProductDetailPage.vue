@@ -17,15 +17,24 @@
             @click="toggleFavorite"
             :color="isFavorite ? 'red' : 'grey'"
           >
-            <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+            <v-icon>{{
+              isFavorite ? "mdi-heart" : "mdi-heart-outline"
+            }}</v-icon>
           </v-btn>
         </div>
         <div class="text-subtitle-2 text-grey-darken-1 mb-1">
           分類：{{ product.categoryName }}
         </div>
 
-        <v-rating :model-value="ratingInfo.averageRating" color="amber" readonly density="compact" />
-        <div class="text-caption text-grey">{{ ratingInfo.totalReview }} 則評價</div>
+        <v-rating
+          :model-value="ratingInfo.averageRating"
+          color="amber"
+          readonly
+          density="compact"
+        />
+        <div class="text-caption text-grey">
+          {{ ratingInfo.totalReview }} 則評價
+        </div>
 
         <div class="my-4">
           <div class="text-h6 font-weight-bold text-red">
@@ -67,19 +76,25 @@
     <h3 class="text-h6 font-weight-bold mb-4">用戶評論</h3>
     <v-row>
       <v-col cols="12" v-for="(review, index) in reviews" :key="index">
-  <v-card class="pa-4 mb-3">
-    <div class="d-flex justify-space-between align-center mb-1">
-      <div class="text-subtitle-2 font-weight-medium">
-        {{ review.reviewer || "匿名用戶" }}
-      </div>
-      <v-rating :model-value="review.rating" color="amber" readonly dense size="small" />
-    </div>
-    <div class="text-caption text-grey-darken-1 mb-2">
-      {{ review.date || "無日期" }}
-    </div>
-    <div class="text-body-2">{{ review.comment }}</div>
-  </v-card>
-</v-col>
+        <v-card class="pa-4 mb-3">
+          <div class="d-flex justify-space-between align-center mb-1">
+            <div class="text-subtitle-2 font-weight-medium">
+              {{ review.reviewer || "匿名用戶" }}
+            </div>
+            <v-rating
+              :model-value="review.rating"
+              color="amber"
+              readonly
+              dense
+              size="small"
+            />
+          </div>
+          <div class="text-caption text-grey-darken-1 mb-2">
+            {{ review.date || "無日期" }}
+          </div>
+          <div class="text-body-2">{{ review.comment }}</div>
+        </v-card>
+      </v-col>
     </v-row>
 
     <!-- 推薦商品區塊 -->
@@ -106,7 +121,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
-import api from "@/member/api/axiosInterceptor";
+import api from "@/api/axiosInterceptor";
 import ProductCard from "./ProductCard.vue";
 import { loadCart } from "@/order/components/frontsite/useCart";
 import { useAuthStore } from "@/member/stores/auth";
@@ -114,7 +129,7 @@ import {
   apiAddShoppingCartItem,
   apiFindShoppingCartItem,
   apiUpdateShoppingCartItem,
-} from "@/member/api/api";
+} from "@/api/api";
 
 const route = useRoute();
 const emit = defineEmits(["add-to-cart"]);
@@ -166,7 +181,9 @@ async function toggleFavorite() {
 
 async function fetchReviews(id) {
   try {
-    const res = await axios.get(`http://localhost:8080/api/orderdetail/comments/${id}`);
+    const res = await axios.get(
+      `http://localhost:8080/api/orderdetail/comments/${id}`
+    );
     reviews.value = res.data;
   } catch (error) {
     console.error("載入評論失敗:", error);
@@ -204,7 +221,12 @@ function updateRecommendations() {
 }
 
 onMounted(async () => {
-  await Promise.all([fetchProduct(route.params.id), fetchAllProducts(), fetchRatingInfo(route.params.id),fetchReviews(route.params.id)]);
+  await Promise.all([
+    fetchProduct(route.params.id),
+    fetchAllProducts(),
+    fetchRatingInfo(route.params.id),
+    fetchReviews(route.params.id),
+  ]);
   updateRecommendations();
   await checkFavorite();
 });
@@ -216,14 +238,16 @@ watch(
     await fetchRatingInfo(newId);
     await fetchReviews(newId);
     updateRecommendations();
-    await checkFavorite(); 
+    await checkFavorite();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 );
 
 async function fetchRatingInfo(id) {
   try {
-    const res = await axios.get(`http://localhost:8080/product/${id}/rating-info`);
+    const res = await axios.get(
+      `http://localhost:8080/product/${id}/rating-info`
+    );
     ratingInfo.value = res.data;
   } catch (error) {
     console.error("載入評價資訊失敗:", error);

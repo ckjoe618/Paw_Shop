@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref } from "vue";
-import * as api from "@/member/api/memberApi/UserApi";
+import * as api from "@/api/memberApi/UserApi";
 
 const isValid = ref(false);
 const loading = ref(false);

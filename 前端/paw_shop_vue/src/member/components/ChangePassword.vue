@@ -37,7 +37,7 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
-import * as api from "@/member/api/memberApi/UserApi";
+import * as api from "@/api/memberApi/UserApi";
 
 const authStore = useAuthStore();
 const formRef = ref(null);

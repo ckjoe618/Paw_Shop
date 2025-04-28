@@ -225,9 +225,9 @@ const handleSearch = () => {
   }
 };
 
-onMounted(() => {
-  loadCart();
-});
+// onMounted(() => {
+//   loadCart();
+// });
 </script>
 
 <style scoped>
