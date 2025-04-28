@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class AddressDto {
 
+	private Integer addressId;
 	private Integer memberId;
 	private String recipientName;
 	private String phone;
@@ -16,6 +17,9 @@ public class AddressDto {
 	private String city;
 	private String district;
 	private String addressDetail;
+	private boolean defaultStatus;
+
+	public AddressDto() {}
 
 	public AddressDto(AddressBean entity) {
 		if (entity != null) {
@@ -23,4 +27,5 @@ public class AddressDto {
 			this.memberId = entity.getMember().getMemberId();
 		}
 	}
+
 }

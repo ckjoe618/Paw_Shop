@@ -1,12 +1,9 @@
 import api from "@/member/api/axiosInterceptor";
 import { handleResponse } from "../handleResponse";
 
-// 全部會員查詢q
+// 全部會員查詢
 export const apiFindMemberAll = () =>
   handleResponse(api.get("/api/admin/member"));
-// 單筆會員查詢
-export const apiFindMember = (data) =>
-  handleResponse(api.get(`/api/admin/member/${data}`));
 // 新增會員
 export const apiAddMember = (data) =>
   handleResponse(api.post("/api/admin/member", data));

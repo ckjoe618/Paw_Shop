@@ -1,247 +1,253 @@
 <template>
-   <div class="container mt-3">
-    <div id="messageContainer"></div>
+  <v-container>
+    <div class="container mt-3">
+      <div id="messageContainer"></div>
 
-    <!-- 查詢 + 新增 -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <!-- 新增按鈕 -->
-      <AddButton @click="() => (openCreateModal = true)" />
-      <v-alert 
-      v-if="phoneNumberError" 
-      type="error" 
-      dense 
-      class="phone-number-error"
-    >
-      {{ phoneNumberError }}
-    </v-alert>
-      <!-- 查詢表單 -->
-      <v-form @submit.prevent="selectAppointmentByPhoneNum" class="d-flex align-items-center">
-        <label class="me-2">預約電話:</label>
-        <v-text-field
-          v-model="phoneNumber"
-          hide-details
+      <!-- 查詢 + 新增 -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <v-row align="center" class="mb-4" style="gap: 12px">
+          <h2 class="mb-0">預約資訊</h2>
+          <!-- 新增按鈕 -->
+          <AddButton @click="() => (openCreateModal = true)" />
+        </v-row>
+
+        <v-alert
+          v-if="phoneNumberError"
+          type="error"
           dense
-          style="width: 250px"
-          class="me-2"
-        ></v-text-field>
-       
-        <v-btn
-          color="primary"
-          :disabled="!phoneNumber"
-          @click="selectAppointmentByPhoneNum"
-          style="height: 40px"
+          class="phone-number-error"
         >
-          查詢
-        </v-btn>
-     
-      </v-form>
+          {{ phoneNumberError }}
+        </v-alert>
+        <!-- 查詢表單 -->
+        <v-form
+          @submit.prevent="selectAppointmentByPhoneNum"
+          class="d-flex align-items-center"
+        >
+          <label class="me-2">預約電話:</label>
+          <v-text-field
+            v-model="phoneNumber"
+            hide-details
+            dense
+            style="width: 250px"
+            class="me-2"
+          ></v-text-field>
 
-      
-    </div>
+          <v-btn
+            color="primary"
+            :disabled="!phoneNumber"
+            @click="selectAppointmentByPhoneNum"
+            style="height: 40px"
+          >
+            查詢
+          </v-btn>
+        </v-form>
+      </div>
 
-    <!-- 新增預約 Modal -->
-    <div class="modal fade" tabindex="-1" ref="modalRef">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form @submit.prevent="submitAppointment">
-            <div class="modal-header">
-              <h5 class="modal-title">新增預約</h5>
-              <button
-                type="button"
-                class="btn-close"
-                @click="openCreateModal = false"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label>會員 ID</label>
-                <input
-                  type="number"
-                  v-model="form.memberId"
-                  class="form-control"
-                  required
-                  :min="1"  
-                />
-              </div>
-
-              <div class="mb-3">
-                <label>寵物</label>
-                <select
-                  v-model="form.petId"
-                  class="form-select"
-                  :disabled="pets.length === 0"
-                  required
-                >
-                  <option value="" disabled>請選擇寵物</option>
-                  <option
-                    v-for="pet in pets"
-                    :key="pet.petId"
-                    :value="pet.petId"
-                  >
-                    {{ pet.petName }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="appointmentDate">預約日期</label>
-                <input
-                  type="date"
-                  v-model="form.date"
-                  id="appointmentDate"
-                  class="form-control"
-                  @change="onDateChange"
-                  :min="minDate"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="appointmentTimeslot">預約時段</label>
-                <select
-                  v-model="form.timeslot"
-                  id="appointmentTimeslot"
-                  class="form-select"
-                  :disabled="!availableTimeslots.length"
-                  required
-                >
-                  <option value="" disabled selected>請選擇時段</option>
-                  <option
-                    v-for="(timeslot, index) in availableTimeslots"
-                    :key="index"
-                    :value="timeslot.slot"
-                    :disabled="timeslot.disabled"
-                  >
-                    {{ timeslot.slot }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label>選擇服務</label>
-                <select v-model="form.service" class="form-select" required>
-                  <option value="" disabled>請選擇服務</option>
-                  <option
-                    v-for="service in services"
-                    :value="service.id"
-                    :key="service.id"
-                  >
-                    {{ service.name }} +{{ service.price }}元
-                  </option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label>額外加購</label>
-                <div
-                  v-for="pkg in extraPackages"
-                  :key="pkg.id"
-                  class="form-check"
-                >
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    :value="pkg.id"
-                    v-model="form.extraPackages"
-                    :id="'extra' + pkg.id"
-                  />
-                  <label class="form-check-label" :for="'extra' + pkg.id"
-                    >{{ pkg.name }} +{{ pkg.price }}元</label
-                  >
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <strong>總價: {{ totalPrice }}元</strong>
-              </div>
-
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">新增</button>
+      <!-- 新增預約 Modal -->
+      <div class="modal fade" tabindex="-1" ref="modalRef">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form @submit.prevent="submitAppointment">
+              <div class="modal-header">
+                <h5 class="modal-title">新增預約</h5>
                 <button
                   type="button"
-                  class="btn btn-secondary"
+                  class="btn-close"
                   @click="openCreateModal = false"
-                >
-                  取消
-                </button>
+                ></button>
               </div>
-            </div>
-          </form>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label>會員 ID</label>
+                  <input
+                    type="number"
+                    v-model="form.memberId"
+                    class="form-control"
+                    required
+                    :min="1"
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label>寵物</label>
+                  <select
+                    v-model="form.petId"
+                    class="form-select"
+                    :disabled="pets.length === 0"
+                    required
+                  >
+                    <option value="" disabled>請選擇寵物</option>
+                    <option
+                      v-for="pet in pets"
+                      :key="pet.petId"
+                      :value="pet.petId"
+                    >
+                      {{ pet.petName }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="appointmentDate">預約日期</label>
+                  <input
+                    type="date"
+                    v-model="form.date"
+                    id="appointmentDate"
+                    class="form-control"
+                    @change="onDateChange"
+                    :min="minDate"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="appointmentTimeslot">預約時段</label>
+                  <select
+                    v-model="form.timeslot"
+                    id="appointmentTimeslot"
+                    class="form-select"
+                    :disabled="!availableTimeslots.length"
+                    required
+                  >
+                    <option value="" disabled selected>請選擇時段</option>
+                    <option
+                      v-for="(timeslot, index) in availableTimeslots"
+                      :key="index"
+                      :value="timeslot.slot"
+                      :disabled="timeslot.disabled"
+                    >
+                      {{ timeslot.slot }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label>選擇服務</label>
+                  <select v-model="form.service" class="form-select" required>
+                    <option value="" disabled>請選擇服務</option>
+                    <option
+                      v-for="service in services"
+                      :value="service.id"
+                      :key="service.id"
+                    >
+                      {{ service.name }} +{{ service.price }}元
+                    </option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label>額外加購</label>
+                  <div
+                    v-for="pkg in extraPackages"
+                    :key="pkg.id"
+                    class="form-check"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      :value="pkg.id"
+                      v-model="form.extraPackages"
+                      :id="'extra' + pkg.id"
+                    />
+                    <label class="form-check-label" :for="'extra' + pkg.id"
+                      >{{ pkg.name }} +{{ pkg.price }}元</label
+                    >
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <strong>總價: {{ totalPrice }}元</strong>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">新增</button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    @click="openCreateModal = false"
+                  >
+                    取消
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
+
+      <!-- 資料表 -->
+      <v-data-table
+        :headers="headers"
+        :items="appointments"
+        item-value="appointmentId"
+        class="elevation-1"
+      >
+        <template v-slot:item.serviceNames="{ item }">
+          {{ getServiceNames(item) }}
+        </template>
+
+        <template v-slot:item.additionalPackages="{ item }">
+          {{ getAdditionalPackages(item) }}
+        </template>
+
+        <template v-slot:item.appointmentStatus="{ item }">
+          {{ getAppointmentStatus(item.appointmentStatus) }}
+        </template>
+
+        <template v-slot:item.paymentStatus="{ item }">
+          {{ getPaymentStatus(item.paymentStatus) }}
+        </template>
+
+        <template v-slot:item.actions1="{ item }">
+          <DeleteButton @click="() => showDeleteModal(item.appointmentId)" />
+        </template>
+        <template v-slot:item.actions2="{ item }">
+          <EditButton @click="() => showUpdateModal(item.appointmentId)" />
+        </template>
+      </v-data-table>
+      <v-container class="d-flex justify-center">
+        <v-btn @click="goBack" color="grey" class="me-2">返回</v-btn>
+      </v-container>
+      <!-- 隱藏欄位用來存 appointmentId -->
+      <input type="hidden" id="appointmentIdToDelete" />
+      <input type="hidden" id="appointmentIdToUpdate" />
+
+      <!-- 刪除確認 Modal -->
+      <v-dialog v-model="showDelete" max-width="400">
+        <v-card>
+          <v-card-title class="text-h6">確認刪除</v-card-title>
+          <v-card-text>您確定要刪除此項目嗎？</v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary" @click="showDelete = false">取消</v-btn>
+            <v-btn color="error" @click="confirmDelete">確認刪除</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 確認修改 Modal -->
+      <v-dialog v-model="showUpdate" max-width="500">
+        <v-card>
+          <v-card-title class="text-h6"> 確認修改 </v-card-title>
+
+          <v-card-text>
+            <p>您確定要修改此項目嗎？</p>
+            <input type="hidden" v-model="appointmentIdToUpdate" />
+          </v-card-text>
+
+          <v-card-actions class="justify-end">
+            <v-btn color="secondary" @click="showUpdate = false">取消</v-btn>
+            <v-btn color="primary" @click="goToEditPage">確認修改</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-snackbar v-model="showSnackbar" :timeout="3000" color="success" top>
+        {{ snackbarMessage }}
+      </v-snackbar>
     </div>
-
-    <!-- 資料表 -->
-    <v-data-table
-    :headers="headers"
-    :items="appointments"
-    item-value="appointmentId"
-    class="elevation-1"
-  >
-    <template  v-slot:item.serviceNames="{ item }">
-      {{ getServiceNames(item) }}
-    </template>
-
-    <template  v-slot:item.additionalPackages="{ item }">
-      {{ getAdditionalPackages(item) }}
-    </template>
-
-    <template  v-slot:item.appointmentStatus="{ item }">
-      {{ getAppointmentStatus(item.appointmentStatus) }}
-    </template>
-
-    <template  v-slot:item.paymentStatus="{ item }">
-      {{ getPaymentStatus(item.paymentStatus) }}
-    </template>
-
-    <template  v-slot:item.actions1="{ item }">
-      <DeleteButton @click="() => showDeleteModal(item.appointmentId)" />
-    </template>
-    <template  v-slot:item.actions2="{ item }"> 
-      <EditButton @click="() => showUpdateModal(item.appointmentId)" />
-    </template>
-  </v-data-table>
-  <v-container class="d-flex justify-center">
-  <v-btn @click="goBack" color="grey" class="me-2">返回</v-btn>
-</v-container>
-    <!-- 隱藏欄位用來存 appointmentId -->
-    <input type="hidden" id="appointmentIdToDelete" />
-    <input type="hidden" id="appointmentIdToUpdate" />
-
-    <!-- 刪除確認 Modal -->
-    <v-dialog v-model="showDelete" max-width="400">
-      <v-card>
-        <v-card-title class="text-h6">確認刪除</v-card-title>
-        <v-card-text>您確定要刪除此項目嗎？</v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="secondary" @click="showDelete = false">取消</v-btn>
-          <v-btn color="error" @click="confirmDelete">確認刪除</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- 確認修改 Modal -->
-    <v-dialog v-model="showUpdate" max-width="500">
-      <v-card>
-        <v-card-title class="text-h6"> 確認修改 </v-card-title>
-
-        <v-card-text>
-          <p>您確定要修改此項目嗎？</p>
-          <input type="hidden" v-model="appointmentIdToUpdate" />
-        </v-card-text>
-
-        <v-card-actions class="justify-end">
-          <v-btn color="secondary" @click="showUpdate = false">取消</v-btn>
-          <v-btn color="primary" @click="goToEditPage">確認修改</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-snackbar v-model="showSnackbar" :timeout="3000" color="success" top>
-    {{ snackbarMessage }}
-  </v-snackbar>
-  </div>
+  </v-container>
 </template>
 
 <script setup>
@@ -263,41 +269,47 @@ import AddButton from "@/order/components/buttons/addbtn.vue";
 
 const router = useRouter();
 const showSnackbar = ref(false);
-const snackbarMessage = ref('');
+const snackbarMessage = ref("");
 const appointments = ref([]);
 const phoneNumber = ref("");
-const phoneNumberError = ref(''); 
+const phoneNumberError = ref("");
 const openCreateModal = ref(false);
 const modalRef = ref(null);
 let modalInstance = null;
 const headers = [
-  { title: '預約編號', key: 'appointmentId' },
-  { title: '預約日期', key: 'appointmentDate' },
-  { title: '時間', key: 'appointmentTimeslot' },
-  { title: '預約服務', key: 'serviceNames' },
-  { title: '加購服務', key: 'additionalPackages' },
-  { title: '總價格', key: 'appointmentTotal' },
-  { title: '預約狀態', key: 'appointmentStatus' },
-  { title: '付款狀態', key: 'paymentStatus' },
-  { title: '刪除', key: 'actions1', sortable: false },
-  { title: '修改', key: 'actions2', sortable: false }
-]
+  { title: "預約編號", key: "appointmentId" },
+  { title: "預約日期", key: "appointmentDate" },
+  { title: "時間", key: "appointmentTimeslot" },
+  { title: "預約服務", key: "serviceNames" },
+  { title: "加購服務", key: "additionalPackages" },
+  { title: "總價格", key: "appointmentTotal" },
+  { title: "預約狀態", key: "appointmentStatus" },
+  { title: "付款狀態", key: "paymentStatus" },
+  { title: "刪除", key: "actions1", sortable: false },
+  { title: "修改", key: "actions2", sortable: false },
+];
 
 const getAppointmentStatus = (status) => {
   switch (status) {
-    case 0: return '未完成'
-    case 1: return '已完成'
-    default: return '已取消'
+    case 0:
+      return "未完成";
+    case 1:
+      return "已完成";
+    default:
+      return "已取消";
   }
-}
+};
 
 const getPaymentStatus = (status) => {
   switch (status) {
-    case 0: return '未付款'
-    case 1: return '已付款'
-    default: return '-'
+    case 0:
+      return "未付款";
+    case 1:
+      return "已付款";
+    default:
+      return "-";
   }
-}
+};
 
 watch(openCreateModal, (newVal) => {
   if (newVal && modalRef.value) {
@@ -308,14 +320,14 @@ watch(openCreateModal, (newVal) => {
   }
 });
 const goBack = () => {
-  window.location.reload() 
-    }
+  window.location.reload();
+};
 
 const minDate = computed(() => {
   const today = new Date();
   const year = today.getFullYear();
-  const month = (today.getMonth() + 1).toString().padStart(2, '0');
-  const day = today.getDate().toString().padStart(2, '0');
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const day = today.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 });
 const form = ref({
@@ -426,21 +438,21 @@ const onDateChange = async () => {
 // 電話號碼格式檢查規則
 const phoneNumberRule = (value) => {
   if (!value) {
-    phoneNumberError.value = '電話號碼為必填項';
+    phoneNumberError.value = "電話號碼為必填項";
     return false;
   } else if (!/^\d{10}$/.test(value)) {
-    phoneNumberError.value = '請輸入有效的電話號碼';
+    phoneNumberError.value = "請輸入有效的電話號碼";
     return false;
   }
-  phoneNumberError.value = ''; 
+  phoneNumberError.value = "";
   return true;
 };
 // 電話查詢
 const selectAppointmentByPhoneNum = async () => {
-  if (!phoneNumberRule(phoneNumber.value)) return; 
+  if (!phoneNumberRule(phoneNumber.value)) return;
 
   try {
-    const data = phoneNumber.value.trim(); 
+    const data = phoneNumber.value.trim();
     const res = await apiFindAppointment(data);
 
     if (res && res.data && Array.isArray(res.data)) {
@@ -531,7 +543,7 @@ const confirmDelete = async () => {
     }
   } catch (error) {
     snackbarMessage.value = "刪除預約失敗！";
-      showSnackbar.value = true;
+    showSnackbar.value = true;
     console.error("刪除預約時發生錯誤:", error);
   }
 };
@@ -548,9 +560,11 @@ const showUpdateModal = (appointmentId) => {
 
 const goToEditPage = () => {
   if (!appointmentIdToUpdate.value) return;
-  router.push(`/admin/appointments/edit/${appointmentIdToUpdate.value}`).then(() => {
-    window.location.reload();
-  });
+  router
+    .push(`/admin/appointments/edit/${appointmentIdToUpdate.value}`)
+    .then(() => {
+      window.location.reload();
+    });
 };
 
 //顯示資料
@@ -566,9 +580,9 @@ onMounted(async () => {
 </script>
 <style scoped>
 .phone-number-error {
-  max-width: 70%; 
-  width: 70%; 
+  max-width: 70%;
+  width: 70%;
   font-size: 0.875rem;
-  margin-top: 8px; 
+  margin-top: 8px;
 }
 </style>

@@ -3,7 +3,8 @@ package com.topics.member.model.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.topics.member.exception.NotFoundException;
+
+import com.topics.exception.NotFoundException;
 import com.topics.member.model.dto.AddressDto;
 import com.topics.member.model.entity.AddressBean;
 import com.topics.member.model.entity.MemberBean;
@@ -19,16 +20,23 @@ public class AddressService {
 	@Autowired
 	private MemberRepository memberRepository;
 
-	public AddressDto insertAddress(AddressBean address, Integer memberId) {
-		MemberBean member = memberRepository.findById(memberId)
+	public AddressDto insertAddress(AddressDto address) {
+		MemberBean member = memberRepository.findById(address.getMemberId())
 				.orElseThrow(() -> new NotFoundException("找不到對應的會員"));
-		address.setMember(member);
-		AddressBean saved = addressRepository.save(address);
-		return new AddressDto(saved);
+		AddressBean addressNew = new AddressBean();
+		addressNew.setRecipientName(address.getRecipientName());
+		addressNew.setPhone(address.getPhone());
+		addressNew.setZipcode(address.getZipcode());
+		addressNew.setCity(address.getCity());
+		addressNew.setDistrict(address.getDistrict());
+		addressNew.setAddressDetail(address.getAddressDetail());
+		addressNew.setMember(member);
+		AddressBean save = addressRepository.save(addressNew);
+		return new AddressDto(save);
 	}
 
-	public AddressDto updateAddressById(AddressBean address, Integer id) {
-		AddressBean addressNew = addressRepository.findById(id)
+	public AddressDto updateAddressByAddressId(AddressBean address) {
+		AddressBean addressNew = addressRepository.findById(address.getAddressId())
 				.orElseThrow(() -> new NotFoundException("找不到該地址"));
 
 		addressNew.setRecipientName(address.getRecipientName());
@@ -37,27 +45,30 @@ public class AddressService {
 		addressNew.setCity(address.getCity().replace("台", "臺"));
 		addressNew.setDistrict(address.getDistrict().replace("台", "臺"));
 		addressNew.setAddressDetail(address.getAddressDetail().replace("台", "臺"));
-		addressNew.setDefaultStatus(address.isDefaultStatus());
 		AddressBean save = addressRepository.save(addressNew);
 		return new AddressDto(save);
 	}
 
-	public AddressDto deleteAddressById(Integer id) {
-		AddressBean address = addressRepository.findById(id)
+	public void updateDefaultAddress(Integer addressId) {
+		AddressBean addressNew = addressRepository.findById(addressId)
+				.orElseThrow(() -> new NotFoundException("找不到該地址"));
+
+		Integer memberId = addressNew.getMember().getMemberId();
+		addressRepository.clearDefaultByMemberId(memberId);
+		addressNew.setDefaultStatus(true);
+		addressRepository.save(addressNew);
+	}
+
+	public AddressDto deleteAddressById(Integer addressId) {
+		AddressBean address = addressRepository.findById(addressId)
 				.orElseThrow(() -> new NotFoundException("找不到該地址"));
 		address.setActiveStatus(false);
 		AddressBean save = addressRepository.save(address);
 		return new AddressDto(save);
 	}
 
-	public AddressDto findAddressById(Integer id) {
-		AddressBean address = addressRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("找不到該地址"));
-		return new AddressDto(address);
-	}
-
 	public List<AddressDto> findAddressByMemberId(Integer memberId) {
-		List<AddressDto> address = addressRepository.findAddressById(memberId).stream()
+		List<AddressDto> address = addressRepository.findAddressByMemberId(memberId).stream()
 				.map(a -> new AddressDto(a))
 				.toList();
 		return address;

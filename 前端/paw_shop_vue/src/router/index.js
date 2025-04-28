@@ -13,6 +13,18 @@ const routes = [
     meta: { requiresGuest: true },
   },
   {
+    path: "/oauth2/callback/google",
+    component: () => import("@/components/OAuthGoogleCallback.vue"),
+  },
+  {
+    path: "/forgot-password",
+    component: () => import("@/layout/ForgotPasswordLayout.vue"),
+  },
+  {
+    path: "/reset-password",
+    component: () => import("@/components/ResetPassword.vue"),
+  },
+  {
     path: "/",
     component: () => import("@/layout/FrontLayout.vue"),
     children: [
@@ -25,9 +37,27 @@ const routes = [
         component: () => import("@/pages/FrontHome.vue"),
       },
       {
-        path: "member/profile",
-        component: () => import("@/member/pages/FrontMemberPage.vue"),
+        path: "member",
+        component: () => import("@/member/pages/MemberCenterPage.vue"),
         meta: { requiresAuth: true },
+        children: [
+          {
+            path: "",
+            redirect: "/member/profile",
+          },
+          {
+            path: "profile",
+            component: () => import("@/member/components/ProfileForm.vue"),
+          },
+          {
+            path: "address",
+            component: () => import("@/member/pages/MemberAddress.vue"),
+          },
+          {
+            path: "password",
+            component: () => import("@/member/components/ChangePassword.vue"),
+          },
+        ],
       },
       {
         path: "appointments",
@@ -73,7 +103,6 @@ const routes = [
       },
       {
         path: "products",
-        name: "ProductListView",
         component: () => import("@/product/frontsite/ProductListView.vue"),
       },
       {
@@ -84,6 +113,23 @@ const routes = [
       {
         path: "checkin",
         component: () => import("@/appointment/components/CheckinPage.vue"),
+      },
+      {
+        path: "/favorites",
+        component: () => import("@/product/frontsite/FavoriteListPage.vue"),
+      },
+      {
+        path: "discuss",
+        component: () => import("@/discuss/pages/front/articleListPage.vue"),
+      },
+      {
+        path: "discuss/post",
+        component: () => import("@/discuss/pages/front/postArticlePage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "discuss/:articleId",
+        component: () => import("@/discuss/pages/front/articleDetailPage.vue"),
       },
     ],
   },
@@ -107,6 +153,10 @@ const routes = [
       {
         path: "member",
         component: () => import("@/member/pages/AdminMemberPage.vue"),
+      },
+      {
+        path: "discuss",
+        component: () => import("@/discuss/pages/backend/ArticleListPage.vue"),
       },
       {
         path: "products",

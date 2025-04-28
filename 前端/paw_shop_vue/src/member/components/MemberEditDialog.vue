@@ -21,7 +21,7 @@
           <v-text-field
             label="電話"
             v-model="localMember.phone"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.phone]"
           />
           <v-select
             label="角色"
@@ -38,7 +38,7 @@
             ]"
             item-title="text"
             item-value="value"
-            :rules="[(v) => (v !== null && v !== undefined) || '必填項目']"
+            :rules="[rules.role]"
           />
         </v-form>
       </v-card-text>
@@ -64,21 +64,13 @@ import * as api from "@/member/api/memberApi/AdminApi.js";
 
 const formRef = ref(null);
 const isValid = ref(false);
-const localMember = ref({});
 const loading = ref(false);
+const localMember = ref({});
 
 const props = defineProps({
   dialog: Boolean,
   member: Object,
 });
-
-watch(
-  () => props.member,
-  (val) => {
-    localMember.value = { ...val };
-  },
-  { immediate: true }
-);
 
 // 父層 editDialog → 傳入 props.dialog → dialog.get() 讀取
 // 子層 dialog.value = false → 呼叫 emit → 父層 editDialog 也改變
@@ -91,22 +83,27 @@ const dialog = computed({
 
 const rules = {
   required: (v) => !!v || "必填項目",
-  email: (v) => /.+@.+\..+/.test(v) || "Email 格式不正確",
+  email: (v) => /.+@.+\..+/.test(v) || "Email 格式錯誤",
+  phone: (v) => /^09\d{8}$/.test(v) || "手機號碼格式錯誤",
+  role: (v) => (v !== null && v !== undefined) || "必填項目",
 };
 
-watch(dialog, (val) => {
-  if (!val) {
-    formRef.value.resetValidation();
-    localMember.value = {};
-  } else {
-    // 重新打開 dialog 時，把 props.member 值套進去
-    localMember.value = { ...props.member };
-  }
-});
+watch(
+  dialog,
+  (val) => {
+    if (val) {
+      localMember.value = { ...props.member };
+    } else {
+      setTimeout(() => {
+        formRef.value?.resetValidation();
+        localMember.value = {};
+      });
+    }
+  },
+  { immediate: true }
+);
 
-const close = () => {
-  emit("update:dialog", false);
-};
+const close = () => emit("update:dialog", false);
 
 const submit = async () => {
   const valid = await formRef.value.validate();

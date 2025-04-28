@@ -29,7 +29,7 @@ public class AddressBean {
 	private String district;
 	private String addressDetail;
 	private LocalDateTime createdDate = LocalDateTime.now();
-	private boolean defaultStatus = true;
+	private boolean defaultStatus = false;
 	private boolean activeStatus = true;
 
 	@ManyToOne(fetch = FetchType.LAZY)

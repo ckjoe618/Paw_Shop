@@ -53,7 +53,7 @@
     </div>
 
     <!-- 收藏按鈕 -->
-    <v-btn icon class="text-white mx-1">
+    <v-btn icon class="text-white mx-1" @click="goToFavorites">
       <v-icon size="28">mdi-heart-outline</v-icon>
     </v-btn>
 
@@ -184,7 +184,7 @@ const toggleSearch = () => {
 
 const logout = () => {
   authStore.logout();
-  router.push("/");
+  router.replace("/home");
 };
 
 const closeSearch = () => {
@@ -194,6 +194,10 @@ const closeSearch = () => {
   }, 300); // 與動畫時間同步
   search.value = "";
 };
+
+function goToFavorites() {
+  router.push("/favorites");
+}
 
 const handleClickOutside = (e) => {
   if (searchContainer.value && !searchContainer.value.contains(e.target)) {
@@ -213,9 +217,6 @@ watch(cartMenuVisible, async (val) => {
     await loadCart();
   }
 });
-// onMounted(() => {
-//   loadCart();
-// });
 
 const handleSearch = () => {
   if (search.trim() !== "") {
@@ -223,6 +224,10 @@ const handleSearch = () => {
     closeSearch();
   }
 };
+
+onMounted(() => {
+  loadCart();
+});
 </script>
 
 <style scoped>
