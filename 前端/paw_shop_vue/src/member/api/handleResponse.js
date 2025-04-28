@@ -7,14 +7,7 @@
 export const handleResponse = async (promise) => {
   try {
     const response = await promise;
-    const { success, data, message } = response.data;
-
-    if (!success) {
-      alert(message || "操作失敗");
-      throw new Error(message || "操作失敗");
-    }
-
-    return data; // 回傳純資料，簡化呼叫端
+    return response.data; // 回傳純資料，簡化呼叫端
   } catch (error) {
     // 錯誤訊息已由 interceptor 顯示，不再 alert，保留錯誤讓呼叫端 decide
     throw error;
