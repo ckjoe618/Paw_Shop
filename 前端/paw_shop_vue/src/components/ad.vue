@@ -4,7 +4,7 @@
     cycle
     show-arrows="hover"
     hide-delimiter-background
-    class="rounded-0 mt-10"
+    class="rounded-0"
   >
     <v-carousel-item
       v-for="(img, i) in carouselImages"

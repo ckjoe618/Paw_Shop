@@ -24,19 +24,19 @@ import axios from "axios";
 
 const topProducts = ref([]);
 
-// onMounted(async () => {
-//   try {
-//     const res = await axios.get("http://localhost:8080/product/expensive");
+onMounted(async () => {
+  try {
+    const res = await axios.get("http://localhost:8080/product/expensive");
 
-//     if (Array.isArray(res.data)) {
-//       topProducts.value = res.data.slice(0, 4);
-//     } else {
-//       console.warn("⚠️ 回傳不是陣列：", res.data);
-//     }
-//   } catch (error) {
-//     console.error("❌ 無法取得資料", error);
-//   }
-// });
+    if (Array.isArray(res.data)) {
+      topProducts.value = res.data.slice(0, 4);
+    } else {
+      console.warn("⚠️ 回傳不是陣列：", res.data);
+    }
+  } catch (error) {
+    console.error("❌ 無法取得資料", error);
+  }
+});
 </script>
 
 <style scoped>
