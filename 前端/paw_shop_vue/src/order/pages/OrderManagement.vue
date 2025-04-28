@@ -2,11 +2,6 @@
   <v-container class="pt-16">
     <div class="orderManage-container">
       <h2 class="text-h5 mb-4">我的訂單</h2>
-      <v-tabs v-model="selectedTab" grow>
-        <v-tab v-for="tab in tabs" :key="tab.value" :value="tab.value">
-          {{ tab.label }}
-        </v-tab>
-      </v-tabs>
       <v-table class="elevation-1" density="comfortable">
         <thead style="font-size: 18px">
           <tr style="background-color: #f5f5f5">
@@ -22,12 +17,12 @@
           </tr>
         </thead>
         <tbody style="font-size: 16px">
-          <tr v-for="item in orders" :key="item.orderId">
+          <tr v-for="item in paginatedOrders" :key="item.orderId">
             <td>{{ item.transactionTime?.substring(0, 10) }}</td>
             <td>{{ item.orderId }}</td>
             <td>{{ item.paymentMethod }}</td>
             <td>{{ item.paymentStatus }}</td>
-            <td>{{ item.pickupMethod }}</td>
+            <td style="width: 120px">{{ item.pickupMethod }}</td>
             <td>{{ item.orderStatus }}</td>
             <td>${{ item.priceTotal }}</td>
             <td>
@@ -63,38 +58,6 @@
           total-visible="5"
         ></v-pagination>
       </div>
-      <!-- <v-data-table
-        :headers="headers"
-        :items="orders"
-        class="elevation-1"
-        density="comfortable"
-      >
-        <template #item.priceTotal="{ item }">
-          ${{ item.priceTotal }}
-        </template>
-
-        <template #item.transactionTime="{ item }">
-          {{ item.transactionTime?.substring(0, 10) }}
-        </template>
-        <template #item.details="{ item }">
-          <div class="d-flex align-center" style="gap: 8px">
-            <v-btn size="small" color="#E2E9E2" @click="openDetailsDialog(item)"
-              >查看</v-btn
-            >
-          </div>
-        </template>
-        <template #item.cancel="{ item }">
-          <div class="d-flex align-center" style="gap: 8px">
-            <v-btn
-              size="small"
-              @click="showCancelDialog(item)"
-              :color="canCancel(item.orderStatus) ? '#F5EDE1' : '#808080'"
-              :disabled="!canCancel(item.orderStatus)"
-              >取消訂單</v-btn
-            >
-          </div>
-        </template>
-      </v-data-table> -->
     </div>
   </v-container>
   <!-- 取消訂單dialog -->
@@ -316,18 +279,7 @@ import {
   apiUpdateOrderDetail,
 } from "@/api/api";
 import OrderCancelDialog from "@/order/components/frontsite/OrderCancelDialog.vue";
-import Swal from "sweetalert2";
-
-//tabs
-const tabs = [
-  { label: "全部", value: "ALL" },
-  { label: "未付款", value: "未付款" },
-  { label: "付款完成", value: "付款完成" },
-  { label: "付款失敗", value: "付款失敗" },
-  { label: "已取消", value: "已取消" },
-];
-
-const selectedTab = ref("ALL");
+//import Swal from "sweetalert2";
 
 //查詢所有會員訂單
 const orders = ref([]);
@@ -335,6 +287,7 @@ const fetchOrders = async () => {
   try {
     const res = await apiFindOrdersByMemberId();
     orders.value = res.data;
+    console.log(res.data);
   } catch (error) {
     console.error("取得訂單失敗：", error);
   }
