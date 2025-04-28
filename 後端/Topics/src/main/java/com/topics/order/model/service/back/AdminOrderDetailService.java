@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.topics.order.model.bean.OrderBean;
 import com.topics.order.model.bean.OrderDetailBean;
+import com.topics.order.model.bean.OrderDetailRequestDTO;
 import com.topics.order.model.repository.OrderDetailRepository;
 import com.topics.order.model.repository.OrderRepository;
 import com.topics.product.model.bean.ProductBean;
@@ -27,22 +28,25 @@ public class AdminOrderDetailService {
 	
 	//新增
 	@Transactional
-	public OrderDetailBean insertOrderDetail(OrderDetailBean orderDetailBean) {
-		OrderBean getByorderid = orderRepository.findById(orderDetailBean.getOrder().getOrderId()).get();
-		orderDetailBean.setOrder(getByorderid);
+	public OrderDetailBean insertOrderDetail(OrderDetailRequestDTO requestDTO) {
+		OrderBean order = orderRepository.findById(requestDTO.getOrderId())
+                .orElseThrow(() -> new RuntimeException("找不到訂單"));
+		ProductBean product = productRepository
+			    .findById(requestDTO.getProductId())
+			    .orElseThrow(() -> new RuntimeException("找不到商品"));
 		
-		Integer unitPrice = orderDetailBean.getUnitPrice();
-		Integer quantity = orderDetailBean.getQuantity();
-		orderDetailBean.setSubtotal(unitPrice*quantity);
+		OrderDetailBean orderDetail = new OrderDetailBean();
+		orderDetail.setOrder(order);
+	    orderDetail.setProduct(product);
+	    orderDetail.setUnitPrice(requestDTO.getUnitPrice());
+	    orderDetail.setQuantity(requestDTO.getQuantity());
+	    orderDetail.setSubtotal(requestDTO.getUnitPrice() * requestDTO.getQuantity());
 		
 		// 扣庫存
-		ProductBean product = productRepository
-			    .findById(orderDetailBean.getProduct().getProductId())
-			    .orElseThrow(() -> new RuntimeException("Product not found"));
-		product.setProductStock(product.getProductStock() - quantity);
+		product.setProductStock(product.getProductStock() - requestDTO.getQuantity());
 		productRepository.save(product);
 	    
-		return orderDetailRepository.save(orderDetailBean);
+		return orderDetailRepository.save(orderDetail);
 	}
 	
 	//刪除
