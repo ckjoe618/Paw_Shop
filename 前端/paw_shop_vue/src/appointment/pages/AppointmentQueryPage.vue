@@ -3,28 +3,28 @@
     <h2 class="text-center mb-4">預約訂單查詢</h2>
 
     <div class="row align-items-end mb-3">
-  <!-- 狀態下拉選單 -->
-  <div class="col-md-6">
-    <label for="statusSelect" class="form-label">選擇預約狀態：</label>
-    <select
-      id="statusSelect"
-      v-model="selectedStatus"
-      @change="fetchAppointments"
-      class="form-select"
-    >
-      <option :value="0">待處理</option>
-      <option :value="1">已完成</option>
-      <option :value="2">已取消</option>
-    </select>
-  </div>
+      <!-- 狀態下拉選單 -->
+      <div class="col-md-6">
+        <label for="statusSelect" class="form-label">選擇預約狀態：</label>
+        <select
+          id="statusSelect"
+          v-model="selectedStatus"
+          @change="fetchAppointments"
+          class="form-select"
+        >
+          <option :value="0">待處理</option>
+          <option :value="1">已完成</option>
+          <option :value="2">已取消</option>
+        </select>
+      </div>
 
-  <!-- 回首頁按鈕 -->
-  <div class="col-md-6 text-end">
-    <router-link to="/home" class="btn btn-success mt-3"
-        >回首頁</router-link
-      >
-  </div>
-</div>
+      <!-- 回首頁按鈕 -->
+      <div class="col-md-6 text-end">
+        <router-link to="/home" class="btn btn-success mt-3"
+          >回首頁</router-link
+        >
+      </div>
+    </div>
 
     <!-- 預約列表 -->
     <div
@@ -79,8 +79,10 @@
         </div>
 
         <!-- QR Code 顯示按鈕 -->
-        <div v-if="appointment.appointmentStatus === 0"
-        class="d-flex align-items-center gap-2">
+        <div
+          v-if="appointment.appointmentStatus === 0"
+          class="d-flex align-items-center gap-2"
+        >
           <button
             class="btn"
             :class="
@@ -115,8 +117,6 @@
         >
           <QrCodeDisplay :appointment-id="appointment.appointmentId" />
         </div>
-
-        
       </li>
     </ul>
 
@@ -140,19 +140,18 @@
     </div>
     <div class="text-center text-muted mt-5">
       <p>
-  店家地址：
-  <a
-    href="https://www.google.com/maps?q=桃園市中壢區新生路二段421號"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="text-body text-decoration-none "
-  >
-    桃園市中壢區新生路二段421號
-  </a>
-</p>
-  <p>電話：(03) 453-3013 </p>
-
-</div>
+        店家地址：
+        <a
+          href="https://www.google.com/maps?q=桃園市中壢區新生路二段421號"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-body text-decoration-none"
+        >
+          桃園市中壢區新生路二段421號
+        </a>
+      </p>
+      <p>電話：(03) 453-3013</p>
+    </div>
     <!-- 取消確認 Modal -->
     <v-dialog v-model="showCancelModal" max-width="400">
       <v-card>
@@ -162,19 +161,25 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="secondary" @click="showCancelModal = false">返回</v-btn>
-          <v-btn color="error" @click="confirmCancel" class="no-hover-green" style="box-shadow: none;">確認取消預約</v-btn>
+          <v-btn
+            color="error"
+            @click="confirmCancel"
+            class="no-hover-green"
+            style="box-shadow: none"
+            >確認取消預約</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-snackbar v-model="showSnackbar" :timeout="3000" color="success" top>
-    {{ snackbarMessage }}
-  </v-snackbar>
+      {{ snackbarMessage }}
+    </v-snackbar>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { apiAppointmentsByStatus,apiAppointmentCancel } from "@/member/api/api";
+import { apiAppointmentsByStatus, apiAppointmentCancel } from "@/api/api";
 import QrCodeDisplay from "@/appointment/components/QrCodeDisplay.vue";
 import { useRoute } from "vue-router";
 const router = useRoute();
@@ -217,29 +222,29 @@ const uniqueServices = (serviceNames) => {
 };
 
 const props = defineProps({
-  appointmentId: Number
-})
+  appointmentId: Number,
+});
 const showSnackbar = ref(false);
-const snackbarMessage = ref('');
-const showCancelModal = ref(false)
-const currentCancelId = ref(null)
+const snackbarMessage = ref("");
+const showCancelModal = ref(false);
+const currentCancelId = ref(null);
 const openCancelModal = (id) => {
-  currentCancelId.value = id
-  showCancelModal.value = true
-}
+  currentCancelId.value = id;
+  showCancelModal.value = true;
+};
 const confirmCancel = async () => {
   try {
-    const res = await apiAppointmentCancel(currentCancelId.value)
+    const res = await apiAppointmentCancel(currentCancelId.value);
     snackbarMessage.value = res.data;
-    showCancelModal.value = false
+    showCancelModal.value = false;
     showSnackbar.value = true;
-    emit('appointmentCancelled', currentCancelId.value)
+    emit("appointmentCancelled", currentCancelId.value);
     window.location.reload();
   } catch (err) {
-    snackbarMessage.value = '取消預約失敗，請稍後再試';
+    snackbarMessage.value = "取消預約失敗，請稍後再試";
   }
-}
-const emit = defineEmits(['appointmentCancelled'])
+};
+const emit = defineEmits(["appointmentCancelled"]);
 
 onMounted(() => {
   const storedId = localStorage.getItem("memberId");
@@ -360,7 +365,7 @@ button:disabled {
   cursor: not-allowed;
 }
 .custom-cancel-btn {
-  border: 1px solid #e53935; 
+  border: 1px solid #e53935;
   color: #e53935;
   background-color: transparent;
   font-weight: bold;
@@ -369,17 +374,17 @@ button:disabled {
 }
 
 .custom-cancel-btn:hover {
-  background-color: #ffe6e6; 
-  color: #b71c1c; 
+  background-color: #ffe6e6;
+  color: #b71c1c;
 }
 .no-hover-green {
-  background-color: #f44336 !important; 
+  background-color: #f44336 !important;
   color: white !important;
   transition: none !important;
 }
 
 .no-hover-green:hover {
-  background-color: #f44336 !important; 
+  background-color: #f44336 !important;
   color: white !important;
 }
 </style>

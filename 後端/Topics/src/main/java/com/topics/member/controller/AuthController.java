@@ -37,6 +37,7 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody AuthDto info) {
 		MemberDto loginMember = authService.login(info);
 		String token = JwtUtil.generateToken(loginMember.getMemberId().toString());
+		System.out.println("這是token= " + token);
 
 		Map<String, Object> response = new HashMap<>();
 		response.put("success", true);

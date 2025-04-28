@@ -1,9 +1,6 @@
 import { ref, computed } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
-import {
-  apiFindShoppingCartItem,
-  apiAddShoppingCartItem,
-} from "@/member/api/api";
+import { apiFindShoppingCartItem, apiAddShoppingCartItem } from "@/api/api";
 
 export const cartItems = ref([]);
 

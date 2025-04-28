@@ -260,7 +260,7 @@ import {
   apiDeleteAppointment,
   apihandleQueryAppointmentPet,
   apihandleQueryBookingTime,
-} from "@/member/api/api";
+} from "@/api/api";
 import { useRouter } from "vue-router";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import DeleteButton from "@/order/components/buttons/formDeletebtn.vue";

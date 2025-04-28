@@ -65,7 +65,7 @@
 import { cityList } from "@/member/assets/city.js";
 import { addressList } from "@/member/assets/zipcodes.js";
 import { ref, watch, computed } from "vue";
-import * as api from "@/member/api/memberApi/UserApi";
+import * as api from "@/api/memberApi/UserApi";
 import { useAuthStore } from "../stores/auth";
 
 const auth = useAuthStore();

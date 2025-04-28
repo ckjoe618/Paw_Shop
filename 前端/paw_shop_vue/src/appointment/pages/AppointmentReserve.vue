@@ -110,7 +110,7 @@ import {
   apiaddAppointment,
   apihandleQueryAppointmentPet,
   apihandleQueryBookingTime,
-} from "@/member/api/api";
+} from "@/api/api";
 
 const router = useRouter();
 const route = useRoute();
@@ -183,8 +183,8 @@ watch(
 const minDate = computed(() => {
   const today = new Date();
   const year = today.getFullYear();
-  const month = (today.getMonth() + 1).toString().padStart(2, '0');
-  const day = today.getDate().toString().padStart(2, '0');
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const day = today.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 });
 //查到預約時段
