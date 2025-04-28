@@ -107,6 +107,7 @@ const routes = [
       },
       {
         path: "/products/:id",
+        name: "ProductDetailPage",
         component: () => import("@/product/frontsite/ProductDetailPage.vue"),
       },
       {
