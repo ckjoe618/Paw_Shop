@@ -12,7 +12,7 @@ public class AddressDto {
 	private Integer addressId;
 	private Integer memberId;
 	private String recipientName;
-	private String phone;
+	private String recipientPhone;
 	private Integer zipcode;
 	private String city;
 	private String district;

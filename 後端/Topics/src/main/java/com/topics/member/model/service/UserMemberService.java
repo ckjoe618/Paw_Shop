@@ -1,11 +1,15 @@
 package com.topics.member.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.topics.exception.NotFoundException;
 import com.topics.exception.PasswordErrorException;
+import com.topics.member.model.dto.AddressDto;
 import com.topics.member.model.dto.AuthDto;
 import com.topics.member.model.dto.MemberDto;
+import com.topics.member.model.entity.AddressBean;
 import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.repository.MemberRepository;
 
@@ -23,13 +27,23 @@ public class UserMemberService {
 	public MemberDto updateMemberById(Integer memberId, MemberBean entity) {
 		MemberBean member = memberRepository.findById(memberId)
 				.orElseThrow(() -> new NotFoundException("找不到該會員"));
-		member.setMemberName(entity.getMemberName());
+		member.setEmail(entity.getEmail());
 		member.setPhone(entity.getPhone());
 		if (entity.getMemberPhoto() != null) {
 			member.setMemberPhoto(entity.getMemberPhoto());
 		}
 		MemberBean memberNew = memberRepository.save(member);
-		return new MemberDto(memberNew);
+
+		List<AddressBean> addressList = memberNew.getAddressList();
+		AddressDto addressDefaul = null;
+		if (addressList != null && !addressList.isEmpty()) {
+			addressDefaul = memberNew.getAddressList().stream()
+					.filter(address -> address.isDefaultStatus())
+					.findFirst()
+					.map(address -> new AddressDto(address))
+					.orElseGet(() -> new AddressDto(addressList.get(0)));
+		}
+		return new MemberDto(memberNew, addressDefaul);
 	}
 
 	public MemberDto findMemberById(Integer memberId) {

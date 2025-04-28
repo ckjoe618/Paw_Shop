@@ -106,8 +106,8 @@ public class UserMemberController {
 	@PutMapping("/address/default/{addressId}")
 	public ResponseEntity<?> updateDefaultAddress(@PathVariable Integer addressId) {
 		SecurityUtil.checkUserLoginForAddress(addressId);
-		addressService.updateDefaultAddress(addressId);
-		return ResponseUtil.success("預設地址更新成功");
+		MemberDto member = addressService.updateDefaultAddress(addressId);
+		return ResponseUtil.success(member);
 	}
 
 	@DeleteMapping("/address/{addressId}")
