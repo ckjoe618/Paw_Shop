@@ -85,6 +85,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const route = useRoute();
 const router = useRouter();
