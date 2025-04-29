@@ -84,6 +84,7 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 import * as api from "@/api/memberApi/AdminApi.js";
+import Swal from "sweetalert2";
 
 const props = defineProps({
   dialog: Boolean,
@@ -165,6 +166,12 @@ const submit = async () => {
     close();
   } finally {
     loading.value = false;
+    Swal.fire({
+      icon: "success",
+      title: "新增完成",
+      showConfirmButton: false,
+      timer: 1000,
+    });
   }
 };
 </script>

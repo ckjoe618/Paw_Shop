@@ -135,11 +135,10 @@
                   block
                   size="large"
                   class="mt-2 font-weight-bold text-white"
-                  :loading="loading"
-                  @click="oneClickRegister"
+                  @click="oneClick"
                 >
                   <v-icon start>mdi-flash</v-icon>
-                  一鍵註冊
+                  一鍵輸入
                 </v-btn>
               </v-col>
             </v-row>
@@ -189,7 +188,6 @@ import cat02 from "@/member/assets/images/註冊_貓02.png";
 import { ref, onMounted } from "vue";
 import * as api from "@/api/memberApi/UserApi.js";
 import router from "@/router";
-import { useAuthStore } from "@/member/stores/auth";
 
 const today = new Date().toISOString().split("T")[0];
 const formRef = ref(null);
@@ -249,7 +247,7 @@ const submit = async () => {
   }
 };
 
-const oneClickRegister = () => {
+const oneClick = () => {
   const timestamp = Date.now();
   const uniqueSuffix = String(timestamp).slice(-6); // 取時間戳後6碼
   form.value = {

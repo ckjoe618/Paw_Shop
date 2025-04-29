@@ -23,11 +23,21 @@
           <v-btn
             type="submit"
             color="primary"
+            prepend-icon="mdi-lock-reset"
             :loading="loading"
             :disabled="!isValid"
             block
           >
             重設密碼
+          </v-btn>
+          <v-btn
+            color="success"
+            block
+            class="mt-2 font-weight-bold text-white"
+            @click="oneClick"
+          >
+            <v-icon start>mdi-flash</v-icon>
+            一鍵輸入
           </v-btn>
 
           <v-alert v-if="message" :type="messageType" class="mt-4" dismissible>
@@ -81,17 +91,22 @@ const submit = async () => {
       token: token.value,
       password: password.value,
     });
-    message.value = "✅ 密碼重設成功，請重新登入";
+    message.value = "密碼重設成功，請重新登入";
     messageType.value = "success";
 
     setTimeout(() => {
-      router.push("/login"); // 自動跳轉到登入頁
+      router.push("/login");
     }, 2000);
   } catch (error) {
-    message.value = "❌ 密碼重設失敗，請稍後再試";
+    message.value = "密碼重設失敗，請稍後再試";
     messageType.value = "error";
   } finally {
     loading.value = false;
   }
+};
+
+const oneClick = () => {
+  password.value = "123456";
+  confirmPassword.value = "123456";
 };
 </script>

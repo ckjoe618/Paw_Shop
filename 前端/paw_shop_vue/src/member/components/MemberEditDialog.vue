@@ -63,6 +63,7 @@
 import { ref, watch, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
 import * as api from "@/api/memberApi/AdminApi.js";
+import Swal from "sweetalert2";
 
 const authStore = useAuthStore();
 const formRef = ref(null);
@@ -123,6 +124,12 @@ const submit = async () => {
     close();
   } finally {
     loading.value = false;
+    Swal.fire({
+      icon: "success",
+      title: "修改完成",
+      showConfirmButton: false,
+      timer: 1000,
+    });
   }
 };
 </script>
