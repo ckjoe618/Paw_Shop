@@ -45,7 +45,7 @@
           class="mt-4"
           total-visible="5"
           color="green"
-          @update:model-value="onPageChange"
+          @update:model-value="$scrollToTop()"
         />
       </v-col>
     </v-row>
@@ -59,13 +59,29 @@ import axios from 'axios'
 import ProductCard from './ProductCard.vue'
 import CategorySidebar from './CategorySidebar.vue'
 
+let isDataLoaded = false;
 const router = useRouter()
 const route = useRoute()
 
 const allProducts = ref([])
 
 // 初始狀態從 query 拿
-const currentPage = ref(Number(route.query.page) || 1)
+const currentPage = computed({
+  get() {
+    // 從 URL 直接讀
+    return Number(route.query.page) || 1
+  },
+  set(page) {
+    // 推到新 query，自動保留其他 query
+    router.replace({
+      // 不指定 path/name
+      query: {
+        ...route.query,
+        page
+      }
+    })
+  }
+})
 const sortOption = ref(route.query.sort || 'top')
 const filters = ref({
   category: route.query.category || null,
@@ -85,11 +101,10 @@ const sortOptions = [
 const itemsPerPage = 9
 
 onMounted(async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/product/stock/available')
-    allProducts.value = response.data
-  } catch (error) {
-    console.error('載入商品資料失敗:', error)
+  if (!isDataLoaded) {
+    const { data } = await axios.get('http://localhost:8080/product/stock/available')
+    allProducts.value = data
+    isDataLoaded = true
   }
 })
 
@@ -137,6 +152,7 @@ function handleFilterChange(payload) {
 }
 
 function onPageChange(page) {
+  console.log('[onPageChange] 點到 page =', page, '；換頁前 route.query.page =', route.query.page)
   currentPage.value = page
   updateQuery()
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -149,7 +165,6 @@ watch(sortOption, () => {
 
 function updateQuery() {
   router.replace({
-    path: '/products',
     query: {
       page: currentPage.value,
       sort: sortOption.value,
@@ -161,6 +176,7 @@ function updateQuery() {
 }
 
 watch(() => route.query, (newQuery) => {
+  console.log('[watch query.page] 看到 query.page 變成', newPage)
   currentPage.value = Number(newQuery.page) || 1
   sortOption.value = newQuery.sort || 'top'
   filters.value = {
@@ -171,6 +187,10 @@ watch(() => route.query, (newQuery) => {
     ]
   }
 })
+
+function $scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 </script>
 
 

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.topics.member.model.dto.AuthDto;
 import com.topics.member.model.dto.MemberDto;
-import com.topics.member.model.entity.MemberBean;
 import com.topics.member.model.service.AuthService;
 import com.topics.member.model.service.UserMemberService;
 import com.topics.utils.EmailUtil;

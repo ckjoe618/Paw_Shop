@@ -87,7 +87,8 @@ const fetchAddresses = async () => {
 const onDragEnd = async () => {
   if (addresses.value.length > 0) {
     const newDefaultId = addresses.value[0].addressId;
-    await api.apiUpdateDefaultAddress(newDefaultId);
+    const data = await api.apiUpdateDefaultAddress(newDefaultId);
+    authStore.update(data);
     // 直接標記第一筆
     addresses.value = addresses.value.map((address, index) => ({
       ...address,
@@ -98,7 +99,8 @@ const onDragEnd = async () => {
 
 // 點選設為預設
 const setAsDefault = async (address) => {
-  await api.apiUpdateDefaultAddress(address.addressId);
+  const data = await api.apiUpdateDefaultAddress(address.addressId);
+  authStore.update(data);
   // 把被選中的那筆移到陣列最前面
   addresses.value = [
     address,

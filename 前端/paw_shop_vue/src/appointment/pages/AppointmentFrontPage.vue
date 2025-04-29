@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="carousel-item">
-          <img src="@/appointment/assets/imags/petgrooming.png" class="d-block w-100" alt="專業服務" />
+          <img src="@/appointment/assets/imags/petgrooming01.png" class="d-block w-100" alt="專業服務" />
           <div class="carousel-caption d-none d-md-block animate__animated animate__fadeInUp">
             
           </div>
@@ -310,14 +310,14 @@ h5 {
 }
 
 .row {
-  flex-wrap: wrap; /* 保證項目能換行並且自適應 */
+  flex-wrap: wrap; 
 }
 .feature-box {
-    border: 2px dashed #28a745; /* 綠色虛線框 */
+    border: 2px dashed #28a745; 
     border-radius: 10px;
     padding: 20px;
     height: 100%;
-    background-color: #fdfdfd; /* 淺背景讓框框更明顯 */
+    background-color: #fdfdfd; 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     transition: transform 0.3s ease;
   }
@@ -375,9 +375,9 @@ h5 {
 .animate-img {
   max-height: 300px;
   object-fit: contain;
-  background: transparent; /* 背景透明 */
-  border: none;            /* 無邊框線條 */
-  box-shadow: none;        /* 無陰影 */
+  background: transparent;
+  border: none;            
+  box-shadow: none;        
 }
 
 .feature-card {
@@ -390,14 +390,14 @@ h5 {
 .info-card {
   position: relative;
   height: 480px;
-  width: 100%;             /* 撐滿父容器 */
-  max-width: 600px;        /* 可選：限制最大寬度 */
+  width: 100%;            
+  max-width: 600px;        
   background: transparent;
   border: none;
   box-shadow: none;
   overflow: hidden;
-  margin: auto;            /* 置中 */
-  font-family: 'Noto Sans TC', sans-serif; /* 清晰中文字體 */
+  margin: auto;          
+  font-family: 'Noto Sans TC', sans-serif; 
 }
 
 .bg-image {
@@ -405,15 +405,15 @@ h5 {
   top: 0;
   left: 0;
   width: 90%;
-  height: auto; /* 確保圖片填滿 div */
-  object-fit: cover; /* 讓圖片保持比例並覆蓋整個容器 */
-  z-index: 0; /* 讓圖片在底層 */
+  height: auto; 
+  object-fit: cover; 
+  z-index: 0; 
 }
 
 .overlay-content {
   position: relative;
   width: 85%;
-  z-index: 1; /* 讓文字位於圖片上方 */
+  z-index: 1;
   padding: 2rem;
   border-radius: 0.5rem;
   text-align: center;
@@ -433,12 +433,12 @@ h5 {
 }
 
 img.space-img {
-  max-width: 100%;        /* 保持響應式 */
-  width: 100%;            /* 填滿欄位 */
-  height: auto;           /* 保持比例 */
-  max-height: 400px;      /* 限制高度，避免太大 */
-  object-fit: cover;      /* 裁切但保留比例 */
-  border-radius: 0.5rem;  /* 圓角美觀 */
+  max-width: 100%;       
+  width: 100%;           
+  height: auto;           
+  max-height: 400px;      
+  object-fit: cover;     
+  border-radius: 0.5rem;  
 }
 
 </style>

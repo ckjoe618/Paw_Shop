@@ -1,7 +1,9 @@
 <template>
   <v-card>
     <v-card-text>
-      <div>收件人：{{ address.recipientName }}（{{ address.phone }}）</div>
+      <div>
+        收件人：{{ address.recipientName }}（{{ address.recipientPhone }}）
+      </div>
       <div>
         地址：{{ address.zipcode }} {{ address.city }}{{ address.district
         }}{{ address.addressDetail }}
