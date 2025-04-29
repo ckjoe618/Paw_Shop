@@ -38,10 +38,9 @@ public class OrderController {
 	
 	//新增
 	@PostMapping
-	public ResponseEntity<?> createOrder(@RequestBody OrderBean orderBean) {
+	public OrderBean createOrder(@RequestBody OrderBean orderBean) {
 		Integer memberId = getmemberId();
-		OrderBean order = orderService.createOrder(orderBean, memberId);
-		return ResponseUtil.success(order);
+		return orderService.createOrder(orderBean, memberId);
 	}
 	
 	//修改(付款成功）
@@ -56,11 +55,10 @@ public class OrderController {
 	
 	//查詢
 	@GetMapping
-	public ResponseEntity<?> getOrdersByMemberId(){
+	public List<OrderBean> getOrdersByMemberId(){
 		Integer memberId = getmemberId();
 		
-		List<OrderBean> orders = orderService.getOrdersByMemberId(memberId);
-		return ResponseUtil.success(orders);
+		return orderService.getOrdersByMemberId(memberId);
 	}
 	
 	//取消訂單

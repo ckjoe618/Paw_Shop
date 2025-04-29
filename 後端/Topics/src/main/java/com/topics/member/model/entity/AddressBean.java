@@ -23,7 +23,7 @@ public class AddressBean {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer addressId;
 	private String recipientName;
-	private String phone;
+	private String recipientPhone;
 	private Integer zipcode;
 	private String city;
 	private String district;

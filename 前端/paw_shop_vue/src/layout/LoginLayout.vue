@@ -128,8 +128,6 @@ const performLogin = async (loginId, password) => {
   try {
     const data = await api.apiLogin({ loginId, password });
     authStore.login(data);
-    console.log(data);
-
     await syncCartToBackend();
     router.push(route.query.redirect || "/");
   } finally {
