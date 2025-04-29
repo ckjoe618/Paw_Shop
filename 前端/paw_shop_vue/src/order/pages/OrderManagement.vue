@@ -279,7 +279,7 @@ import {
   apiUpdateOrderDetail,
 } from "@/api/api";
 import OrderCancelDialog from "@/order/components/frontsite/OrderCancelDialog.vue";
-//import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 //查詢所有會員訂單
 const orders = ref([]);
