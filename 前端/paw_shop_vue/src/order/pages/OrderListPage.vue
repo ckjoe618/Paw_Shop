@@ -100,6 +100,7 @@ import OrderForm from "../../order/components/backsite/OrderForm.vue";
 import OrderDetail from "../../order/components/backsite/OrderDetail.vue";
 import axios from "axios";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 
@@ -175,9 +176,18 @@ const clearFilter = () => {
 
 //新增
 const showCreateDialog = ref(false);
-const onOrderCreated = () => {
+const onOrderCreated = (updatedOrder) => {
   showCreateDialog.value = false;
-  reloadOrders();
+
+  const targetList = invalidOrders.value ? allOrders.value : orders.value;
+  const index = targetList.findIndex(
+    (order) => order.orderId === updatedOrder.orderId
+  );
+
+  if (index !== -1) {
+    targetList[index] = updatedOrder;
+  }
+  filterOrders();
 };
 //編輯
 const editingOrderId = ref(null);
@@ -205,6 +215,12 @@ const deleteOrder = async () => {
     await axios.delete(
       `http://localhost:8080/api/admin/order/${deletingOrderId.value}`
     );
+    await Swal.fire({
+      icon: "success",
+      title: "刪除成功",
+      showConfirmButton: false,
+      timer: 1000,
+    });
     showDeleteDialog.value = false;
     await reloadOrders();
   } catch (error) {
