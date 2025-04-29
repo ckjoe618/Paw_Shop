@@ -64,4 +64,9 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handlePasswordErrorException(PasswordErrorException ex) {
 		return ResponseUtil.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 	}
+	
+	@ExceptionHandler(RegisterException.class)
+	public ResponseEntity<?> handleRegisterException(RegisterException ex) {
+		return ResponseUtil.error(HttpStatus.BAD_REQUEST, ex.getMessage());
+	}
 }

@@ -13,6 +13,15 @@ public interface MemberRepository extends JpaRepository<MemberBean, Integer> {
 	MemberBean findByAccount(String account);
 
 	MemberBean findByEmail(String email);
-	
+
 	MemberBean findByPhone(String phone);
+
+	Boolean existsByAccount(String account);
+
+	Boolean existsByIdno(String idno);
+
+	Boolean existsByEmail(String email);
+
+	Boolean existsByPhone(String phone);
+
 }

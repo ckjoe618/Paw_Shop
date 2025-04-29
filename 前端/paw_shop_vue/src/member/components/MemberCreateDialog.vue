@@ -23,7 +23,7 @@
             label="身分證字號"
             maxlength="10"
             v-model="form.idno"
-            :rules="[rules.required, rules.idno]"
+            :rules="[rules.required, rules.idno, rules.idnoGender]"
           />
           <v-text-field
             label="Email"
@@ -40,6 +40,7 @@
             label="生日"
             v-model="form.birthDate"
             type="date"
+            :max="today"
             :rules="[rules.required]"
           />
           <v-text-field
@@ -98,6 +99,7 @@ const formRef = ref(null);
 const isValid = ref(false);
 const loading = ref(false);
 const showPassword = ref(false);
+const today = new Date().toISOString().split("T")[0];
 
 const form = ref({
   memberName: "",
@@ -117,6 +119,17 @@ const rules = {
   phone: (v) => /^09\d{8}$/.test(v) || "手機號碼格式錯誤",
   idno: (v) => /^[A-Z][12]\d{8}$/.test(v) || "身分證格式錯誤",
   min: (n) => (v) => (v && v.length >= n) || `至少輸入 ${n} 字`,
+  idnoGender: (v) => {
+    if (!v || v.length < 2 || !form.value.gender) {
+      return true;
+    }
+    const secondChar = v.charAt(1);
+    if (form.value.gender === "男" && secondChar !== "1")
+      return "男生身分證第2碼必須是1";
+    if (form.value.gender === "女" && secondChar !== "2")
+      return "女生身分證第2碼必須是2";
+    return true;
+  },
 };
 
 watch(dialog, (val) => {

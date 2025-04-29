@@ -39,7 +39,7 @@
                   v-model="form.idno"
                   label="身分證字號"
                   prepend-inner-icon="mdi-card-account-details"
-                  :rules="[rules.required, rules.idno]"
+                  :rules="[rules.required, rules.idno, rules.idnoGender]"
                   variant="outlined"
                   maxlength="10"
                   clearable
@@ -210,6 +210,17 @@ const rules = {
   idno: (v) => /^[A-Z][12]\d{8}$/.test(v) || "身分證格式錯誤",
   min: (n) => (v) => (v && v.length >= n) || `至少輸入 ${n} 字`,
   matchPassword: (v) => v === form.value.password || "密碼不一致",
+  idnoGender: (v) => {
+    if (!v || v.length < 2 || !form.value.gender) {
+      return true;
+    }
+    const secondChar = v.charAt(1);
+    if (form.value.gender === "男" && secondChar !== "1")
+      return "男生身分證第2碼必須是1";
+    if (form.value.gender === "女" && secondChar !== "2")
+      return "女生身分證第2碼必須是2";
+    return true;
+  },
 };
 
 const submit = async () => {
