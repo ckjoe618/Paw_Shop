@@ -20,28 +20,18 @@
           {{ phoneNumberError }}
         </v-alert>
         <!-- 查詢表單 -->
-        <v-form
-          @submit.prevent="selectAppointmentByPhoneNum"
-          class="d-flex align-items-center"
-        >
-          <label class="me-2">預約電話:</label>
-          <v-text-field
-            v-model="phoneNumber"
-            hide-details
-            dense
-            style="width: 250px"
-            class="me-2"
-          ></v-text-field>
-
-          <v-btn
-            color="primary"
-            :disabled="!phoneNumber"
-            @click="selectAppointmentByPhoneNum"
-            style="height: 40px"
-          >
-            查詢
-          </v-btn>
-        </v-form>
+        <v-form @submit.prevent="selectAppointmentByPhoneNum" class="d-flex align-items-center">
+    <label class="me-2">預約電話:</label>
+    <v-text-field
+      v-model="phoneNumber"
+      hide-details
+      dense
+      style="width: 250px"
+      class="me-2"
+      maxlength="10"
+      type="tel"
+    ></v-text-field>
+  </v-form>
       </div>
 
       <!-- 新增預約 Modal -->
@@ -199,16 +189,14 @@
           {{ getPaymentStatus(item.paymentStatus) }}
         </template>
 
-        <template v-slot:item.actions1="{ item }">
-          <DeleteButton @click="() => showDeleteModal(item.appointmentId)" />
-        </template>
         <template v-slot:item.actions2="{ item }">
           <EditButton @click="() => showUpdateModal(item.appointmentId)" />
         </template>
+        <template v-slot:item.actions1="{ item }">
+          <DeleteButton @click="() => showDeleteModal(item.appointmentId)" />
+        </template>
       </v-data-table>
-      <v-container class="d-flex justify-center">
-        <v-btn @click="goBack" color="grey" class="me-2">返回</v-btn>
-      </v-container>
+      
       <!-- 隱藏欄位用來存 appointmentId -->
       <input type="hidden" id="appointmentIdToDelete" />
       <input type="hidden" id="appointmentIdToUpdate" />
@@ -285,8 +273,8 @@ const headers = [
   { title: "總價格", key: "appointmentTotal" },
   { title: "預約狀態", key: "appointmentStatus" },
   { title: "付款狀態", key: "paymentStatus" },
-  { title: "刪除", key: "actions1", sortable: false },
   { title: "修改", key: "actions2", sortable: false },
+  { title: "刪除", key: "actions1", sortable: false },
 ];
 
 const getAppointmentStatus = (status) => {
@@ -435,37 +423,39 @@ const onDateChange = async () => {
     console.error("無法獲取預約資料: ", error);
   }
 };
-// 電話號碼格式檢查規則
-const phoneNumberRule = (value) => {
-  if (!value) {
-    phoneNumberError.value = "電話號碼為必填項";
-    return false;
-  } else if (!/^\d{10}$/.test(value)) {
-    phoneNumberError.value = "請輸入有效的電話號碼";
-    return false;
-  }
-  phoneNumberError.value = "";
-  return true;
-};
-// 電話查詢
-const selectAppointmentByPhoneNum = async () => {
-  if (!phoneNumberRule(phoneNumber.value)) return;
+async function selectAppointmentByPhoneNum() {
+  console.log('查詢電話：', phoneNumber.value);
+  const data = phoneNumber.value.trim();
 
   try {
-    const data = phoneNumber.value.trim();
     const res = await apiFindAppointment(data);
-
+    console.log('查詢結果:', res);
     if (res && res.data && Array.isArray(res.data)) {
       appointments.value = res.data;
     } else {
       appointments.value = [];
       console.warn("未找到相關預約資料");
     }
-  } catch (error) {
-    console.error("查詢失敗:", error);
-    alert("查詢過程中發生問題，請稍後再試");
+  } catch (err) {
+    console.error('查詢失敗:', err);
   }
-};
+}
+
+// 監聽電話輸入
+watch(phoneNumber, async (newVal) => {
+  if (newVal.length === 10) {
+    await selectAppointmentByPhoneNum();
+  } else if (newVal.length === 0) {
+    try {
+      const res = await apiFindAppointmentAll();
+      appointments.value = res.data;
+      console.log("清空輸入，重新顯示全部資料:", appointments.value);
+    } catch (error) {
+      console.error("重新獲取預約資料失敗:", error);
+    }
+  }
+});
+
 //送出表單
 const submitAppointment = async () => {
   console.log("表單資料:", form.value);
