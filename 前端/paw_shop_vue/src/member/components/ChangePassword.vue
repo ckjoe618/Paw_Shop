@@ -1,37 +1,44 @@
 <template>
-  <v-form ref="formRef" v-model="isValid">
-    <v-text-field
-      label="舊密碼"
-      v-model="form.password"
-      :type="showPassword ? 'text' : 'password'"
-      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-      @click:append="showPassword = !showPassword"
-      :rules="[rules.required]"
-    />
-    <v-text-field
-      label="新密碼"
-      v-model="form.newPassword"
-      :type="showPassword ? 'text' : 'password'"
-      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-      @click:append="showPassword = !showPassword"
-      :rules="[rules.required, rules.password]"
-    />
-    <v-text-field
-      label="確認新密碼"
-      v-model="form.confirmPassword"
-      :type="showPassword ? 'text' : 'password'"
-      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-      @click:append="showPassword = !showPassword"
-      :rules="[rules.required, rules.matchPassword]"
-    />
-    <v-btn
-      color="primary"
-      :disabled="!isValid"
-      :loading="loading"
-      @click="changePassword"
-      >修改密碼</v-btn
-    >
-  </v-form>
+  <v-container>
+    <v-row class="mb-4">
+      <v-col cols="12">
+        <h4>修改密碼</h4>
+      </v-col>
+    </v-row>
+    <v-form ref="formRef" v-model="isValid">
+      <v-text-field
+        label="舊密碼"
+        v-model="form.password"
+        :type="showPassword ? 'text' : 'password'"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+        :rules="[rules.required]"
+      />
+      <v-text-field
+        label="新密碼"
+        v-model="form.newPassword"
+        :type="showPassword ? 'text' : 'password'"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+        :rules="[rules.required, rules.password]"
+      />
+      <v-text-field
+        label="確認新密碼"
+        v-model="form.confirmPassword"
+        :type="showPassword ? 'text' : 'password'"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+        :rules="[rules.required, rules.matchPassword]"
+      />
+      <v-btn
+        color="primary"
+        :disabled="!isValid"
+        :loading="loading"
+        @click="changePassword"
+        >修改密碼</v-btn
+      >
+    </v-form>
+  </v-container>
 </template>
 
 <script setup>

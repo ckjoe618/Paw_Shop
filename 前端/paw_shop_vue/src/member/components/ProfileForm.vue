@@ -1,90 +1,101 @@
 <template>
-  <v-form ref="formRef" v-model="isValid">
-    <v-row>
-      <!-- 左欄：會員資訊 -->
-      <v-col cols="12" md="8">
-        <v-row class="mb-2">
-          <v-col cols="12" class="d-flex align-center">
-            <span class="text-subtitle-1 font-weight-medium mr-2">姓名:</span>
-            <span class="text-body-1 text-grey-darken-1">{{
-              form.memberName
-            }}</span>
-          </v-col>
-        </v-row>
-
-        <v-row class="mb-2">
-          <v-col cols="12" class="d-flex align-center">
-            <span class="text-subtitle-1 font-weight-medium mr-2">性別:</span>
-            <span class="text-body-1 text-grey-darken-1">{{
-              form.gender
-            }}</span>
-          </v-col>
-        </v-row>
-
-        <v-text-field
-          label="Email"
-          v-model="form.email"
-          :rules="[rules.required, rules.email]"
-        />
-
-        <v-row class="mb-2">
-          <v-col cols="12" class="d-flex align-center">
-            <span class="text-subtitle-1 font-weight-medium mr-2">身分證:</span>
-            <span class="text-body-1 text-grey-darken-1">{{ form.idno }}</span>
-          </v-col>
-        </v-row>
-
-        <v-text-field
-          label="手機號碼"
-          v-model="form.phone"
-          maxlength="10"
-          :rules="[rules.required, rules.phone]"
-        />
-
-        <v-row class="mb-2">
-          <v-col cols="12" class="d-flex align-center">
-            <span class="text-subtitle-1 font-weight-medium mr-2">生日:</span>
-            <span class="text-body-1 text-grey-darken-1">
-              {{ new Date(form.birthDate).toLocaleDateString() }}
-            </span>
-          </v-col>
-        </v-row>
-
-        <div class="text-center mt-6">
-          <v-btn
-            color="primary"
-            prepend-icon="mdi-content-save"
-            :disabled="!isValid"
-            :loading="loading"
-            @click="saveProfile"
-          >
-            儲存
-          </v-btn>
-        </div>
-      </v-col>
-
-      <!-- 右欄：頭像設定 -->
-      <v-col cols="12" md="4" class="text-center">
-        <v-avatar size="120" class="mx-auto mb-4">
-          <v-img :src="previewPhoto" cover />
-        </v-avatar>
-        <v-btn class="mb-2" color="primary" @click="$refs.fileInput.click()">
-          選擇圖片
-        </v-btn>
-        <input
-          ref="fileInput"
-          type="file"
-          accept="image/png, image/jpeg"
-          hidden
-          @change="handleFileChange"
-        />
-        <div class="text-caption text-grey-darken-1">
-          檔案大小：最大 1MB<br />
-          檔案限制：.JPEG、.PNG
-        </div>
+  <v-container>
+    <v-row class="mb-4">
+      <v-col cols="12">
+        <h4>個人檔案</h4>
       </v-col>
     </v-row>
-  </v-form>
+    <v-form ref="formRef" v-model="isValid">
+      <v-row>
+        <!-- 左欄：會員資訊 -->
+        <v-col cols="12" md="8">
+          <v-row class="mb-2">
+            <v-col cols="12" class="d-flex align-center">
+              <span class="text-subtitle-1 font-weight-medium mr-2">姓名:</span>
+              <span class="text-body-1 text-grey-darken-1">{{
+                form.memberName
+              }}</span>
+            </v-col>
+          </v-row>
+
+          <v-row class="mb-2">
+            <v-col cols="12" class="d-flex align-center">
+              <span class="text-subtitle-1 font-weight-medium mr-2">性別:</span>
+              <span class="text-body-1 text-grey-darken-1">{{
+                form.gender
+              }}</span>
+            </v-col>
+          </v-row>
+
+          <v-text-field
+            label="Email"
+            v-model="form.email"
+            :rules="[rules.required, rules.email]"
+          />
+
+          <v-row class="mb-2">
+            <v-col cols="12" class="d-flex align-center">
+              <span class="text-subtitle-1 font-weight-medium mr-2"
+                >身分證:</span
+              >
+              <span class="text-body-1 text-grey-darken-1">{{
+                form.idno
+              }}</span>
+            </v-col>
+          </v-row>
+
+          <v-text-field
+            label="手機號碼"
+            v-model="form.phone"
+            maxlength="10"
+            :rules="[rules.required, rules.phone]"
+          />
+
+          <v-row class="mb-2">
+            <v-col cols="12" class="d-flex align-center">
+              <span class="text-subtitle-1 font-weight-medium mr-2">生日:</span>
+              <span class="text-body-1 text-grey-darken-1">
+                {{ new Date(form.birthDate).toLocaleDateString() }}
+              </span>
+            </v-col>
+          </v-row>
+
+          <div class="text-center mt-6">
+            <v-btn
+              color="primary"
+              prepend-icon="mdi-content-save"
+              :disabled="!isValid"
+              :loading="loading"
+              @click="saveProfile"
+            >
+              儲存
+            </v-btn>
+          </div>
+        </v-col>
+
+        <!-- 右欄：頭像設定 -->
+        <v-col cols="12" md="4" class="text-center">
+          <v-avatar size="120" class="mx-auto mb-4">
+            <v-img :src="previewPhoto" cover />
+          </v-avatar>
+          <v-btn class="mb-2" color="primary" @click="$refs.fileInput.click()">
+            選擇圖片
+          </v-btn>
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/png, image/jpeg"
+            hidden
+            @change="handleFileChange"
+          />
+          <div class="text-caption text-grey-darken-1">
+            檔案大小：最大 1MB<br />
+            檔案限制：.JPEG、.PNG
+          </div>
+        </v-col>
+      </v-row>
+    </v-form>
+  </v-container>
 </template>
 
 <script setup>
