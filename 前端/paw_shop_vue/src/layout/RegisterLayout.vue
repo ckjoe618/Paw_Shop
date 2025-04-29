@@ -130,6 +130,17 @@
                   <v-icon start>mdi-checkbox-marked-circle-outline</v-icon>
                   註冊
                 </v-btn>
+                <v-btn
+                  color="success"
+                  block
+                  size="large"
+                  class="mt-2 font-weight-bold text-white"
+                  :loading="loading"
+                  @click="oneClickRegister"
+                >
+                  <v-icon start>mdi-flash</v-icon>
+                  一鍵註冊
+                </v-btn>
               </v-col>
             </v-row>
           </v-form>
@@ -178,6 +189,7 @@ import cat02 from "@/member/assets/images/註冊_貓02.png";
 import { ref, onMounted } from "vue";
 import * as api from "@/api/memberApi/UserApi.js";
 import router from "@/router";
+import { useAuthStore } from "@/member/stores/auth";
 
 const today = new Date().toISOString().split("T")[0];
 const formRef = ref(null);
@@ -230,11 +242,27 @@ const submit = async () => {
   }
   loading.value = true;
   try {
-    await api.apiAddMember(form.value);
+    const data = await api.apiAddMember(form.value);
     router.push("/login");
   } finally {
     loading.value = false;
   }
+};
+
+const oneClickRegister = () => {
+  const timestamp = Date.now();
+  const uniqueSuffix = String(timestamp).slice(-6); // 取時間戳後6碼
+  form.value = {
+    memberName: "陳之漢",
+    gender: "男",
+    idno: `A1${uniqueSuffix.padEnd(8, "0")}`, // 身分證：A1+6碼+補0
+    email: `test${timestamp}@example.com`,
+    phone: `09${uniqueSuffix.padEnd(8, "1")}`, // 手機：09+6碼+補1
+    birthDate: "1995-05-05",
+    account: `testuser${timestamp}`,
+    password: "123456",
+    confirmPassword: "123456",
+  };
 };
 
 onMounted(() => {

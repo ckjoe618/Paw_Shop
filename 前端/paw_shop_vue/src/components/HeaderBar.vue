@@ -160,7 +160,7 @@ const items = ref([
   },
   {
     title: "論壇管理",
-    link: "#",
+    link: "/discuss",
   },
   {
     title: "登出",
@@ -225,9 +225,9 @@ const handleSearch = () => {
   }
 };
 
-// onMounted(() => {
-//   loadCart();
-// });
+onMounted(() => {
+  loadCart();
+});
 </script>
 
 <style scoped>
