@@ -30,13 +30,16 @@
         @click:append="showPassword = !showPassword"
         :rules="[rules.required, rules.matchPassword]"
       />
-      <v-btn
-        color="primary"
-        :disabled="!isValid"
-        :loading="loading"
-        @click="changePassword"
-        >修改密碼</v-btn
-      >
+      <div class="text-center mt-6">
+        <v-btn
+          color="primary"
+          prepend-icon="mdi-lock-reset"
+          :disabled="!isValid"
+          :loading="loading"
+          @click="changePassword"
+          >修改密碼</v-btn
+        >
+      </div>
     </v-form>
   </v-container>
 </template>
