@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import com.topics.exception.ForbiddenException;
 import com.topics.exception.LoginFailException;
 import com.topics.member.model.dto.AddressDto;
 import com.topics.member.model.dto.AuthDto;
@@ -45,6 +46,9 @@ public class AuthService {
 		}
 		if (!info.getPassword().equals(member.getPassword())) {
 			throw new LoginFailException("登入失敗，密碼錯誤");
+		}
+		if(!member.isActiveStatus()) {
+			throw new ForbiddenException("帳號已被停用，請聯繫客服");
 		}
 
 		AddressBean address = addressRepository.findActiveAddressByMemberId(member.getMemberId());
@@ -93,17 +97,17 @@ public class AuthService {
 		MemberBean member = memberRepository.findByEmail(email);
 
 		if (member == null) {
-			MemberBean newMember = new MemberBean();
-			newMember.setMemberName(name);
-			newMember.setEmail(email);
-			newMember.setAccount(email.split("@")[0] + "_google");
-			newMember.setPassword(UUID.randomUUID().toString());
-			newMember.setGender("不明");
-			newMember.setIdno("OAUTH_USER_" + UUID.randomUUID().toString().substring(0, 6));
-			newMember.setPhone("999" + String.format("%07d", new Random().nextInt(10000000)));
-			newMember.setBirthDate(LocalDate.of(1900, 1, 1));
+			MemberBean memberNew = new MemberBean();
+			memberNew.setMemberName(name);
+			memberNew.setEmail(email);
+			memberNew.setAccount(email.split("@")[0] + "_google");
+			memberNew.setPassword(UUID.randomUUID().toString());
+			memberNew.setGender("女");
+			memberNew.setIdno("A2" + String.format("%08d", new Random().nextInt(100000000)));
+			memberNew.setPhone("09" + String.format("%08d", new Random().nextInt(100000000)));
+			memberNew.setBirthDate(LocalDate.of(2000, 1, 1));
 
-			MemberBean saved = memberRepository.save(newMember);
+			MemberBean saved = memberRepository.save(memberNew);
 			return new MemberDto(saved);
 		}
 		return new MemberDto(member);
