@@ -87,7 +87,7 @@
         </template>
 
         <v-list density="compact" nav>
-          <v-list-item title="Logout" @click="logout" />
+          <v-list-item title="登出" @click="logout" />
         </v-list>
       </v-menu>
     </v-app-bar>

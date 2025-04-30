@@ -16,8 +16,9 @@ const authStore = useAuthStore();
 
 onMounted(async () => {
   const code = route.query.code;
-  if (!code) return router.push("/login");
-
+  if (!code) {
+    return router.push("/login");
+  }
   try {
     const data = await api.apiLoginByGoogleCallback(code);
     authStore.login(data);

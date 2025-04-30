@@ -102,6 +102,7 @@
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
 import * as api from "@/api/memberApi/UserApi.js";
+import Swal from "sweetalert2";
 
 const authStore = useAuthStore();
 const formRef = ref(null);
@@ -150,6 +151,12 @@ const saveProfile = async () => {
     uploadFile.value = null;
   } finally {
     loading.value = false;
+    Swal.fire({
+      icon: "success",
+      title: "修改完成",
+      showConfirmButton: false,
+      timer: 1000,
+    });
   }
 };
 

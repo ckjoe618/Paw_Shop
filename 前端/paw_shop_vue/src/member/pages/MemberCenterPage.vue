@@ -1,6 +1,6 @@
 <template>
-  <v-container class="pt-6">
-    <v-card elevation="4" rounded="lg">
+  <v-container class="pt-6 d-flex justify-center">
+    <v-card elevation="4" rounded="lg" max-width="1000" width="100%">
       <v-row>
         <!-- 左側導覽列 -->
         <v-col cols="12" md="3" class="pa-6 grey-lighten-4">

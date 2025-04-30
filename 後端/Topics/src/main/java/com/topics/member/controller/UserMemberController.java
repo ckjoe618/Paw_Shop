@@ -122,7 +122,7 @@ public class UserMemberController {
 	}
 
 	@PutMapping("/password/{memberId}")
-	public ResponseEntity<?> putMethodName(@PathVariable Integer memberId, @RequestBody AuthDto entity) {
+	public ResponseEntity<?> updatePasswordByMemberId(@PathVariable Integer memberId, @RequestBody AuthDto entity) {
 		SecurityUtil.checkUserLogin(memberId);
 		userMemberService.updatePasswordByMemberId(memberId, entity);
 		return ResponseUtil.success("修改密碼成功");

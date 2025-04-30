@@ -36,10 +36,8 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody AuthDto info) {
 		MemberDto loginMember = authService.login(info);
 		String token = JwtUtil.generateToken(loginMember.getMemberId().toString());
-		System.out.println("這是token= " + token);
 
 		Map<String, Object> response = new HashMap<>();
-		response.put("success", true);
 		response.put("token", token);
 		response.put("memberId", loginMember.getMemberId());
 		response.put("memberName", loginMember.getMemberName());
@@ -61,12 +59,14 @@ public class AuthController {
 //		String token = JwtUtil.generateToken(String.valueOf(loginMember.getMemberId()));
 //
 //		Map<String, Object> response = new HashMap<>();
-//		response.put("success", true);
 //		response.put("token", token);
 //		response.put("memberId", loginMember.getMemberId());
 //		response.put("memberName", loginMember.getMemberName());
+//		response.put("gender", loginMember.getGender());
+//		response.put("idno", loginMember.getIdno());
 //		response.put("email", loginMember.getEmail());
 //		response.put("phone", loginMember.getPhone());
+//		response.put("birthDate", loginMember.getBirthDate());
 //		response.put("role", loginMember.getRole());
 //		response.put("memberPhoto", loginMember.getMemberPhoto());
 //		response.put("address", loginMember.getAddress());

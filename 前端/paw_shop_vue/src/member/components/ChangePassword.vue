@@ -48,6 +48,7 @@
 import { ref } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
 import * as api from "@/api/memberApi/UserApi";
+import Swal from "sweetalert2";
 
 const authStore = useAuthStore();
 const formRef = ref(null);
@@ -76,7 +77,16 @@ const changePassword = async () => {
   loading.value = true;
   try {
     await api.apiUpdatePassword(form.value);
-    // 可以做自動登出或跳回登入頁
+    Swal.fire({
+      icon: "success",
+      title: "修改完成",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+    formRef.value.resetValidation();
+    form.value.password = "";
+    form.value.newPassword = "";
+    form.value.confirmPassword = "";
   } finally {
     loading.value = false;
   }
