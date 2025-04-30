@@ -97,11 +97,12 @@ public class AdminOrderController {
 	@PutMapping("/updatePriceTotal")
 	public ResponseEntity<String> resetOrderPriceTotal(@RequestBody Map<String, Object> data) {
 		Integer orderId = (Integer) data.get("orderId");
-		Integer priceTotal = (Integer) data.get("priceTotal");
+		Integer productPriceTotal = (Integer) data.get("productPriceTotal");
+		Integer shippingFee = (Integer)data.get("shippingFee");
 		
 		OrderBean selectedOrder = orderService.findOrderByOrderId(orderId);
 		if (selectedOrder != null) {
-			selectedOrder.setPriceTotal(priceTotal);
+			selectedOrder.setPriceTotal(productPriceTotal + shippingFee);
 			orderService.updateOrderByOrderId(selectedOrder);
 			return ResponseEntity.ok("ok");
 		}
