@@ -184,15 +184,25 @@ public class ArticleService {
                 .orElse("未知分類");
         dto.setCategoryName(categoryName);
 
-        // 額外查會員資訊
-        MemberBean member = article.getMember();
-        String memberName = (member != null) ? member.getMemberName() : "未知會員";
-        String memberPhoto = (member != null && member.getMemberPhoto() != null)
-                ? member.getMemberPhoto() : null;
+        // 額外查會員資訊 (加防呆)
+        String memberName = "未知會員";
+        String memberPhoto = null;
+        try {
+            MemberBean member = article.getMember();
+            if (member != null) {
+                memberName = member.getMemberName();
+                if (member.getMemberPhoto() != null) {
+                    memberPhoto = member.getMemberPhoto();
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("讀取會員資料失敗: " + e.getMessage());
+        }
         dto.setMemberName(memberName);
         dto.setMemberPhoto(memberPhoto);
 
         return dto;
     }
+
 
 }

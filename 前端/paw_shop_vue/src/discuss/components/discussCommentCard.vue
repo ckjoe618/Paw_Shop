@@ -17,21 +17,27 @@
       {{ content }}
     </div>
 
-    <!-- 按讚icon -->
+    <!-- 按讚按鈕 -->
     <v-row align="center" dense>
       <v-col cols="auto">
-        <v-icon small>mdi-thumb-up-outline</v-icon>
-        0
+        <v-btn
+          variant="text"
+          :icon="isLiked ? 'mdi-thumb-up' : 'mdi-thumb-up-outline'"
+          ripple
+          @click="$emit('toggle-like')"
+        >
+          {{ likeCount }}
+        </v-btn>
       </v-col>
     </v-row>
 
-    <!-- 放樓中樓的slot -->
+    <!-- 放樓中樓（回覆） -->
     <slot></slot>
   </v-card>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   floor: Number,
   memberName: String,
   content: String,
@@ -39,7 +45,17 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  isLiked: {
+    type: Boolean,
+    default: false,
+  },
+  likeCount: {
+    type: Number,
+    default: 0,
+  },
 });
+
+const emit = defineEmits(["toggle-like"]);
 </script>
 
 <style scoped>
@@ -47,3 +63,4 @@ defineProps({
   background-color: #f5f5f5;
 }
 </style>
+  

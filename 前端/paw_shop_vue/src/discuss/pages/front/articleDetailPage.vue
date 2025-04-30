@@ -1,3 +1,189 @@
+<script setup>
+import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "@/member/stores/auth";
+import axios from "axios";
+
+import DiscussArticleCard from "@/discuss/components/discussArticleCard.vue";
+import DiscussCommentCard from "@/discuss/components/discussCommentCard.vue";
+import DiscussReplyItem from "@/discuss/components/discussReplyItem.vue";
+import CommentInput from "@/discuss/components/commentInput.vue";
+
+import { fetchArticleDetail } from "@/discuss/api/articleApi";
+import { fetchCommentsByArticle } from "@/discuss/api/commentApi";
+
+const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
+const articleId = route.params.articleId;
+
+const article = ref(null);
+const comments = ref([]);
+const loading = ref(true);
+
+const isLiked = ref(false);
+const likeCount = ref(0);
+
+const commentLikeStatusMap = ref({});
+const commentLikeCountMap = ref({});
+
+const loadComments = async () => {
+  try {
+    const commentsData = await fetchCommentsByArticle(articleId);
+    comments.value = commentsData;
+  } catch (err) {
+    console.error("留言載入失敗", err);
+  }
+};
+
+// 主文留言（1-1、1-2）
+const mainReplies = computed(() => {
+  return comments.value.filter((c) => c.parentCommentId === -1);
+});
+
+// 樓層留言（2樓以上）
+const floorComments = computed(() => {
+  const floors = [];
+  const realFloors = comments.value
+    .filter((c) => c.floor !== null)
+    .sort((a, b) => a.floor - b.floor);
+
+  let expectedFloor = 1;
+  realFloors.forEach((comment) => {
+    while (expectedFloor < comment.floor) {
+      floors.push({
+        commentId: `missing-${expectedFloor}`,
+        floor: expectedFloor,
+        memberName: "系統",
+        content: "（此留言已被刪除）",
+        deleted: true,
+        replies: [],
+      });
+      expectedFloor++;
+    }
+    floors.push({
+      ...comment,
+      replies: comment.replies || [],
+    });
+    expectedFloor++;
+  });
+
+  return floors;
+});
+
+// 主要初始化
+onMounted(async () => {
+  try {
+    const articleData = await fetchArticleDetail(articleId);
+    article.value = articleData;
+
+    const commentsData = await fetchCommentsByArticle(articleId);
+
+    // ✅ 防止錯誤 memberPhoto 問題，先清空
+    commentsData.forEach((comment) => {
+      comment.memberPhoto = null;
+    });
+
+    comments.value = commentsData;
+
+    // 主文按讚資料
+    if (authStore.isLoggedIn) {
+      const response = await axios.post("/api/likes/check", {
+        articleId: articleId,
+        memberId: authStore.memberId,
+      });
+      isLiked.value = response.data;
+    }
+
+    const likeCountRes = await axios.get(`/api/likes/count/${articleId}`);
+    likeCount.value = likeCountRes.data;
+
+    // 留言按讚資料
+    for (const comment of commentsData) {
+      const commentId = comment.commentId;
+
+      if (authStore.isLoggedIn) {
+        try {
+          const res = await axios.post("/api/comment-likes/check", {
+            commentId: commentId,
+            memberId: authStore.memberId,
+          });
+          commentLikeStatusMap.value[commentId] = res.data;
+        } catch (error) {
+          console.error(`查詢留言${commentId}是否按讚失敗`, error);
+        }
+      }
+
+      try {
+        const res = await axios.get(`/api/comment-likes/count/${commentId}`);
+        commentLikeCountMap.value[commentId] = res.data;
+      } catch (error) {
+        console.error(`查詢留言${commentId}讚數失敗`, error);
+      }
+    }
+  } catch (error) {
+    console.error("載入失敗", error);
+    article.value = null;
+  } finally {
+    loading.value = false;
+  }
+});
+
+// 主文按讚切換
+const toggleLike = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  try {
+    if (isLiked.value) {
+      await axios.delete("/api/likes", {
+        data: { articleId, memberId: authStore.memberId },
+      });
+      isLiked.value = false;
+      likeCount.value--;
+    } else {
+      await axios.post("/api/likes", {
+        articleId,
+        memberId: authStore.memberId,
+      });
+      isLiked.value = true;
+      likeCount.value++;
+    }
+  } catch (error) {
+    console.error("切換按讚失敗", error);
+  }
+};
+
+// 留言按讚切換
+const toggleCommentLike = async (commentId) => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  try {
+    if (commentLikeStatusMap.value[commentId]) {
+      await axios.delete("/api/comment-likes", {
+        data: { commentId: commentId, memberId: authStore.memberId },
+      });
+      commentLikeStatusMap.value[commentId] = false;
+      commentLikeCountMap.value[commentId]--;
+    } else {
+      await axios.post("/api/comment-likes", {
+        commentId: commentId,
+        memberId: authStore.memberId,
+      });
+      commentLikeStatusMap.value[commentId] = true;
+      commentLikeCountMap.value[commentId]++;
+    }
+  } catch (error) {
+    console.error("切換留言按讚失敗", error);
+  }
+};
+</script>
+
 <template>
   <v-container class="py-8">
     <v-row justify="center">
@@ -25,6 +211,11 @@
               :content="reply.content"
             />
           </div>
+          <CommentInput
+            :articleId="+articleId"
+            :parentCommentId="-1"
+            @success="loadComments"
+          />
         </DiscussArticleCard>
 
         <v-row justify="center" v-else-if="loading">
@@ -40,6 +231,12 @@
         <!-- 留言區 -->
         <h2 class="text-h6 font-weight-bold mb-4">留言區</h2>
 
+        <CommentInput
+          :articleId="+articleId"
+          :parentCommentId="null"
+          :onSuccess="loadComments"
+        />
+
         <div v-if="floorComments.length > 0">
           <div
             v-for="floor in floorComments"
@@ -51,8 +248,11 @@
               :memberName="floor.deleted ? '系統' : floor.memberName"
               :content="floor.deleted ? '（此留言已被刪除）' : floor.content"
               :deleted="floor.deleted"
+              :isLiked="commentLikeStatusMap[floor.commentId] || false"
+              :likeCount="commentLikeCountMap[floor.commentId] || 0"
+              @toggle-like="() => toggleCommentLike(floor.commentId)"
             >
-              <!-- 樓中樓回覆 -->
+              <!-- 樓中樓留言 -->
               <template v-if="floor.replies && floor.replies.length > 0">
                 <div class="pl-8 mt-2">
                   <DiscussReplyItem
@@ -63,6 +263,14 @@
                   />
                 </div>
               </template>
+
+              <!-- 🧩 對樓層回覆（4-1、5-1） -->
+              <CommentInput
+                v-if="typeof floor.commentId === 'number'"
+                :articleId="+articleId"
+                :parentCommentId="floor.commentId"
+                @success="loadComments"
+              />
             </DiscussCommentCard>
           </div>
         </div>
@@ -74,118 +282,3 @@
     </v-row>
   </v-container>
 </template>
-
-<script setup>
-import { ref, onMounted, computed } from "vue";
-import { useRoute, useRouter } from "vue-router"; // 這邊多加 router
-import { useAuthStore } from "@/member/stores/auth";
-import axios from "axios";
-import { fetchArticleDetail } from "@/discuss/api/articleApi";
-import { fetchCommentsByArticle } from "@/discuss/api/commentApi";
-
-import DiscussArticleCard from "@/discuss/components/discussArticleCard.vue";
-import DiscussCommentCard from "@/discuss/components/discussCommentCard.vue";
-import DiscussReplyItem from "@/discuss/components/discussReplyItem.vue";
-
-const route = useRoute();
-const router = useRouter(); // 這邊加上
-const authStore = useAuthStore();
-const articleId = route.params.articleId;
-
-const article = ref(null);
-const comments = ref([]);
-const loading = ref(true);
-
-const isLiked = ref(false);
-const likeCount = ref(0);
-
-// 主文下的留言（1-1、1-2）
-const mainReplies = computed(() => {
-  return comments.value.filter((c) => c.parentCommentId === -1);
-});
-
-// 樓層留言（2樓以上）
-const floorComments = computed(() => {
-  const floors = [];
-  const realFloors = comments.value
-    .filter((c) => c.floor !== null)
-    .sort((a, b) => a.floor - b.floor);
-
-  let expectedFloor = 1;
-  realFloors.forEach((comment) => {
-    while (expectedFloor < comment.floor) {
-      floors.push({
-        commentId: `missing-${expectedFloor}`,
-        floor: expectedFloor,
-        memberName: "系統",
-        content: "（此留言已被刪除）",
-        deleted: true,
-        replies: [],
-      });
-      expectedFloor++;
-    }
-
-    floors.push({
-      ...comment,
-      replies: comment.replies || [],
-    });
-    expectedFloor++;
-  });
-
-  return floors;
-});
-
-// 一次處理所有初始資料
-onMounted(async () => {
-  try {
-    const articleData = await fetchArticleDetail(articleId);
-    article.value = articleData;
-
-    const commentsData = await fetchCommentsByArticle(articleId);
-    comments.value = commentsData;
-
-    if (authStore.isLoggedIn) {
-      const response = await axios.post("/api/likes/check", {
-        articleId: articleId,
-        memberId: authStore.memberId,
-      });
-      isLiked.value = response.data;
-    }
-
-    const likeCountRes = await axios.get(`/api/likes/count/${articleId}`);
-    likeCount.value = likeCountRes.data;
-  } catch (error) {
-    console.error("載入失敗", error);
-    article.value = null;
-  } finally {
-    loading.value = false;
-  }
-});
-
-// 按下按鈕切換按讚
-const toggleLike = async () => {
-  if (!authStore.isLoggedIn) {
-    router.push("/login");
-    return;
-  }
-
-  try {
-    if (isLiked.value) {
-      await axios.delete("/api/likes", {
-        data: { articleId, memberId: authStore.memberId },
-      });
-      isLiked.value = false;
-      likeCount.value--;
-    } else {
-      await axios.post("/api/likes", {
-        articleId,
-        memberId: authStore.memberId,
-      });
-      isLiked.value = true;
-      likeCount.value++;
-    }
-  } catch (error) {
-    console.error("切換按讚失敗", error);
-  }
-};
-</script>
