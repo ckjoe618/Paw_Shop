@@ -7,6 +7,7 @@ import com.topics.discuss.model.dto.response.CommentGroupDto;
 import com.topics.discuss.model.dto.response.CommentResponseDto;
 import com.topics.discuss.model.entity.CommentBean;
 import com.topics.discuss.model.service.front.CommentService;
+import com.topics.security.AuthHolder;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,8 @@ public class CommentController {
     // 新增留言
     @PostMapping
     public ResponseEntity<CommentBean> addComment(@Valid @RequestBody CommentRequestDto dto) {
-        CommentBean saved = commentService.addComment(dto);
+        int memberId = AuthHolder.getMember().getMemberId();
+        CommentBean saved = commentService.addComment(dto, memberId);
         return ResponseEntity.status(201).body(saved);
     }
 

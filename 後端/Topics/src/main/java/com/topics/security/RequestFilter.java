@@ -28,13 +28,18 @@ public class RequestFilter extends HttpFilter {
 			if (header != null && header.startsWith("Bearer ")) {
 				String token = header.substring(7);
 
-				if (JwtUtil.isTokenValid(token)) {
-					String memberId = JwtUtil.getSubject(token);
-					MemberDto member = memberRepository.findById(Integer.parseInt(memberId))
-							.map(m -> new MemberDto(m))
-							.orElseThrow(() -> new NotFoundException("找不到使用者"));
+				try {
+					if (JwtUtil.isTokenValid(token)) {
+						String memberId = JwtUtil.getSubject(token);
+						MemberDto member = memberRepository.findById(Integer.parseInt(memberId))
+								.map(m -> new MemberDto(m))
+								.orElseThrow(() -> new NotFoundException("找不到使用者"));
 
-					AuthHolder.setMember(member);
+						AuthHolder.setMember(member);
+					}
+				} catch (Exception e) {
+					// 捕捉 token格式錯誤、驗證失敗，不拋出錯誤
+					System.err.println("JWT格式錯誤或無效，視為未登入: " + e.getMessage());
 				}
 			}
 			chain.doFilter(request, response);

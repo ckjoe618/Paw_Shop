@@ -1,108 +1,49 @@
-<template>
-  <v-container class="py-8">
-    <v-row justify="center">
-      <v-col cols="12" md="8">
-        <!-- 單篇文章 -->
-        <DiscussArticleCard
-          v-if="article"
-          :title="article.title"
-          :categoryName="article.categoryName"
-          :memberName="article.memberName"
-        >
-          <div class="article-content">{{ article.content }}</div>
-        </DiscussArticleCard>
-
-        <!-- Loading -->
-        <v-row justify="center" v-else-if="loading">
-          <v-progress-circular indeterminate color="primary" size="50" />
-        </v-row>
-
-        <!-- 錯誤 -->
-        <v-alert v-else type="error" class="mt-6">
-          抱歉，找不到這篇文章。
-        </v-alert>
-
-        <v-divider class="my-6"></v-divider>
-
-        <!-- 留言區 -->
-        <h2 class="text-h6 font-weight-bold mb-4">留言區</h2>
-
-        <div v-if="floorComments.length > 0">
-          <div
-            v-for="floor in floorComments"
-            :key="floor.commentId"
-            class="mb-6"
-          >
-            <!-- 樓層留言 -->
-            <DiscussCommentCard
-              v-if="!floor.isMainReply"
-              :floor="floor.floor"
-              :memberName="floor.deleted ? '系統' : floor.memberName"
-              :content="floor.deleted ? '（此留言已被刪除）' : floor.content"
-            />
-
-            <!-- 主文留言（parentCommentId = 0） -->
-            <DiscussReplyItem
-              v-else
-              :memberName="floor.memberName"
-              :content="floor.content"
-            />
-
-            <!-- 樓中樓回覆 -->
-            <div
-              v-if="floor.replies && floor.replies.length > 0"
-              class="pl-8 mt-2"
-            >
-              <DiscussReplyItem
-                v-for="reply in floor.replies"
-                :key="reply.commentId"
-                :memberName="reply.memberName"
-                :content="reply.content"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div v-else class="text-center grey--text mt-4">
-          目前沒有留言，趕快來當第一個留言的人吧！
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
-</template>
-
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
-import { fetchArticleDetail } from "@/discuss/api/articleApi";
-import { fetchCommentsByArticle } from "@/discuss/api/commentApi";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "@/member/stores/auth";
+import axios from "axios";
 
-// 引入元件
 import DiscussArticleCard from "@/discuss/components/discussArticleCard.vue";
 import DiscussCommentCard from "@/discuss/components/discussCommentCard.vue";
 import DiscussReplyItem from "@/discuss/components/discussReplyItem.vue";
+import CommentInput from "@/discuss/components/commentInput.vue";
+
+import { fetchArticleDetail } from "@/discuss/api/articleApi";
+import { fetchCommentsByArticle } from "@/discuss/api/commentApi";
 
 const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
 const articleId = route.params.articleId;
 
 const article = ref(null);
 const comments = ref([]);
 const loading = ref(true);
 
-// 整理後的樓層資料
+const isLiked = ref(false);
+const likeCount = ref(0);
+
+const commentLikeStatusMap = ref({});
+const commentLikeCountMap = ref({});
+
+const loadComments = async () => {
+  try {
+    const commentsData = await fetchCommentsByArticle(articleId);
+    comments.value = commentsData;
+  } catch (err) {
+    console.error("留言載入失敗", err);
+  }
+};
+
+// 主文留言（1-1、1-2）
+const mainReplies = computed(() => {
+  return comments.value.filter((c) => c.parentCommentId === -1);
+});
+
+// 樓層留言（2樓以上）
 const floorComments = computed(() => {
   const floors = [];
-
-  // 先處理主文留言 (parentCommentId === 0)
-  const mainReplies = comments.value.filter((c) => c.parentCommentId === 0);
-  mainReplies.forEach((reply) => {
-    floors.push({
-      ...reply,
-      isMainReply: true,
-    });
-  });
-
-  // 再處理樓層留言 (floor !== null)
   const realFloors = comments.value
     .filter((c) => c.floor !== null)
     .sort((a, b) => a.floor - b.floor);
@@ -120,12 +61,9 @@ const floorComments = computed(() => {
       });
       expectedFloor++;
     }
-
     floors.push({
       ...comment,
-      replies: comments.value.filter(
-        (r) => r.parentCommentId === comment.commentId
-      ),
+      replies: comment.replies || [],
     });
     expectedFloor++;
   });
@@ -133,14 +71,56 @@ const floorComments = computed(() => {
   return floors;
 });
 
-// 載入文章與留言
+// 主要初始化
 onMounted(async () => {
   try {
     const articleData = await fetchArticleDetail(articleId);
     article.value = articleData;
 
     const commentsData = await fetchCommentsByArticle(articleId);
+
+    // ✅ 防止錯誤 memberPhoto 問題，先清空
+    commentsData.forEach((comment) => {
+      comment.memberPhoto = null;
+    });
+
     comments.value = commentsData;
+
+    // 主文按讚資料
+    if (authStore.isLoggedIn) {
+      const response = await axios.post("/api/likes/check", {
+        articleId: articleId,
+        memberId: authStore.memberId,
+      });
+      isLiked.value = response.data;
+    }
+
+    const likeCountRes = await axios.get(`/api/likes/count/${articleId}`);
+    likeCount.value = likeCountRes.data;
+
+    // 留言按讚資料
+    for (const comment of commentsData) {
+      const commentId = comment.commentId;
+
+      if (authStore.isLoggedIn) {
+        try {
+          const res = await axios.post("/api/comment-likes/check", {
+            commentId: commentId,
+            memberId: authStore.memberId,
+          });
+          commentLikeStatusMap.value[commentId] = res.data;
+        } catch (error) {
+          console.error(`查詢留言${commentId}是否按讚失敗`, error);
+        }
+      }
+
+      try {
+        const res = await axios.get(`/api/comment-likes/count/${commentId}`);
+        commentLikeCountMap.value[commentId] = res.data;
+      } catch (error) {
+        console.error(`查詢留言${commentId}讚數失敗`, error);
+      }
+    }
   } catch (error) {
     console.error("載入失敗", error);
     article.value = null;
@@ -148,12 +128,157 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+// 主文按讚切換
+const toggleLike = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  try {
+    if (isLiked.value) {
+      await axios.delete("/api/likes", {
+        data: { articleId, memberId: authStore.memberId },
+      });
+      isLiked.value = false;
+      likeCount.value--;
+    } else {
+      await axios.post("/api/likes", {
+        articleId,
+        memberId: authStore.memberId,
+      });
+      isLiked.value = true;
+      likeCount.value++;
+    }
+  } catch (error) {
+    console.error("切換按讚失敗", error);
+  }
+};
+
+// 留言按讚切換
+const toggleCommentLike = async (commentId) => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  try {
+    if (commentLikeStatusMap.value[commentId]) {
+      await axios.delete("/api/comment-likes", {
+        data: { commentId: commentId, memberId: authStore.memberId },
+      });
+      commentLikeStatusMap.value[commentId] = false;
+      commentLikeCountMap.value[commentId]--;
+    } else {
+      await axios.post("/api/comment-likes", {
+        commentId: commentId,
+        memberId: authStore.memberId,
+      });
+      commentLikeStatusMap.value[commentId] = true;
+      commentLikeCountMap.value[commentId]++;
+    }
+  } catch (error) {
+    console.error("切換留言按讚失敗", error);
+  }
+};
 </script>
 
-<style scoped>
-.article-content {
-  font-size: 16px;
-  line-height: 1.8;
-  white-space: pre-wrap; /* 保留換行 */
-}
-</style>
+<template>
+  <v-container class="py-8">
+    <v-row justify="center">
+      <v-col cols="12" md="8">
+        <!-- 單篇文章 -->
+        <DiscussArticleCard
+          v-if="article"
+          :title="article.title"
+          :categoryName="article.categoryName"
+          :memberName="article.memberName"
+          :isLiked="isLiked"
+          :likeCount="likeCount"
+          @toggle-like="toggleLike"
+        >
+          <div class="article-content">
+            {{ article.content }}
+          </div>
+
+          <!-- 主文留言 -->
+          <div v-if="mainReplies.length > 0" class="mt-4">
+            <DiscussReplyItem
+              v-for="reply in mainReplies"
+              :key="reply.commentId"
+              :memberName="reply.memberName"
+              :content="reply.content"
+            />
+          </div>
+          <CommentInput
+            :articleId="+articleId"
+            :parentCommentId="-1"
+            @success="loadComments"
+          />
+        </DiscussArticleCard>
+
+        <v-row justify="center" v-else-if="loading">
+          <v-progress-circular indeterminate color="primary" size="50" />
+        </v-row>
+
+        <v-alert v-else type="error" class="mt-6">
+          抱歉，找不到這篇文章。
+        </v-alert>
+
+        <v-divider class="my-6"></v-divider>
+
+        <!-- 留言區 -->
+        <h2 class="text-h6 font-weight-bold mb-4">留言區</h2>
+
+        <CommentInput
+          :articleId="+articleId"
+          :parentCommentId="null"
+          :onSuccess="loadComments"
+        />
+
+        <div v-if="floorComments.length > 0">
+          <div
+            v-for="floor in floorComments"
+            :key="floor.commentId"
+            class="mb-6"
+          >
+            <DiscussCommentCard
+              :floor="floor.floor"
+              :memberName="floor.deleted ? '系統' : floor.memberName"
+              :content="floor.deleted ? '（此留言已被刪除）' : floor.content"
+              :deleted="floor.deleted"
+              :isLiked="commentLikeStatusMap[floor.commentId] || false"
+              :likeCount="commentLikeCountMap[floor.commentId] || 0"
+              @toggle-like="() => toggleCommentLike(floor.commentId)"
+            >
+              <!-- 樓中樓留言 -->
+              <template v-if="floor.replies && floor.replies.length > 0">
+                <div class="pl-8 mt-2">
+                  <DiscussReplyItem
+                    v-for="reply in floor.replies"
+                    :key="reply.commentId"
+                    :memberName="reply.memberName"
+                    :content="reply.content"
+                  />
+                </div>
+              </template>
+
+              <!-- 🧩 對樓層回覆（4-1、5-1） -->
+              <CommentInput
+                v-if="typeof floor.commentId === 'number'"
+                :articleId="+articleId"
+                :parentCommentId="floor.commentId"
+                @success="loadComments"
+              />
+            </DiscussCommentCard>
+          </div>
+        </div>
+
+        <div v-else class="text-center grey--text mt-4">
+          目前沒有留言，趕快來當第一個留言的人吧！
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>

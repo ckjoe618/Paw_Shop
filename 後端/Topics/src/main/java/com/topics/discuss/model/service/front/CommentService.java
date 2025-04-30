@@ -53,14 +53,12 @@ public class CommentService {
 
     // 巢狀留言結構查詢
     public List<CommentGroupDto> getGroupedCommentsByArticleId(int articleId) {
-
         List<CommentBean> comments = commentRepository.findByArticleIdAndDeletedFalseOrderByCreatedDateAsc(articleId);
 
         List<CommentGroupDto> result = new ArrayList<>();
         Map<Integer, List<CommentGroupDto>> replyMap = new HashMap<>();
 
         for (CommentBean comment : comments) {
-            // 回傳dto
             CommentGroupDto dto = new CommentGroupDto();
             dto.setCommentId(comment.getCommentId());
             dto.setMemberId(comment.getMemberId());
@@ -70,19 +68,23 @@ public class CommentService {
             dto.setCreatedDate(comment.getCreatedDate());
             dto.setUpdatedDate(comment.getUpdatedDate());
 
-            // member
             MemberBean member = comment.getMember();
             dto.setMemberName(member.getMemberName());
 
-            String memberPhoto = (member.getMemberPhoto() != null)
-                    ? member.getMemberPhoto() : null;
+            String memberPhoto = (member.getMemberPhoto() != null) ? member.getMemberPhoto() : null;
             dto.setMemberPhoto(memberPhoto);
 
-            if (comment.getParentCommentId() == null || comment.getParentCommentId() == 0) {
+            Integer parentCommentId = comment.getParentCommentId();
+
+            if (parentCommentId == null) {
+                // 樓層留言（新樓：2樓、3樓…）
+                result.add(dto);
+            } else if (parentCommentId == -1) {
+                // 主文留言（掛在文章本身）
                 result.add(dto);
             } else {
-                int parentId = comment.getParentCommentId();
-                replyMap.computeIfAbsent(parentId, k -> new ArrayList<>()).add(dto);
+                // 樓中樓留言（回覆其他留言）
+                replyMap.computeIfAbsent(parentCommentId, k -> new ArrayList<>()).add(dto);
             }
         }
 
@@ -95,12 +97,13 @@ public class CommentService {
         return result;
     }
 
+
     // 新增留言、回覆
-    public CommentBean addComment(CommentRequestDto dto) {
+    public CommentBean addComment(CommentRequestDto dto, int memberId) {
         CommentBean comment = new CommentBean();
 
         comment.setArticleId(dto.getArticleId());
-        comment.setMemberId(dto.getMemberId());
+        comment.setMemberId(memberId);
         comment.setContent(dto.getContent());
         comment.setDeleted(false);
         comment.setUpdatedDate(null);
@@ -111,10 +114,10 @@ public class CommentService {
             int nextFloor = (latest == null) ? 2 : latest.getFloor() + 1;
             comment.setFloor(nextFloor);
             comment.setParentCommentId(null);
-        } else if (dto.getParentCommentId() == 0) {
+        } else if (dto.getParentCommentId() == -1) {
             // 1樓留言
             comment.setFloor(null);
-            comment.setParentCommentId(0);
+            comment.setParentCommentId(-1);
         } else {
             // 其他樓層留言
             boolean exists = commentRepository.existsById(dto.getParentCommentId());
