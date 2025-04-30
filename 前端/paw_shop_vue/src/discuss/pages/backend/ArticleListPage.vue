@@ -4,7 +4,6 @@
       <v-card-title>
         所有文章
         <v-spacer></v-spacer>
-        <!-- 使用你自己的新增按鈕元件 -->
         <addbtn class="ml-2" />
       </v-card-title>
 
@@ -15,6 +14,17 @@
           :items-per-page="10"
           class="elevation-1"
         >
+          <!-- 會員照片 -->
+          <template v-slot:item.memberPhoto="{ item }">
+            <img
+              v-if="!item.hidePhoto"
+              :src="`/uploads/${item.memberPhoto}`"
+              alt="member"
+              width="50"
+              @error="item.hidePhoto = true"
+            />
+          </template>
+
           <!-- 建立時間格式轉換 -->
           <template v-slot:item.createdDate="{ item }">
             {{ formatDate(item.createdDate) }}
@@ -46,10 +56,10 @@
 
 <script>
 import axios from "axios";
-import addbtn from "../components/buttons/addbtn.vue";
-import formCheckbtn from "../components/buttons/formCheckbtn.vue";
-import formEditbtn from "../components/buttons/formEditbtn.vue";
-import formDeletebtn from "../components/buttons/formDeletebtn.vue";
+import addbtn from "../../components/buttons/addbtn.vue";
+import formCheckbtn from "../../components/buttons/formCheckbtn.vue";
+import formEditbtn from "../../components/buttons/formEditbtn.vue";
+import formDeletebtn from "../../components/buttons/formDeletebtn.vue";
 
 export default {
   name: "ArticleListPage",
@@ -65,6 +75,7 @@ export default {
       headers: [
         { title: "文章編號", value: "articleId" },
         { title: "會員編號", value: "memberId" },
+        { title: "會員照片", value: "memberPhoto" },
         { title: "標題", value: "title" },
         { title: "分類編號", value: "categoryId" },
         { title: "瀏覽次數", value: "viewCount" },
@@ -81,7 +92,11 @@ export default {
       axios
         .get("http://localhost:8080/discuss/article")
         .then((response) => {
-          this.articles = response.data;
+          // 若沒有 memberPhoto 也要加上 hidePhoto 欄位以便錯誤處理
+          this.articles = response.data.map((a) => ({
+            ...a,
+            hidePhoto: false,
+          }));
         })
         .catch((error) => {
           console.error("取得文章失敗", error);

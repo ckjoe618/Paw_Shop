@@ -75,7 +75,7 @@ const items = ref([
     icon: "fas fa-comments",
     image: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
     button: [
-      { label: "文章管理", link: "" },
+      { label: "文章管理", link: "/admin/discuss" },
       { label: "分類", link: "" },
     ],
   },
