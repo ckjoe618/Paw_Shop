@@ -255,9 +255,16 @@ const submitForm = async () => {
   }
 };
 onMounted(() => {
+  const memberId = localStorage.getItem("memberId");
+  if (!memberId) {
+    router.push("/login");
+    return;
+  }
+  
+  form.value.memberId = memberId;
   fetchPetsByMember();
-  form.value.memberId = localStorage.getItem("memberId");
 });
+
 </script>
 
 <style scoped>

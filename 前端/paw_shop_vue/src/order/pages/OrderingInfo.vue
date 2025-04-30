@@ -112,14 +112,14 @@
                   />
                 </v-col>
                 <!-- 選擇超商 -->
-                <v-col cols="12" v-if="pickupMethodforbtn !== '宅配'">
+                <!-- <v-col cols="12" v-if="pickupMethodforbtn !== '宅配'">
                   <v-btn color="green" @click="openCvsMap">選擇超商門市</v-btn>
 
                   <div v-if="cvsInfo" class="mt-2">
                     <p>門市名稱：{{ cvsInfo.CVSStoreName }}</p>
                     <p>門市地址：{{ cvsInfo.CVSAddress }}</p>
                   </div>
-                </v-col>
+                </v-col> -->
               </v-row>
             </v-col>
           </v-row>

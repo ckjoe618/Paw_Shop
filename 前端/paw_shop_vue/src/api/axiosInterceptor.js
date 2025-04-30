@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "@/member/stores/auth";
 import router from "@/router";
+import Swal from "sweetalert2";
 
 const api = axios.create({
   baseURL: "http://localhost:8080", // 預設localhost
@@ -40,7 +41,12 @@ api.interceptors.response.use(
 
       if (!hasShownAlert) {
         hasShownAlert = true;
-        alert("登入已過期，請重新登入");
+        Swal.fire({
+          icon: "error",
+          title: "登入已過期，請重新登入",
+          showConfirmButton: false,
+          timer: 1000,
+        });
       }
       authStore.logout();
       router.push("/login");
@@ -53,7 +59,12 @@ api.interceptors.response.use(
     }
 
     if (!hasShownAlert && status !== 401) {
-      alert(message);
+      Swal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
 
     switch (status) {
@@ -72,7 +83,12 @@ api.interceptors.response.use(
       default:
         // 其他錯誤
         if (!status && !hasShownAlert) {
-          alert("無法連線到伺服器，請檢查網路或稍後再試");
+          Swal.fire({
+            icon: "error",
+            title: "無法連線到伺服器，請檢查網路或稍後再試",
+            showConfirmButton: false,
+            timer: 1000,
+          });
         }
         break;
     }

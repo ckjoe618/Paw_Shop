@@ -13,7 +13,7 @@
           />
           <v-text-field
             label="電話"
-            v-model="localAddress.phone"
+            v-model="localAddress.recipientPhone"
             maxlength="10"
             :rules="[rules.required, rules.phone]"
           />
@@ -67,6 +67,7 @@ import { addressList } from "@/member/assets/zipcodes.js";
 import { ref, watch, computed } from "vue";
 import * as api from "@/api/memberApi/UserApi";
 import { useAuthStore } from "../stores/auth";
+import Swal from "sweetalert2";
 
 const auth = useAuthStore();
 
@@ -164,8 +165,20 @@ const save = async () => {
   try {
     if (props.mode === "add") {
       await api.apiAddAddress(localAddress.value);
+      Swal.fire({
+        icon: "success",
+        title: "新增完成",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     } else {
       await api.apiUpdateAddress(localAddress.value);
+      Swal.fire({
+        icon: "success",
+        title: "修改完成",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
     emit("saved");
     close();

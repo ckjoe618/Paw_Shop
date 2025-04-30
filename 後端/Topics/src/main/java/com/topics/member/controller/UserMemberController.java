@@ -23,6 +23,7 @@ import com.topics.member.model.dto.AuthDto;
 import com.topics.member.model.dto.MemberDto;
 import com.topics.member.model.entity.AddressBean;
 import com.topics.member.model.entity.MemberBean;
+import com.topics.member.model.repository.AddressRepository;
 import com.topics.member.model.service.AddressService;
 import com.topics.member.model.service.UserMemberService;
 import com.topics.utils.ResponseUtil;
@@ -31,6 +32,9 @@ import com.topics.utils.SecurityUtil;
 @RestController
 @RequestMapping("/api/user")
 public class UserMemberController {
+	
+	@Autowired
+	private AddressRepository addressRepository;
 
 	@Autowired
 	private UserMemberService userMemberService;
@@ -105,20 +109,20 @@ public class UserMemberController {
 
 	@PutMapping("/address/default/{addressId}")
 	public ResponseEntity<?> updateDefaultAddress(@PathVariable Integer addressId) {
-		SecurityUtil.checkUserLoginForAddress(addressId);
+		SecurityUtil.checkUserLoginForAddress(addressId, addressRepository);
 		MemberDto member = addressService.updateDefaultAddress(addressId);
 		return ResponseUtil.success(member);
 	}
 
 	@DeleteMapping("/address/{addressId}")
 	public ResponseEntity<?> updateAddressById(@PathVariable Integer addressId) {
-		SecurityUtil.checkUserLoginForAddress(addressId);
+		SecurityUtil.checkUserLoginForAddress(addressId, addressRepository);
 		addressService.deleteAddressById(addressId);
 		return ResponseUtil.success("刪除地址成功");
 	}
 
 	@PutMapping("/password/{memberId}")
-	public ResponseEntity<?> putMethodName(@PathVariable Integer memberId, @RequestBody AuthDto entity) {
+	public ResponseEntity<?> updatePasswordByMemberId(@PathVariable Integer memberId, @RequestBody AuthDto entity) {
 		SecurityUtil.checkUserLogin(memberId);
 		userMemberService.updatePasswordByMemberId(memberId, entity);
 		return ResponseUtil.success("修改密碼成功");

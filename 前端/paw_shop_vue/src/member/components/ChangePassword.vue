@@ -1,43 +1,54 @@
 <template>
-  <v-form ref="formRef" v-model="isValid">
-    <v-text-field
-      label="舊密碼"
-      v-model="form.password"
-      :type="showPassword ? 'text' : 'password'"
-      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-      @click:append="showPassword = !showPassword"
-      :rules="[rules.required]"
-    />
-    <v-text-field
-      label="新密碼"
-      v-model="form.newPassword"
-      :type="showPassword ? 'text' : 'password'"
-      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-      @click:append="showPassword = !showPassword"
-      :rules="[rules.required, rules.password]"
-    />
-    <v-text-field
-      label="確認新密碼"
-      v-model="form.confirmPassword"
-      :type="showPassword ? 'text' : 'password'"
-      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-      @click:append="showPassword = !showPassword"
-      :rules="[rules.required, rules.matchPassword]"
-    />
-    <v-btn
-      color="primary"
-      :disabled="!isValid"
-      :loading="loading"
-      @click="changePassword"
-      >修改密碼</v-btn
-    >
-  </v-form>
+  <v-container>
+    <v-row class="mb-4">
+      <v-col cols="12">
+        <h4>修改密碼</h4>
+      </v-col>
+    </v-row>
+    <v-form ref="formRef" v-model="isValid">
+      <v-text-field
+        label="舊密碼"
+        v-model="form.password"
+        :type="showPassword ? 'text' : 'password'"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+        :rules="[rules.required]"
+      />
+      <v-text-field
+        label="新密碼"
+        v-model="form.newPassword"
+        :type="showPassword ? 'text' : 'password'"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+        :rules="[rules.required, rules.password]"
+      />
+      <v-text-field
+        label="確認新密碼"
+        v-model="form.confirmPassword"
+        :type="showPassword ? 'text' : 'password'"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+        :rules="[rules.required, rules.matchPassword]"
+      />
+      <div class="text-center mt-6">
+        <v-btn
+          color="primary"
+          prepend-icon="mdi-lock-reset"
+          :disabled="!isValid"
+          :loading="loading"
+          @click="changePassword"
+          >修改密碼</v-btn
+        >
+      </div>
+    </v-form>
+  </v-container>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
 import * as api from "@/api/memberApi/UserApi";
+import Swal from "sweetalert2";
 
 const authStore = useAuthStore();
 const formRef = ref(null);
@@ -66,7 +77,16 @@ const changePassword = async () => {
   loading.value = true;
   try {
     await api.apiUpdatePassword(form.value);
-    // 可以做自動登出或跳回登入頁
+    Swal.fire({
+      icon: "success",
+      title: "修改完成",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+    formRef.value.resetValidation();
+    form.value.password = "";
+    form.value.newPassword = "";
+    form.value.confirmPassword = "";
   } finally {
     loading.value = false;
   }

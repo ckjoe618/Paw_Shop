@@ -13,11 +13,21 @@
           <v-btn
             type="submit"
             color="primary"
+            prepend-icon="mdi-email"
             :loading="loading"
             :disabled="!isValid"
             block
-            >發送重設連結</v-btn
+            >發送重設連結
+          </v-btn>
+          <v-btn
+            color="success"
+            block
+            class="mt-2 font-weight-bold text-white"
+            @click="oneClick"
           >
+            <v-icon start>mdi-flash</v-icon>
+            一鍵輸入
+          </v-btn>
         </v-form>
         <v-alert v-if="message" type="success" class="mt-4">{{
           message
@@ -58,5 +68,9 @@ const submit = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const oneClick = () => {
+  email.value = "pawshopispan@gmail.com";
 };
 </script>

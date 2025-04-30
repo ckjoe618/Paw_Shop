@@ -39,7 +39,7 @@
                   v-model="form.idno"
                   label="身分證字號"
                   prepend-inner-icon="mdi-card-account-details"
-                  :rules="[rules.required, rules.idno]"
+                  :rules="[rules.required, rules.idno, rules.idnoGender]"
                   variant="outlined"
                   maxlength="10"
                   clearable
@@ -130,6 +130,16 @@
                   <v-icon start>mdi-checkbox-marked-circle-outline</v-icon>
                   註冊
                 </v-btn>
+                <v-btn
+                  color="success"
+                  block
+                  size="large"
+                  class="mt-2 font-weight-bold text-white"
+                  @click="oneClick"
+                >
+                  <v-icon start>mdi-flash</v-icon>
+                  一鍵輸入
+                </v-btn>
               </v-col>
             </v-row>
           </v-form>
@@ -210,6 +220,17 @@ const rules = {
   idno: (v) => /^[A-Z][12]\d{8}$/.test(v) || "身分證格式錯誤",
   min: (n) => (v) => (v && v.length >= n) || `至少輸入 ${n} 字`,
   matchPassword: (v) => v === form.value.password || "密碼不一致",
+  idnoGender: (v) => {
+    if (!v || v.length < 2 || !form.value.gender) {
+      return true;
+    }
+    const secondChar = v.charAt(1);
+    if (form.value.gender === "男" && secondChar !== "1")
+      return "男生身分證第2碼必須是1";
+    if (form.value.gender === "女" && secondChar !== "2")
+      return "女生身分證第2碼必須是2";
+    return true;
+  },
 };
 
 const submit = async () => {
@@ -219,11 +240,27 @@ const submit = async () => {
   }
   loading.value = true;
   try {
-    await api.apiAddMember(form.value);
+    const data = await api.apiAddMember(form.value);
     router.push("/login");
   } finally {
     loading.value = false;
   }
+};
+
+const oneClick = () => {
+  const timestamp = Date.now();
+  const uniqueSuffix = String(timestamp).slice(-6); // 取時間戳後6碼
+  form.value = {
+    memberName: "陳之漢",
+    gender: "男",
+    idno: `A1${uniqueSuffix.padEnd(8, "0")}`, // 身分證：A1+6碼+補0
+    email: `test${timestamp}@example.com`,
+    phone: `09${uniqueSuffix.padEnd(8, "1")}`, // 手機：09+6碼+補1
+    birthDate: "1995-05-05",
+    account: `testuser${timestamp}`,
+    password: "123456",
+    confirmPassword: "123456",
+  };
 };
 
 onMounted(() => {

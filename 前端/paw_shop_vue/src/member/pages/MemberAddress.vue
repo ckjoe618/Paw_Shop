@@ -62,6 +62,7 @@
       @saved="fetchAddresses"
     />
   </v-container>
+  <DeleteConfirmDialog ref="deleteConfirmRef" />
 </template>
 
 <script setup>
@@ -71,12 +72,15 @@ import * as api from "@/api/memberApi/UserApi";
 import AddressCard from "@/member/components/AddressCard.vue";
 import AddressEditDialog from "@/member/components/AddressEditDialog.vue";
 import draggable from "vuedraggable";
+import DeleteConfirmDialog from "@/member/components/DeleteConfirmDialog.vue";
+import Swal from "sweetalert2";
 
 const authStore = useAuthStore();
 const addresses = ref([]);
 const dialog = ref(false);
 const dialogMode = ref("add");
 const editedAddress = ref(null);
+const deleteConfirmRef = ref(null);
 
 const fetchAddresses = async () => {
   const data = await api.apiFindAddress(authStore.memberId);
@@ -94,6 +98,12 @@ const onDragEnd = async () => {
       ...address,
       defaultStatus: index === 0,
     }));
+    Swal.fire({
+      icon: "success",
+      title: "修改完成",
+      showConfirmButton: false,
+      timer: 1000,
+    });
   }
 };
 
@@ -109,6 +119,12 @@ const setAsDefault = async (address) => {
     ...addr,
     defaultStatus: index === 0,
   }));
+  Swal.fire({
+    icon: "success",
+    title: "修改完成",
+    showConfirmButton: false,
+    timer: 1000,
+  });
 };
 
 const openAddDialog = () => {
@@ -132,7 +148,11 @@ const editAddress = (address) => {
 };
 
 const deleteAddress = async (address) => {
-  if (confirm("確定要刪除這筆地址嗎？")) {
+  const isConfirm = await deleteConfirmRef.value.openDialog({
+    title: "刪除地址",
+    message: `確定要刪除 ${address.recipientName} 的地址嗎？`,
+  });
+  if (isConfirm) {
     await api.apiDeleteAddress(address.addressId);
     fetchAddresses();
   }

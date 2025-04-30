@@ -89,7 +89,7 @@
           應付金額總計：NT$ {{ subtotal - discount + shipping }}
         </h5>
       </div>
-      <v-form>
+      <v-form ref="formRef">
         <!-- 優惠方式 -->
         <v-divider class="my-4" />
         <h4>
@@ -118,7 +118,7 @@
         <h4>
           <v-icon class="mr-2">mdi-truck-cargo-container</v-icon>選擇取貨方式
         </h4>
-        <v-radio-group v-model="pickupMethod">
+        <v-radio-group v-model="pickupMethod" :rules="pickupRules">
           <v-radio value="宅配" color="success">
             <template #label>
               <span style="font-weight: bold">宅配</span>
@@ -294,6 +294,8 @@ watch(usedPoints, (val) => {
 
 //取貨方式 & 付款方式
 const pickupMethod = ref("");
+const pickupRules = [(v) => !!v || "請選擇取貨方式"];
+const formRef = ref(null);
 const paymentMethod = ref(null);
 const paymentLocked = ref(false);
 watch(pickupMethod, (newMethod) => {
@@ -332,6 +334,9 @@ const keppShopping = () => {
   router.back();
 };
 const orderingInfo = async () => {
+  const result = await formRef.value.validate();
+  if (!result.valid) return;
+
   checkoutStore.cartItems = cartItems;
   checkoutStore.paymentMethod = paymentMethod.value;
   checkoutStore.pickupMethod = pickupMethod.value;
