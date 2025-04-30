@@ -237,10 +237,15 @@ const openDetailDialog = (order) => {
 };
 const updatePriceTotal = (newTotal) => {
   if (selectedOrder.value) {
-    selectedOrder.value.priceTotal = newTotal;
+    //前端先即時更新總額
+    const shippingFee = selectedOrder.value.shippingFee || 0;
+    const finalTotal = newTotal + shippingFee;
+    selectedOrder.value.priceTotal = finalTotal;
+    //傳後端
     axios.put("http://localhost:8080/api/admin/order/updatePriceTotal", {
       orderId: selectedOrder.value.orderId,
-      priceTotal: newTotal,
+      productPriceTotal: newTotal,
+      shippingFee: shippingFee,
     });
   }
 };
