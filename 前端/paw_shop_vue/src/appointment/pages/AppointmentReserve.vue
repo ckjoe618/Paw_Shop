@@ -111,7 +111,7 @@ import {
   apihandleQueryAppointmentPet,
   apihandleQueryBookingTime,
 } from "@/api/api";
-
+import Swal from "sweetalert2";
 const router = useRouter();
 const route = useRoute();
 const selectedServiceFromQuery = computed(() => route.query.service || "");
@@ -191,9 +191,13 @@ const minDate = computed(() => {
 const onDateChange = async () => {
   const data = form.value.date;
   if (!data) {
-    alert("請選擇一個日期");
-    return;
-  }
+  Swal.fire({
+    icon: "warning", 
+    title: "請選擇一個日期",
+    confirmButtonText: "確定",
+  });
+  return;
+}
 
   try {
     const res = await apihandleQueryBookingTime(data);
@@ -254,16 +258,22 @@ const submitForm = async () => {
     console.error("預約失敗", error);
   }
 };
-onMounted(() => {
+onMounted(async () => {
   const memberId = localStorage.getItem("memberId");
   if (!memberId) {
+    await Swal.fire({
+      icon: "warning",
+      title: "請先登入",
+      confirmButtonText: "確定",
+    });
     router.push("/login");
     return;
   }
-  
+
   form.value.memberId = memberId;
   fetchPetsByMember();
 });
+
 
 </script>
 

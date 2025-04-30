@@ -182,6 +182,8 @@ import { ref, onMounted, computed } from "vue";
 import { apiAppointmentsByStatus, apiAppointmentCancel } from "@/api/api";
 import QrCodeDisplay from "@/appointment/components/QrCodeDisplay.vue";
 import { useRoute } from "vue-router";
+import Swal from "sweetalert2";
+
 const router = useRoute();
 const toggleQRCode = (appointmentId) => {
   if (showQRCodeForAppointment.value === appointmentId) {
@@ -252,7 +254,15 @@ onMounted(() => {
     memberId.value = storedId;
     fetchAppointments();
   } else {
-    alert("尚未登入，請先登入會員");
+    Swal.fire({
+      icon: "warning",
+      title: "尚未登入",
+      text: "請先登入會員",
+      confirmButtonText: "前往登入",
+    }).then(() => {
+      // 你可以選擇導向登入頁面
+       router.push("/login");
+    });
   }
 });
 

@@ -66,15 +66,18 @@ const routes = [
       {
         path: "appointments/reserve",
         component: () => import("@/appointment/pages/AppointmentReserve.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "appointments/hendlereserve",
         component: () =>
           import("@/appointment/pages/AppointmentHendlePage.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "appointments/queryreserve",
         component: () => import("@/appointment/pages/AppointmentQueryPage.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "checkout",
@@ -109,10 +112,6 @@ const routes = [
         path: "/products/:id",
         name: "ProductDetailPage",
         component: () => import("@/product/frontsite/ProductDetailPage.vue"),
-      },
-      {
-        path: "checkin",
-        component: () => import("@/appointment/components/CheckinPage.vue"),
       },
       {
         path: "/favorites",
@@ -171,6 +170,11 @@ const routes = [
         path: "appointments/edit/:id",
         component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
         meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      {
+        path: "checkin",
+        component: () => import("@/appointment/components/CheckinPage.vue"),
+
       },
     ],
   },

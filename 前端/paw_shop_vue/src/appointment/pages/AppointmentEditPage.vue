@@ -131,7 +131,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { apishowUpdateAppointment, apiUpdateAppointment } from "@/api/api";
-
+import Swal from "sweetalert2";
 const route = useRoute();
 const router = useRouter();
 
@@ -211,13 +211,25 @@ async function submitUpdate() {
   }
 
   try {
-    await apiUpdateAppointment(appointment.value.appointmentId, formData);
-    alert("預約更新成功");
-    router.push("/admin/appointments");
-  } catch (error) {
-    alert("更新失敗，請稍後再試");
-    console.error(error);
-  }
+  await apiUpdateAppointment(appointment.value.appointmentId, formData);
+  
+  await Swal.fire({
+    icon: "success",
+    title: "預約更新成功",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+
+  router.push("/admin/appointments");
+
+} catch (error) {
+  await Swal.fire({
+    icon: "error",
+    title: "更新失敗，請稍後再試",
+    confirmButtonText: "確定",
+  });
+  console.error(error);
+}
 }
 onMounted(fetchAppointment);
 </script>
