@@ -149,7 +149,7 @@ const items = ref([
     title: "論壇",
     icon: "mdi-forum",
     children: [
-      { label: "文章管理", link: "/" },
+      { label: "文章管理", link: "/admin/discuss" },
       { label: "分類", link: "/" },
     ],
   },

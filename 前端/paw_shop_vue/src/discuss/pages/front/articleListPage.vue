@@ -127,10 +127,7 @@
 
       <!-- 右側聊天室 -->
       <v-col cols="3">
-        <v-card outlined>
-          <v-card-title>聊天室</v-card-title>
-          <v-card-text>（未來聊天室內容區）</v-card-text>
-        </v-card>
+        <chatRoom />
       </v-col>
     </v-row>
   </v-container>
@@ -142,6 +139,7 @@ import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useArticleStore } from "@/discuss/stores/articleStore";
 import { useCategoryStore } from "@/discuss/stores/categoryStore";
+import chatRoom from "@/discuss/components/chatRoom.vue";
 
 const router = useRouter();
 const articleStore = useArticleStore();

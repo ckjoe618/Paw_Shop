@@ -1,5 +1,6 @@
 package com.topics.discuss.controller.back;
 
+import com.topics.discuss.model.dto.response.AdminArticleDto;
 import com.topics.discuss.model.entity.ArticleBean;
 import com.topics.discuss.model.service.back.AdminArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ public class AdminArticleController {
     // RESTful API：取得所有文章
     @GetMapping("/article")
     @ResponseBody
-    public List<ArticleBean> getAllArticles() {
-        return adminArticleService.getAllArticles();
+    public ResponseEntity<List<AdminArticleDto>> getAllArticles() {
+        return ResponseEntity.ok(adminArticleService.getAllArticleDtos());
     }
 
     // RESTful API：取得單篇文章

@@ -57,7 +57,6 @@
 <script setup>
 import Editbtn from "@/order/components/buttons/formEditbtn.vue";
 import Deletebtn from "@/order/components/buttons/formDeletebtn.vue";
-import { defineProps } from "vue";
 import dayjs from "dayjs";
 
 const props = defineProps({
