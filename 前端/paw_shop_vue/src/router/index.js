@@ -114,10 +114,6 @@ const routes = [
         component: () => import("@/product/frontsite/ProductDetailPage.vue"),
       },
       {
-        path: "checkin",
-        component: () => import("@/appointment/components/CheckinPage.vue"),
-      },
-      {
         path: "/favorites",
         component: () => import("@/product/frontsite/FavoriteListPage.vue"),
       },
@@ -174,6 +170,11 @@ const routes = [
         path: "appointments/edit/:id",
         component: () => import("@/appointment/pages/AppointmentEditPage.vue"),
         meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      {
+        path: "checkin",
+        component: () => import("@/appointment/components/CheckinPage.vue"),
+
       },
     ],
   },
