@@ -99,11 +99,11 @@ public class CommentService {
 
 
     // 新增留言、回覆
-    public CommentBean addComment(CommentRequestDto dto) {
+    public CommentBean addComment(CommentRequestDto dto, int memberId) {
         CommentBean comment = new CommentBean();
 
         comment.setArticleId(dto.getArticleId());
-        comment.setMemberId(dto.getMemberId());
+        comment.setMemberId(memberId);
         comment.setContent(dto.getContent());
         comment.setDeleted(false);
         comment.setUpdatedDate(null);
