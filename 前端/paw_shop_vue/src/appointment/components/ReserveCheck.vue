@@ -39,16 +39,32 @@
   <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  
+  import Swal from "sweetalert2";
   const agreed = ref(false)
   const router = useRouter()
-  
+  const memberId = localStorage.getItem("memberId");
   function goToForm() {
-    if (agreed.value) {
-      router.push({
-        path: "/appointments/reserve",
-      })
-    }
+    if (!memberId) {
+    Swal.fire({
+      icon: "warning",
+      title: "請先登入會員",
+      confirmButtonText: "確定",
+    });
+    router.push("/login");
+    return;
+  }
+
+  if (agreed.value) {
+    router.push({
+      path: "/appointments/reserve",
+    });
+  } else {
+    Swal.fire({
+      icon: "info",
+      title: "請勾選同意條款後再繼續",
+      confirmButtonText: "好的",
+    });
+  }
   }
   </script>
   

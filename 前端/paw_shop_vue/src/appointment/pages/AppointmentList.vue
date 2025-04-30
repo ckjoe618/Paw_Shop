@@ -254,7 +254,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import DeleteButton from "@/order/components/buttons/formDeletebtn.vue";
 import EditButton from "@/order/components/buttons/formEditbtn.vue";
 import AddButton from "@/order/components/buttons/addbtn.vue";
-
+import Swal from "sweetalert2";
 const router = useRouter();
 const showSnackbar = ref(false);
 const snackbarMessage = ref("");
@@ -399,9 +399,13 @@ watch(
 const onDateChange = async () => {
   const data = form.value.date;
   if (!data) {
-    alert("請選擇一個日期");
-    return;
-  }
+  Swal.fire({
+    icon: "warning",
+    title: "請選擇一個日期",
+    confirmButtonText: "確定",
+  });
+  return;
+}
 
   try {
     const res = await apihandleQueryBookingTime(data);

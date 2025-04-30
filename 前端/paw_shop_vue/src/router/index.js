@@ -66,15 +66,18 @@ const routes = [
       {
         path: "appointments/reserve",
         component: () => import("@/appointment/pages/AppointmentReserve.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "appointments/hendlereserve",
         component: () =>
           import("@/appointment/pages/AppointmentHendlePage.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "appointments/queryreserve",
         component: () => import("@/appointment/pages/AppointmentQueryPage.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "checkout",
