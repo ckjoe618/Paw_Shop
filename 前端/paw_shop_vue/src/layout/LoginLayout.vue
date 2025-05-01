@@ -111,10 +111,10 @@ const loading = ref(false);
 const handlerLogin = () => performLogin(loginId.value, password.value);
 
 // 管理者快速登入
-const handlerAdminLogin = () => performLogin("lzx5", "123456");
+const handlerAdminLogin = () => performLogin("wxm1", "123456789");
 
 // 使用者快速登入
-const handlerUserLogin = () => performLogin("wxm1", "123456");
+const handlerUserLogin = () => performLogin("cpr6", "123456");
 
 // Google 登入
 const handleGoogleLogin = async () => {
