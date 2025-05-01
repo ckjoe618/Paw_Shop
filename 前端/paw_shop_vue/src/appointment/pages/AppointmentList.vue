@@ -11,14 +11,9 @@
           <AddButton @click="() => (openCreateModal = true)" />
         </v-row>
 
-        <v-alert
-          v-if="phoneNumberError"
-          type="error"
-          dense
-          class="phone-number-error"
-        >
-          {{ phoneNumberError }}
-        </v-alert>
+        <v-btn @click="handleOneClickLogin" color="primary" size="large" variant="text">
+  
+  </v-btn>
         <!-- 查詢表單 -->
         <v-form @submit.prevent="selectAppointmentByPhoneNum" class="d-flex align-items-center">
     <label class="me-2">預約電話:</label>
@@ -235,6 +230,7 @@
         {{ snackbarMessage }}
       </v-snackbar>
     </div>
+   
   </v-container>
 </template>
 
@@ -260,7 +256,13 @@ const showSnackbar = ref(false);
 const snackbarMessage = ref("");
 const appointments = ref([]);
 const phoneNumber = ref("");
-const phoneNumberError = ref("");
+const handleOneClickLogin = async () => {
+  const testPhoneNumber = "0912000001";  // 測試用的電話號碼
+
+
+  // 填入一鍵登入的預設值
+  phoneNumber.value = testPhoneNumber;
+}
 const openCreateModal = ref(false);
 const modalRef = ref(null);
 let modalInstance = null;
@@ -573,10 +575,5 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-.phone-number-error {
-  max-width: 70%;
-  width: 70%;
-  font-size: 0.875rem;
-  margin-top: 8px;
-}
+
 </style>

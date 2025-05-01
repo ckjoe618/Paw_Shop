@@ -142,7 +142,7 @@ const items = ref([
     icon: "mdi-calendar-account",
     children: [
       { label: "預約紀錄", link: "/admin/appointments" },
-      { label: "服務項目資訊", link: "/" },
+      { label: "預約報到管理", link: "/admin/checkin?appointmentId=" },
     ],
   },
   {
