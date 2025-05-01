@@ -18,7 +18,7 @@
     </div>
 
     <!-- 按讚按鈕 -->
-    <v-row align="center" dense>
+    <v-row align="center" dense class="justify-space-between">
       <v-col cols="auto">
         <v-btn
           variant="text"
@@ -29,6 +29,14 @@
           {{ likeCount }}
         </v-btn>
       </v-col>
+
+      <v-col cols="auto" v-if="!deleted">
+        <ActionMenu
+          :isOwner="isOwner"
+          :showFavorite="false"
+          @delete="$emit('delete')"
+        />
+      </v-col>
     </v-row>
 
     <!-- 放樓中樓（回覆） -->
@@ -37,8 +45,14 @@
 </template>
 
 <script setup>
+import { useAuthStore } from "@/member/stores/auth";
+import ActionMenu from "@/discuss/components/comment/actionMenu.vue";
+
+const authStore = useAuthStore();
+
 const props = defineProps({
   floor: Number,
+  memberId: Number,
   memberName: String,
   content: String,
   deleted: {
@@ -55,7 +69,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["toggle-like"]);
+const isOwner = props.memberId === authStore.memberId;
+
+const emit = defineEmits(["toggle-like", "delete"]);
 </script>
 
 <style scoped>
@@ -63,4 +79,3 @@ const emit = defineEmits(["toggle-like"]);
   background-color: #f5f5f5;
 }
 </style>
-  

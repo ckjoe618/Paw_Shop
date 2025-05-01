@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 import DiscussArticleCard from "@/discuss/components/discussArticleCard.vue";
 import DiscussCommentCard from "@/discuss/components/discussCommentCard.vue";
@@ -70,6 +71,69 @@ const floorComments = computed(() => {
 
   return floors;
 });
+
+const handleDelete = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "確定要刪除這篇文章嗎？",
+    text: "刪除後將無法復原！",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "是，刪除",
+    cancelButtonText: "取消",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete(
+        `/api/articles/${article.value.articleId}/member/${authStore.memberId}`
+      );
+      await Swal.fire("已刪除！", "文章已成功刪除。", "success");
+      router.push("/discuss");
+    } catch (error) {
+      console.error("刪除文章失敗", error);
+      Swal.fire("錯誤", "刪除失敗，請稍後再試", "error");
+    }
+  }
+};
+
+const handleDeleteComment = async (commentId) => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "確定要刪除這則留言嗎？",
+    text: "刪除後將無法恢復",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "是，刪除！",
+    cancelButtonText: "取消",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete("/api/comments", {
+        data: {
+          commentId,
+          memberId: authStore.memberId,
+        },
+      });
+      await loadComments();
+      Swal.fire("刪除成功", "留言已被刪除", "success");
+    } catch (err) {
+      console.error("刪除留言失敗", err);
+      Swal.fire("錯誤", "刪除留言失敗", "error");
+    }
+  }
+};
 
 // 主要初始化
 onMounted(async () => {
@@ -194,28 +258,34 @@ const toggleCommentLike = async (commentId) => {
           :title="article.title"
           :categoryName="article.categoryName"
           :memberName="article.memberName"
+          :memberId="article.memberId"
+          :articleId="article.articleId"
           :isLiked="isLiked"
           :likeCount="likeCount"
           @toggle-like="toggleLike"
+          @delete="handleDelete"
         >
-          <div class="article-content">
+          <!-- slot（預設插槽：內文） -->
+          <div class="article-content mb-2">
             {{ article.content }}
           </div>
 
-          <!-- 主文留言 -->
-          <div v-if="mainReplies.length > 0" class="mt-4">
-            <DiscussReplyItem
-              v-for="reply in mainReplies"
-              :key="reply.commentId"
-              :memberName="reply.memberName"
-              :content="reply.content"
+          <!-- slot name="footer"（留言與留言框） -->
+          <template #footer>
+            <div v-if="mainReplies.length > 0" class="mt-4">
+              <DiscussReplyItem
+                v-for="reply in mainReplies"
+                :key="reply.commentId"
+                :memberName="reply.memberName"
+                :content="reply.content"
+              />
+            </div>
+            <CommentInput
+              :articleId="+articleId"
+              :parentCommentId="-1"
+              @success="loadComments"
             />
-          </div>
-          <CommentInput
-            :articleId="+articleId"
-            :parentCommentId="-1"
-            @success="loadComments"
-          />
+          </template>
         </DiscussArticleCard>
 
         <v-row justify="center" v-else-if="loading">
@@ -245,12 +315,14 @@ const toggleCommentLike = async (commentId) => {
           >
             <DiscussCommentCard
               :floor="floor.floor"
+              :memberId="floor.memberId"
               :memberName="floor.deleted ? '系統' : floor.memberName"
               :content="floor.deleted ? '（此留言已被刪除）' : floor.content"
               :deleted="floor.deleted"
               :isLiked="commentLikeStatusMap[floor.commentId] || false"
               :likeCount="commentLikeCountMap[floor.commentId] || 0"
               @toggle-like="() => toggleCommentLike(floor.commentId)"
+              @delete="() => handleDeleteComment(floor.commentId)"
             >
               <!-- 樓中樓留言 -->
               <template v-if="floor.replies && floor.replies.length > 0">

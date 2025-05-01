@@ -66,7 +66,7 @@
             :class="{ active: selectedCategory === '' }"
             style="cursor: pointer"
           >
-            <v-list-item-title>全部分類</v-list-item-title>
+            <v-list-item-title>全部</v-list-item-title>
           </v-list-item>
           <v-list-item
             v-for="category in categories"
