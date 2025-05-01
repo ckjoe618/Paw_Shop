@@ -127,7 +127,10 @@ const items = ref([
   {
     title: "使用者",
     icon: "mdi-account",
-    children: [{ label: "用戶管理", link: "/admin/member" }],
+    children: [
+      { label: "用戶管理", link: "/admin/member" },
+      { label: "用戶分析", link: "/admin/memberAnalyze" },
+    ],
   },
   {
     title: "賣場",

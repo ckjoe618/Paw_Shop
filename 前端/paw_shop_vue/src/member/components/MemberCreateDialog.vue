@@ -196,7 +196,7 @@ const oneClick = () => {
     birthDate: "1995-05-05",
     account: `user${randomSix}`,
     password: "123456",
-    role: "USER",
+    role: "ADMIN",
   };
 };
 </script>

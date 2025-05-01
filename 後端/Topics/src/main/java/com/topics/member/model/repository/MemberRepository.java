@@ -24,4 +24,21 @@ public interface MemberRepository extends JpaRepository<MemberBean, Integer> {
 
 	Boolean existsByPhone(String phone);
 
+	@Query(value = """
+			    SELECT FORMAT(create_account_date, 'yyyy-MM') AS month, COUNT(*) AS count
+			    FROM member
+			    WHERE create_account_date >= DATEADD(MONTH, -6, GETDATE())
+			    GROUP BY FORMAT(create_account_date, 'yyyy-MM')
+			    ORDER BY month
+			""", nativeQuery = true)
+	List<Object[]> countNewMembersByMonth();
+
+	@Query(value = """
+			    SELECT gender, COUNT(*) AS count
+			    FROM member
+			    WHERE gender IS NOT NULL
+			    GROUP BY gender
+			""", nativeQuery = true)
+	List<Object[]> countByGender();
+
 }
