@@ -101,7 +101,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/member/stores/auth";
-import * as api from "@/api/memberApi/UserApi.js";
+import * as api from "@/api/memberApi/UserApi";
 import Swal from "sweetalert2";
 
 const authStore = useAuthStore();

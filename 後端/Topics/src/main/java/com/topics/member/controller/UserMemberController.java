@@ -110,12 +110,12 @@ public class UserMemberController {
 	@PutMapping("/address/default/{addressId}")
 	public ResponseEntity<?> updateDefaultAddress(@PathVariable Integer addressId) {
 		SecurityUtil.checkUserLoginForAddress(addressId, addressRepository);
-		MemberDto member = addressService.updateDefaultAddress(addressId);
-		return ResponseUtil.success(member);
+		AddressDto address = addressService.updateDefaultAddress(addressId);
+		return ResponseUtil.success(address);
 	}
 
 	@DeleteMapping("/address/{addressId}")
-	public ResponseEntity<?> updateAddressById(@PathVariable Integer addressId) {
+	public ResponseEntity<?> updateAddressByAddressId(@PathVariable Integer addressId) {
 		SecurityUtil.checkUserLoginForAddress(addressId, addressRepository);
 		addressService.deleteAddressById(addressId);
 		return ResponseUtil.success("刪除地址成功");

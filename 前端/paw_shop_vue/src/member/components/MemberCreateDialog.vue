@@ -76,14 +76,22 @@
         >
           確認
         </v-btn>
+        <v-btn
+          color="success"
+          class="font-weight-bold text-white"
+          @click="oneClick"
+        >
+          一鍵輸入
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import * as api from "@/api/memberApi/AdminApi.js";
+import { ref, watch, computed, nextTick } from "vue";
+import * as api from "@/api/memberApi/AdminApi";
+import { getRandomNumber, getRandomName } from "@/member/assets/GetRandom";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -150,8 +158,10 @@ watch(dialog, (val) => {
   }
 });
 
-const close = () => {
+const close = async () => {
   emit("update:dialog", false);
+  await nextTick();
+  document.activeElement?.blur();
 };
 
 const submit = async () => {
@@ -173,5 +183,20 @@ const submit = async () => {
       timer: 1000,
     });
   }
+};
+
+const oneClick = () => {
+  const randomSix = getRandomNumber(6);
+  form.value = {
+    memberName: getRandomName(),
+    gender: "男",
+    idno: "A1" + getRandomNumber(8),
+    email: `user${randomSix}@test.com`,
+    phone: "09" + getRandomNumber(8),
+    birthDate: "1995-05-05",
+    account: `user${randomSix}`,
+    password: "123456",
+    role: "USER",
+  };
 };
 </script>

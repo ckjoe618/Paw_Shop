@@ -94,7 +94,7 @@
 import PawShopLogo from "@/member/assets/images/PawShop_white_logo.png";
 import GoogleLogo from "@/member/assets/images/Google_logo.png";
 import { ref } from "vue";
-import * as api from "@/api/memberApi/UserApi.js";
+import * as api from "@/api/memberApi/UserApi";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 import { syncCartToBackend } from "@/order/components/frontsite/useCart";
