@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/member/stores/auth";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 import DiscussArticleCard from "@/discuss/components/discussArticleCard.vue";
 import DiscussCommentCard from "@/discuss/components/discussCommentCard.vue";
@@ -70,6 +71,69 @@ const floorComments = computed(() => {
 
   return floors;
 });
+
+const handleDelete = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "確定要刪除這篇文章嗎？",
+    text: "刪除後將無法復原！",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "是，刪除",
+    cancelButtonText: "取消",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete(
+        `/api/articles/${article.value.articleId}/member/${authStore.memberId}`
+      );
+      await Swal.fire("已刪除！", "文章已成功刪除。", "success");
+      router.push("/discuss");
+    } catch (error) {
+      console.error("刪除文章失敗", error);
+      Swal.fire("錯誤", "刪除失敗，請稍後再試", "error");
+    }
+  }
+};
+
+const handleDeleteComment = async (commentId) => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "確定要刪除這則留言嗎？",
+    text: "刪除後將無法恢復",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "是，刪除！",
+    cancelButtonText: "取消",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete("/api/comments", {
+        data: {
+          commentId,
+          memberId: authStore.memberId,
+        },
+      });
+      await loadComments();
+      Swal.fire("刪除成功", "留言已被刪除", "success");
+    } catch (err) {
+      console.error("刪除留言失敗", err);
+      Swal.fire("錯誤", "刪除留言失敗", "error");
+    }
+  }
+};
 
 // 主要初始化
 onMounted(async () => {
@@ -182,6 +246,92 @@ const toggleCommentLike = async (commentId) => {
     console.error("切換留言按讚失敗", error);
   }
 };
+
+const handleEdit = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  const { value: formValues } = await Swal.fire({
+    title: "編輯文章",
+    html:
+      `<input id="swal-title" class="swal2-input" placeholder="標題" value="${article.value.title}">` +
+      `<textarea id="swal-content" class="swal2-textarea" placeholder="內容">${article.value.content}</textarea>`,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: "儲存",
+    cancelButtonText: "取消",
+    preConfirm: () => {
+      const title = document.getElementById("swal-title").value.trim();
+      const content = document.getElementById("swal-content").value.trim();
+      if (!title || !content) {
+        Swal.showValidationMessage("標題與內容不可為空");
+        return;
+      }
+      return { title, content };
+    },
+  });
+
+  if (formValues) {
+    try {
+      await axios.put("/api/articles", {
+        articleId: article.value.articleId,
+        title: formValues.title,
+        content: formValues.content,
+        categoryId: article.value.categoryId,
+      });
+      const updated = await fetchArticleDetail(articleId);
+      article.value = updated;
+      Swal.fire("成功", "文章已更新", "success");
+    } catch (error) {
+      console.error("文章更新失敗", error);
+      Swal.fire("錯誤", "更新失敗", "error");
+    }
+  }
+};
+
+const isFavorited = ref(false);
+
+// 初始化時檢查是否收藏
+onMounted(async () => {
+  // ...原本的邏輯
+  if (authStore.isLoggedIn) {
+    try {
+      const favRes = await axios.post("/api/favorites/check", {
+        articleId: articleId,
+        memberId: authStore.memberId,
+      });
+      isFavorited.value = favRes.data;
+    } catch (e) {
+      console.warn("查詢收藏狀態失敗", e);
+    }
+  }
+});
+
+const toggleFavorite = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  try {
+    if (isFavorited.value) {
+      await axios.delete("/api/favorites", {
+        data: { articleId: articleId, memberId: authStore.memberId },
+      });
+      isFavorited.value = false;
+    } else {
+      await axios.post("/api/favorites", {
+        articleId: articleId,
+        memberId: authStore.memberId,
+      });
+      isFavorited.value = true;
+    }
+  } catch (err) {
+    console.error("切換收藏失敗", err);
+  }
+};
 </script>
 
 <template>
@@ -194,28 +344,36 @@ const toggleCommentLike = async (commentId) => {
           :title="article.title"
           :categoryName="article.categoryName"
           :memberName="article.memberName"
+          :memberId="article.memberId"
+          :articleId="article.articleId"
           :isLiked="isLiked"
           :likeCount="likeCount"
           @toggle-like="toggleLike"
+          @delete="handleDelete"
+          @edit="handleEdit"
+          @toggle-favorite="toggleFavorite"
         >
-          <div class="article-content">
+          <!-- slot（預設插槽：內文） -->
+          <div class="article-content mb-2">
             {{ article.content }}
           </div>
 
-          <!-- 主文留言 -->
-          <div v-if="mainReplies.length > 0" class="mt-4">
-            <DiscussReplyItem
-              v-for="reply in mainReplies"
-              :key="reply.commentId"
-              :memberName="reply.memberName"
-              :content="reply.content"
+          <!-- slot name="footer"（留言與留言框） -->
+          <template #footer>
+            <div v-if="mainReplies.length > 0" class="mt-4">
+              <DiscussReplyItem
+                v-for="reply in mainReplies"
+                :key="reply.commentId"
+                :memberName="reply.memberName"
+                :content="reply.content"
+              />
+            </div>
+            <CommentInput
+              :articleId="+articleId"
+              :parentCommentId="-1"
+              @success="loadComments"
             />
-          </div>
-          <CommentInput
-            :articleId="+articleId"
-            :parentCommentId="-1"
-            @success="loadComments"
-          />
+          </template>
         </DiscussArticleCard>
 
         <v-row justify="center" v-else-if="loading">
@@ -245,12 +403,14 @@ const toggleCommentLike = async (commentId) => {
           >
             <DiscussCommentCard
               :floor="floor.floor"
+              :memberId="floor.memberId"
               :memberName="floor.deleted ? '系統' : floor.memberName"
               :content="floor.deleted ? '（此留言已被刪除）' : floor.content"
               :deleted="floor.deleted"
               :isLiked="commentLikeStatusMap[floor.commentId] || false"
               :likeCount="commentLikeCountMap[floor.commentId] || 0"
               @toggle-like="() => toggleCommentLike(floor.commentId)"
+              @delete="() => handleDeleteComment(floor.commentId)"
             >
               <!-- 樓中樓留言 -->
               <template v-if="floor.replies && floor.replies.length > 0">

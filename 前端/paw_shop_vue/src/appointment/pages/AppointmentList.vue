@@ -11,22 +11,29 @@
           <AddButton @click="() => (openCreateModal = true)" />
         </v-row>
 
-        <v-btn @click="handleOneClickLogin" color="primary" size="large" variant="text">
-  
-  </v-btn>
+        <v-btn
+          @click="handleOneClickLogin"
+          color="primary"
+          size="large"
+          variant="text"
+        >
+        </v-btn>
         <!-- 查詢表單 -->
-        <v-form @submit.prevent="selectAppointmentByPhoneNum" class="d-flex align-items-center">
-    <label class="me-2">預約電話:</label>
-    <v-text-field
-      v-model="phoneNumber"
-      hide-details
-      dense
-      style="width: 250px"
-      class="me-2"
-      maxlength="10"
-      type="tel"
-    ></v-text-field>
-  </v-form>
+        <v-form
+          @submit.prevent="selectAppointmentByPhoneNum"
+          class="d-flex align-items-center"
+        >
+          <label class="me-2">預約電話:</label>
+          <v-text-field
+            v-model="phoneNumber"
+            hide-details
+            dense
+            style="width: 250px"
+            class="me-2"
+            maxlength="10"
+            type="tel"
+          ></v-text-field>
+        </v-form>
       </div>
 
       <!-- 新增預約 Modal -->
@@ -191,7 +198,7 @@
           <DeleteButton @click="() => showDeleteModal(item.appointmentId)" />
         </template>
       </v-data-table>
-      
+
       <!-- 隱藏欄位用來存 appointmentId -->
       <input type="hidden" id="appointmentIdToDelete" />
       <input type="hidden" id="appointmentIdToUpdate" />
@@ -230,7 +237,6 @@
         {{ snackbarMessage }}
       </v-snackbar>
     </div>
-   
   </v-container>
 </template>
 
@@ -257,12 +263,11 @@ const snackbarMessage = ref("");
 const appointments = ref([]);
 const phoneNumber = ref("");
 const handleOneClickLogin = async () => {
-  const testPhoneNumber = "0912000001";  // 測試用的電話號碼
-
+  const testPhoneNumber = "0910000001"; // 測試用的電話號碼
 
   // 填入一鍵登入的預設值
   phoneNumber.value = testPhoneNumber;
-}
+};
 const openCreateModal = ref(false);
 const modalRef = ref(null);
 let modalInstance = null;
@@ -401,13 +406,13 @@ watch(
 const onDateChange = async () => {
   const data = form.value.date;
   if (!data) {
-  Swal.fire({
-    icon: "warning",
-    title: "請選擇一個日期",
-    confirmButtonText: "確定",
-  });
-  return;
-}
+    Swal.fire({
+      icon: "warning",
+      title: "請選擇一個日期",
+      confirmButtonText: "確定",
+    });
+    return;
+  }
 
   try {
     const res = await apihandleQueryBookingTime(data);
@@ -430,12 +435,12 @@ const onDateChange = async () => {
   }
 };
 async function selectAppointmentByPhoneNum() {
-  console.log('查詢電話：', phoneNumber.value);
+  console.log("查詢電話：", phoneNumber.value);
   const data = phoneNumber.value.trim();
 
   try {
     const res = await apiFindAppointment(data);
-    console.log('查詢結果:', res);
+    console.log("查詢結果:", res);
     if (res && res.data && Array.isArray(res.data)) {
       appointments.value = res.data;
     } else {
@@ -443,7 +448,7 @@ async function selectAppointmentByPhoneNum() {
       console.warn("未找到相關預約資料");
     }
   } catch (err) {
-    console.error('查詢失敗:', err);
+    console.error("查詢失敗:", err);
   }
 }
 
@@ -574,6 +579,4 @@ onMounted(async () => {
   }
 });
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>
