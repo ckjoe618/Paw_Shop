@@ -1,72 +1,65 @@
 <template>
   <v-card class="mb-4" outlined rounded>
+    <!-- 文章標題 -->
     <v-card-title class="text-h5 font-weight-bold">{{ title }}</v-card-title>
 
+    <!-- 分類與作者 -->
     <v-card-subtitle class="d-flex align-center">
       <span class="mr-2">{{ categoryName }}</span>
       <v-divider vertical class="mx-2"></v-divider>
       <span>{{ memberName }}</span>
     </v-card-subtitle>
 
+    <!-- 📝 內文 -->
     <v-card-text class="py-4">
       <slot />
-      <!-- 內文插槽 -->
     </v-card-text>
 
-    <v-divider></v-divider>
-
-    <v-card-actions>
-      <!-- 按讚按鈕，根據 isLiked 顯示不同的文字與樣式 -->
-      <v-btn
-        variant="text"
-        :icon="isLiked ? 'mdi-heart' : 'mdi-heart-outline'"
-        ripple
-        @click="toggleLike"
-      >
+    <!-- ❤️ 按讚 + 操作選單（移到內文底下） -->
+    <v-row class="px-4 pb-2" align="center" justify="space-between">
+      <v-btn variant="text" ripple @click="emit('toggle-like')">
+        <v-icon start>
+          {{ isLiked ? "mdi-thumb-up" : "mdi-thumb-up-outline" }}
+        </v-icon>
         {{ likeCount }}
       </v-btn>
-    </v-card-actions>
+
+      <ActionMenu
+        :isOwner="authStore.memberId === memberId"
+        :isArticle="true"
+        :articleId="articleId"
+        @delete="$emit('delete')"
+        @edit="emit('edit')"
+        @favorite="emit('toggle-favorite')"
+      />
+    </v-row>
+
+    <!-- 🗨️ 主文留言與留言輸入插槽 -->
+    <v-card-text class="pt-0">
+      <slot name="footer" />
+    </v-card-text>
   </v-card>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import ActionMenu from "./comment/actionMenu.vue";
+import { useAuthStore } from "@/member/stores/auth";
 
-// 接收來自父組件的props
+const authStore = useAuthStore();
+
 const props = defineProps({
   title: String,
   categoryName: String,
   memberName: String,
+  memberId: Number,
+  articleId: Number,
   isLiked: Boolean,
   likeCount: Number,
+  isFavorited: Boolean,
 });
 
-// local state，用來管理按讚狀態
-const likeCount = ref(props.likeCount);
-const isLiked = ref(props.isLiked);
+const emit = defineEmits(["toggle-like", "delete", "edit", "toggle-favorite"]);
 
-// 當 props 改變時，更新 local state
-watch(
-  () => props.likeCount,
-  (newValue) => {
-    likeCount.value = newValue;
-  }
-);
-
-watch(
-  () => props.isLiked,
-  (newValue) => {
-    isLiked.value = newValue;
-  }
-);
-
-// 定義事件發射
-const emit = defineEmits(["toggle-like"]);
-
-// 按讚邏輯：切換按讚狀態，並向父組件發射事件
-const toggleLike = () => {
-  isLiked.value = !isLiked.value; // 切換按讚狀態
-  likeCount.value += isLiked.value ? 1 : -1; // 根據狀態增加或減少讚數
-  emit("toggle-like", isLiked.value); // 發送事件給父組件，更新按讚狀態
-};
+// 是否是作者
+const isOwner = authStore.memberId === props.memberId;
 </script>
