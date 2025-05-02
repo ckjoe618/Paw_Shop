@@ -295,16 +295,33 @@ const exportToPdf = async () => {
   });
 
   const imgData = canvas.toDataURL("image/png");
-  const pdf = new jsPDF("landscape", "mm", "a4");
+  const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = pdf.internal.pageSize.getWidth();
-  const imgHeight = (canvas.height * pageWidth) / canvas.width;
+  const pageHeight = pdf.internal.pageSize.getHeight();
 
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let position = 0;
   const dateStr = new Date().toLocaleDateString("zh-TW").replaceAll("/", "-");
   const filename = `會員分析報告_${dateStr}.pdf`;
 
-  pdf.addImage(imgData, "PNG", 0, 0, pageWidth, imgHeight);
-  pdf.save(filename);
+  // 多頁處理
+  if (imgHeight <= pageHeight) {
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+  } else {
+    // 多頁分段
+    let remainingHeight = imgHeight;
 
-  exporting.value = false; // 還原按鈕
+    while (remainingHeight > 0) {
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      remainingHeight -= pageHeight;
+      position -= pageHeight;
+      if (remainingHeight > 0) pdf.addPage();
+    }
+  }
+
+  pdf.save(filename);
+  exporting.value = false; // 顯示按鈕
 };
 </script>
