@@ -50,7 +50,10 @@ const items = ref([
     title: "使用者",
     icon: "fas fa-user",
     image: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
-    button: [{ label: "用戶管理", link: "/admin/member" }],
+    button: [
+      { label: "用戶管理", link: "/admin/member" },
+      { label: "用戶分析", link: "/admin/memberAnalyze" },
+    ],
   },
   {
     title: "賣場",
@@ -67,7 +70,7 @@ const items = ref([
     image: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
     button: [
       { label: "預約紀錄", link: "/admin/appointments" },
-      { label: "服務項目資訊", link: "" },
+      { label: "預約報到管理", link: "/admin/checkin?appointmentId=" },
     ],
   },
   {

@@ -37,36 +37,53 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
-  import Swal from "sweetalert2";
+  import Swal from "sweetalert2"
+  
   const agreed = ref(false)
   const router = useRouter()
-  const memberId = localStorage.getItem("memberId");
-  function goToForm() {
-    if (!memberId) {
-    Swal.fire({
-      icon: "warning",
-      title: "請先登入會員",
-      confirmButtonText: "確定",
-    });
-    router.push("/login");
-    return;
-  }
+  
+  const memberId = ref(localStorage.getItem("memberId"))
+  
+  onMounted(() => {
+  const redirectedFromLogin = sessionStorage.getItem("justLoggedIn") === "true";
+  const agreedFromSession = sessionStorage.getItem("agreed") === "true";
 
-  if (agreed.value) {
-    router.push({
-      path: "/appointments/reserve",
-    });
-  } else {
-    Swal.fire({
-      icon: "info",
-      title: "請勾選同意條款後再繼續",
-      confirmButtonText: "好的",
-    });
+  if (redirectedFromLogin && memberId.value && agreedFromSession) {
+    // 確保 agreed 被設為 true 才能觸發按鈕跳轉條件
+    agreed.value = true;
+
+    sessionStorage.removeItem("justLoggedIn");
+    sessionStorage.removeItem("agreed");
+
+    // 跳轉到預約表單
+    router.push("/appointments/reserve");
   }
+});
+
+  function goToForm() {
+    if (!memberId.value) {
+      localStorage.setItem("redirectPath", "/appointments/reserve")
+      // 透過 sessionStorage 記錄：稍後登入完要導回來再判斷
+      sessionStorage.setItem("justLoggedIn", "true")
+      sessionStorage.setItem("agreed", "true");
+      router.push("/login?redirect=/appointments/reserve");
+      return
+    }
+  
+    if (agreed.value) {
+      router.push("/appointments/reserve")
+    } else {
+      Swal.fire({
+        icon: "info",
+        title: "請勾選同意條款後再繼續",
+        confirmButtonText: "好的",
+      })
+    }
   }
   </script>
+  
   
   <style scoped>
   .container {

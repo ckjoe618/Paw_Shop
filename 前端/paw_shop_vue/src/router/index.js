@@ -159,6 +159,10 @@ const routes = [
         component: () => import("@/member/pages/AdminMemberPage.vue"),
       },
       {
+        path: "memberAnalyze",
+        component: () => import("@/member/components/MemberDashboard.vue"),
+      },
+      {
         path: "discuss",
         component: () => import("@/discuss/pages/backend/ArticleListPage.vue"),
       },

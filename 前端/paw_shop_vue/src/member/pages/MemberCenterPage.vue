@@ -12,7 +12,7 @@
               v-for="item in menuItems"
               :key="item.route"
               :to="item.route"
-              :active="$route.path === item.route"
+              :active="route.path === item.route"
               class="rounded"
               link
             >
@@ -35,7 +35,7 @@ import { useAuthStore } from "@/member/stores/auth";
 import { useRoute } from "vue-router";
 
 const authStore = useAuthStore();
-const $route = useRoute();
+const route = useRoute();
 
 const menuItems = [
   { label: "個人檔案", route: "/member/profile" },

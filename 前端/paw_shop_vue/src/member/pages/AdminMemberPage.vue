@@ -33,13 +33,14 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import * as api from "@/api/memberApi/AdminApi.js";
+import * as api from "@/api/memberApi/AdminApi";
 import MemberTable from "@/member/components/MemberTable.vue";
 import MemberEditDialog from "@/member/components/MemberEditDialog.vue";
 import MemberSearchPanel from "@/member/components/MemberSearchPanel.vue";
 import MemberCreateDialog from "@/member/components/MemberCreateDialog.vue";
 import DeleteConfirmDialog from "@/member/components/DeleteConfirmDialog.vue";
 import AddBtn from "@/order/components/buttons/addbtn.vue";
+import Swal from "sweetalert2";
 
 const members = ref([]);
 const filteredMembers = ref([]);
@@ -98,10 +99,17 @@ const handleDeactivate = async (member) => {
     title: "停用會員",
     message: `確定要停用 ${member.memberName} 嗎？`,
   });
-  if (isConfirm) {
-    await api.apiDeleteMember(member.memberId);
-    fetchMembers();
+  if (!isConfirm) {
+    return;
   }
+  await api.apiDeleteMember(member.memberId);
+  await fetchMembers();
+  Swal.fire({
+    icon: "success",
+    title: "刪除完成",
+    showConfirmButton: false,
+    timer: 1000,
+  });
 };
 
 onMounted(() => {

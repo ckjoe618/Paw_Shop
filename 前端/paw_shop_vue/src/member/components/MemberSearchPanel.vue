@@ -41,7 +41,7 @@
 <script setup>
 import { ref, watch } from "vue";
 
-const keyword = ref(null);
+const keyword = ref("");
 const role = ref(null);
 const status = ref(null);
 

@@ -186,7 +186,8 @@ import cat01 from "@/member/assets/images/註冊_貓01.png";
 import dog02 from "@/member/assets/images/註冊_狗02.png";
 import cat02 from "@/member/assets/images/註冊_貓02.png";
 import { ref, onMounted } from "vue";
-import * as api from "@/api/memberApi/UserApi.js";
+import * as api from "@/api/memberApi/UserApi";
+import { getRandomNumber, getRandomName } from "@/member/assets/GetRandom";
 import router from "@/router";
 
 const today = new Date().toISOString().split("T")[0];
@@ -248,16 +249,15 @@ const submit = async () => {
 };
 
 const oneClick = () => {
-  const timestamp = Date.now();
-  const uniqueSuffix = String(timestamp).slice(-6); // 取時間戳後6碼
+  const randomSix = getRandomNumber(6);
   form.value = {
-    memberName: "陳之漢",
+    memberName: getRandomName(),
     gender: "男",
-    idno: `A1${uniqueSuffix.padEnd(8, "0")}`, // 身分證：A1+6碼+補0
-    email: `test${timestamp}@example.com`,
-    phone: `09${uniqueSuffix.padEnd(8, "1")}`, // 手機：09+6碼+補1
+    idno: "A1" + getRandomNumber(8),
+    email: `user${randomSix}@test.com`,
+    phone: "09" + getRandomNumber(8),
     birthDate: "1995-05-05",
-    account: `testuser${timestamp}`,
+    account: `user${randomSix}`,
     password: "123456",
     confirmPassword: "123456",
   };

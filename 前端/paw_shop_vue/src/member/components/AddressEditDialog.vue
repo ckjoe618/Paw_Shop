@@ -26,7 +26,7 @@
           <v-select
             label="城市"
             v-model="localAddress.city"
-            :items="cities"
+            :items="county"
             :rules="[rules.required]"
             @update:modelValue="onCityChange"
           />
@@ -56,26 +56,32 @@
           @click="save"
           >儲存</v-btn
         >
+        <v-btn
+          color="success"
+          class="font-weight-bold text-white"
+          @click="oneClick"
+        >
+          一鍵輸入
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup>
-import { cityList } from "@/member/assets/city.js";
-import { addressList } from "@/member/assets/zipcodes.js";
-import { ref, watch, computed } from "vue";
+import { addressList } from "@/member/assets/city";
+import { ref, watch, computed, nextTick } from "vue";
+import { useAuthStore } from "@/member/stores/auth";
 import * as api from "@/api/memberApi/UserApi";
-import { useAuthStore } from "../stores/auth";
+import { getRandomNumber, getRandomName } from "@/member/assets/GetRandom";
 import Swal from "sweetalert2";
 
-const auth = useAuthStore();
-
+const authStore = useAuthStore();
 const formRef = ref(null);
 const isValid = ref(false);
 const loading = ref(false);
 const localAddress = ref({});
-const cities = ref(cityList.map((city) => city.name));
+const county = ref([...new Set(addressList.map((item) => item.county))]);
 const districts = ref([]);
 const focusRef = ref(false);
 
@@ -99,35 +105,31 @@ const rules = {
 
 watch(
   dialog,
-  (val) => {
+  async (val) => {
     if (val) {
       localAddress.value = { ...props.address };
       if (localAddress.value.city) {
         updateDistricts(localAddress.value.city);
       }
     } else {
-      setTimeout(() => {
-        formRef.value?.resetValidation();
-        localAddress.value = {};
-        districts.value = [];
-        focusRef.value = false;
-      });
+      await nextTick(); // 等待 DOM 清空完畢後再重設
+      formRef.value?.resetValidation();
+      localAddress.value = {};
+      districts.value = [];
+      focusRef.value = false;
     }
   },
   { immediate: true }
 );
 
-// 選城市時，更新區域下拉
-const onCityChange = (cityName) => {
-  localAddress.value.city = cityName;
-  updateDistricts(cityName);
+// 切換城市時，更新對應地區與郵遞區號
+const onCityChange = (county) => {
+  localAddress.value.city = county;
+  updateDistricts(county);
   // 如果只有一個區，直接選起來＋自動帶zipcode
   if (districts.value.length === 1) {
     localAddress.value.district = districts.value[0];
-    const found = addressList.find(
-      (item) => item.county === cityName && item.city === districts.value[0]
-    );
-    localAddress.value.zipcode = found ? found.zipcode : "";
+    onDistrictChange(districts.value[0]);
   } else {
     localAddress.value.district = "";
     localAddress.value.zipcode = "";
@@ -135,17 +137,17 @@ const onCityChange = (cityName) => {
 };
 
 // 更新區域選單
-const updateDistricts = (cityName) => {
+const updateDistricts = (county) => {
   districts.value = addressList
-    .filter((item) => item.county === cityName)
+    .filter((item) => item.county === county)
     .map((item) => item.city);
 };
 
 // 選區域時，自動帶入郵遞區號
 const onDistrictChange = (districtName) => {
-  const cityName = localAddress.value.city;
+  const county = localAddress.value.city;
   const found = addressList.find(
-    (item) => item.county === cityName && item.city === districtName
+    (item) => item.county === county && item.city === districtName
   );
   localAddress.value.zipcode = found ? found.zipcode : "";
   // 自動聚焦到詳細地址欄
@@ -154,7 +156,10 @@ const onDistrictChange = (districtName) => {
   });
 };
 
-const close = () => emit("update:dialog", false);
+const close = () => {
+  document.activeElement?.blur();
+  emit("update:dialog", false);
+};
 
 const save = async () => {
   const valid = await formRef.value.validate();
@@ -164,7 +169,10 @@ const save = async () => {
   loading.value = true;
   try {
     if (props.mode === "add") {
-      await api.apiAddAddress(localAddress.value);
+      const data = await api.apiAddAddress(localAddress.value);
+      if (data.defaultStatus) {
+        authStore.update({ address: data });
+      }
       Swal.fire({
         icon: "success",
         title: "新增完成",
@@ -172,7 +180,10 @@ const save = async () => {
         timer: 1000,
       });
     } else {
-      await api.apiUpdateAddress(localAddress.value);
+      const data = await api.apiUpdateAddress(localAddress.value);
+      if (data.defaultStatus) {
+        authStore.update({ address: data });
+      }
       Swal.fire({
         icon: "success",
         title: "修改完成",
@@ -185,5 +196,21 @@ const save = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const oneClick = () => {
+  const randomAddress =
+    addressList[Math.floor(Math.random() * addressList.length)];
+  localAddress.value = {
+    ...localAddress.value,
+    recipientName: getRandomName(),
+    recipientPhone: "09" + getRandomNumber(8),
+    city: randomAddress.county,
+    district: randomAddress.city,
+    zipcode: randomAddress.zipcode,
+    addressDetail: "中山路" + getRandomNumber(3) + "號",
+  };
+  updateDistricts(randomAddress.county);
+  onDistrictChange(randomAddress.city);
 };
 </script>
