@@ -32,7 +32,7 @@ export const totalCartQty = computed(() =>
 
 export async function syncCartToBackend() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  console.log("同步購物車:", cart);
+  // console.log("同步購物車:", cart);
   if (cart.length === 0) return;
 
   try {

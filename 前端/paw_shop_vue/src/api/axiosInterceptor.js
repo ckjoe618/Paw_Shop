@@ -43,7 +43,7 @@ api.interceptors.response.use(
         hasShownAlert = true;
         Swal.fire({
           icon: "error",
-          title: "登入已過期，請重新登入",
+          title: message,
           showConfirmButton: false,
           timer: 1000,
         });

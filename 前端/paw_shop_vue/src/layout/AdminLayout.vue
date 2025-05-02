@@ -127,7 +127,10 @@ const items = ref([
   {
     title: "使用者",
     icon: "mdi-account",
-    children: [{ label: "用戶管理", link: "/admin/member" }],
+    children: [
+      { label: "用戶管理", link: "/admin/member" },
+      { label: "用戶分析", link: "/admin/memberAnalyze" },
+    ],
   },
   {
     title: "賣場",
@@ -142,7 +145,7 @@ const items = ref([
     icon: "mdi-calendar-account",
     children: [
       { label: "預約紀錄", link: "/admin/appointments" },
-      { label: "服務項目資訊", link: "/" },
+      { label: "預約報到管理", link: "/admin/checkin?appointmentId=" },
     ],
   },
   {

@@ -18,12 +18,7 @@
         </select>
       </div>
 
-      <!-- 回首頁按鈕 -->
-      <div class="col-md-6 text-end">
-        <router-link to="/home" class="btn btn-success mt-3"
-          >回首頁</router-link
-        >
-      </div>
+     
     </div>
 
     <!-- 預約列表 -->

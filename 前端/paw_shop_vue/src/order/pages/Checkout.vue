@@ -334,6 +334,7 @@ const keppShopping = () => {
   router.back();
 };
 const orderingInfo = async () => {
+  console.log("總金額", priceTotal.value);
   const result = await formRef.value.validate();
   if (!result.valid) return;
 

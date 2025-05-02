@@ -15,10 +15,19 @@ public interface AddressRepository extends JpaRepository<AddressBean, Integer> {
 
 	@Query("from AddressBean WHERE member.memberId = :memberId AND defaultStatus = true AND activeStatus = true")
 	AddressBean findActiveAddressByMemberId(@Param("memberId") Integer memberId);
-	
+
 	@Modifying
 	@Transactional
 	@Query("UPDATE AddressBean SET defaultStatus = false WHERE member.memberId = :memberId")
 	void clearDefaultByMemberId(@Param("memberId") Integer memberId);
+
+	@Query(value = """
+			    SELECT city, COUNT(*) AS total
+			    FROM address
+			    WHERE active_status = 1
+			    GROUP BY city
+			    ORDER BY total DESC
+			""", nativeQuery = true)
+	List<Object[]> countActiveMembersByCity();
 
 }

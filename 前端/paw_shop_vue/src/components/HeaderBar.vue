@@ -139,7 +139,6 @@ import {
 const router = useRouter();
 const authStore = useAuthStore();
 const cartMenuVisible = ref(false);
-
 const search = ref("");
 const showSearch = ref(false);
 const showSearchIcon = ref(true);

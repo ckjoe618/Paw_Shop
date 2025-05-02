@@ -92,7 +92,7 @@ const onDragEnd = async () => {
   if (addresses.value.length > 0) {
     const newDefaultId = addresses.value[0].addressId;
     const data = await api.apiUpdateDefaultAddress(newDefaultId);
-    authStore.update(data);
+    authStore.update({ address: data });
     // 直接標記第一筆
     addresses.value = addresses.value.map((address, index) => ({
       ...address,
@@ -110,7 +110,7 @@ const onDragEnd = async () => {
 // 點選設為預設
 const setAsDefault = async (address) => {
   const data = await api.apiUpdateDefaultAddress(address.addressId);
-  authStore.update(data);
+  authStore.update({ address: data });
   // 把被選中的那筆移到陣列最前面
   addresses.value = [
     address,
@@ -132,7 +132,7 @@ const openAddDialog = () => {
   editedAddress.value = {
     memberId: authStore.memberId,
     recipientName: "",
-    phone: "",
+    recipientPhone: "",
     zipcode: "",
     city: "",
     district: "",
@@ -152,10 +152,33 @@ const deleteAddress = async (address) => {
     title: "刪除地址",
     message: `確定要刪除 ${address.recipientName} 的地址嗎？`,
   });
-  if (isConfirm) {
-    await api.apiDeleteAddress(address.addressId);
-    fetchAddresses();
+  if (!isConfirm) {
+    return;
   }
+  await api.apiDeleteAddress(address.addressId);
+  await fetchAddresses();
+
+  if (address.defaultStatus && addresses.value.length > 0) {
+    const newDefault = addresses.value[0];
+    const data = await api.apiUpdateDefaultAddress(newDefault.addressId);
+    authStore.update({ address: data });
+    addresses.value = addresses.value.map((addr, index) => ({
+      ...addr,
+      defaultStatus: index === 0,
+    }));
+    Swal.fire({
+      icon: "success",
+      title: "預設地址已更新",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+  }
+  Swal.fire({
+    icon: "success",
+    title: "地址已刪除",
+    showConfirmButton: false,
+    timer: 1000,
+  });
 };
 
 onMounted(() => {
