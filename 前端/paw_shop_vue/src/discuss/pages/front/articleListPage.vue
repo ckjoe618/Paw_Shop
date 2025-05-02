@@ -159,7 +159,7 @@ const goToPostPage = () => {
 };
 
 const goToProfilePage = () => {
-  router.push("/member");
+  router.push("/discuss/favorites");
 };
 
 const goToArticle = (articleId) => {

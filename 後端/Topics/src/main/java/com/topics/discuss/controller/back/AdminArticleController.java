@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/discuss")
+@RequestMapping("/api/discuss")
 public class AdminArticleController {
 
     @Autowired
@@ -55,10 +55,9 @@ public class AdminArticleController {
     }
 
     // RESTful API：刪除文章
-    @DeleteMapping("/article/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> deleteArticle(@PathVariable Integer id) {
-        adminArticleService.deleteArticle(id);
+    @DeleteMapping("/admin/{articleId}")
+    public ResponseEntity<Void> adminDeleteArticle(@PathVariable int articleId) {
+        adminArticleService.adminDeleteArticle(articleId); // 呼叫新的 service 方法
         return ResponseEntity.noContent().build();
     }
 }

@@ -246,6 +246,92 @@ const toggleCommentLike = async (commentId) => {
     console.error("切換留言按讚失敗", error);
   }
 };
+
+const handleEdit = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  const { value: formValues } = await Swal.fire({
+    title: "編輯文章",
+    html:
+      `<input id="swal-title" class="swal2-input" placeholder="標題" value="${article.value.title}">` +
+      `<textarea id="swal-content" class="swal2-textarea" placeholder="內容">${article.value.content}</textarea>`,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: "儲存",
+    cancelButtonText: "取消",
+    preConfirm: () => {
+      const title = document.getElementById("swal-title").value.trim();
+      const content = document.getElementById("swal-content").value.trim();
+      if (!title || !content) {
+        Swal.showValidationMessage("標題與內容不可為空");
+        return;
+      }
+      return { title, content };
+    },
+  });
+
+  if (formValues) {
+    try {
+      await axios.put("/api/articles", {
+        articleId: article.value.articleId,
+        title: formValues.title,
+        content: formValues.content,
+        categoryId: article.value.categoryId,
+      });
+      const updated = await fetchArticleDetail(articleId);
+      article.value = updated;
+      Swal.fire("成功", "文章已更新", "success");
+    } catch (error) {
+      console.error("文章更新失敗", error);
+      Swal.fire("錯誤", "更新失敗", "error");
+    }
+  }
+};
+
+const isFavorited = ref(false);
+
+// 初始化時檢查是否收藏
+onMounted(async () => {
+  // ...原本的邏輯
+  if (authStore.isLoggedIn) {
+    try {
+      const favRes = await axios.post("/api/favorites/check", {
+        articleId: articleId,
+        memberId: authStore.memberId,
+      });
+      isFavorited.value = favRes.data;
+    } catch (e) {
+      console.warn("查詢收藏狀態失敗", e);
+    }
+  }
+});
+
+const toggleFavorite = async () => {
+  if (!authStore.isLoggedIn) {
+    router.push("/login");
+    return;
+  }
+
+  try {
+    if (isFavorited.value) {
+      await axios.delete("/api/favorites", {
+        data: { articleId: articleId, memberId: authStore.memberId },
+      });
+      isFavorited.value = false;
+    } else {
+      await axios.post("/api/favorites", {
+        articleId: articleId,
+        memberId: authStore.memberId,
+      });
+      isFavorited.value = true;
+    }
+  } catch (err) {
+    console.error("切換收藏失敗", err);
+  }
+};
 </script>
 
 <template>
@@ -264,6 +350,8 @@ const toggleCommentLike = async (commentId) => {
           :likeCount="likeCount"
           @toggle-like="toggleLike"
           @delete="handleDelete"
+          @edit="handleEdit"
+          @toggle-favorite="toggleFavorite"
         >
           <!-- slot（預設插槽：內文） -->
           <div class="article-content mb-2">

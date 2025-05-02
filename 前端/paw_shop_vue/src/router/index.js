@@ -130,6 +130,11 @@ const routes = [
         path: "discuss/:articleId",
         component: () => import("@/discuss/pages/front/articleDetailPage.vue"),
       },
+      {
+        path: "discuss/favorites",
+        component: () =>
+          import("@/discuss/pages/front/favoriteArticlePage.vue"),
+      },
     ],
   },
   {
@@ -174,7 +179,6 @@ const routes = [
       {
         path: "checkin",
         component: () => import("@/appointment/components/CheckinPage.vue"),
-
       },
     ],
   },

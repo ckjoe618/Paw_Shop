@@ -17,12 +17,10 @@
 
     <!-- ❤️ 按讚 + 操作選單（移到內文底下） -->
     <v-row class="px-4 pb-2" align="center" justify="space-between">
-      <v-btn
-        variant="text"
-        :icon="isLiked ? 'mdi-heart' : 'mdi-heart-outline'"
-        ripple
-        @click="emit('toggle-like')"
-      >
+      <v-btn variant="text" ripple @click="emit('toggle-like')">
+        <v-icon start>
+          {{ isLiked ? "mdi-thumb-up" : "mdi-thumb-up-outline" }}
+        </v-icon>
         {{ likeCount }}
       </v-btn>
 
@@ -31,6 +29,8 @@
         :isArticle="true"
         :articleId="articleId"
         @delete="$emit('delete')"
+        @edit="emit('edit')"
+        @favorite="emit('toggle-favorite')"
       />
     </v-row>
 
@@ -55,9 +55,10 @@ const props = defineProps({
   articleId: Number,
   isLiked: Boolean,
   likeCount: Number,
+  isFavorited: Boolean,
 });
 
-const emit = defineEmits(["toggle-like", "delete"]);
+const emit = defineEmits(["toggle-like", "delete", "edit", "toggle-favorite"]);
 
 // 是否是作者
 const isOwner = authStore.memberId === props.memberId;

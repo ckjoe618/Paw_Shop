@@ -20,12 +20,10 @@
     <!-- 按讚按鈕 -->
     <v-row align="center" dense class="justify-space-between">
       <v-col cols="auto">
-        <v-btn
-          variant="text"
-          :icon="isLiked ? 'mdi-thumb-up' : 'mdi-thumb-up-outline'"
-          ripple
-          @click="$emit('toggle-like')"
-        >
+        <v-btn variant="text" ripple @click="$emit('toggle-like')">
+          <v-icon start>
+            {{ isLiked ? "mdi-thumb-up" : "mdi-thumb-up-outline" }}
+          </v-icon>
           {{ likeCount }}
         </v-btn>
       </v-col>
