@@ -27,7 +27,7 @@ public class EcpayPaymentController {
         params.put("TotalAmount", String.valueOf((int)order.getAmount()));
         params.put("TradeDesc", "PawShop付款");
         params.put("ItemName", order.getItemName());
-        params.put("ReturnURL", "https://073d-1-163-253-22.ngrok-free.app/api/ecpay/return");
+        params.put("ReturnURL", "https://0b9b-111-243-190-174.ngrok-free.app/api/ecpay/return");
         params.put("ChoosePayment", "Credit");
         //params.put("OrderResultURL", "http://localhost:5173/orderResult");
         params.put("ClientBackURL", "http://localhost:5173/orderResult");
