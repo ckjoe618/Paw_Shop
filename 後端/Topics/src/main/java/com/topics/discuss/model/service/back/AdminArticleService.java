@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class AdminArticleService {
@@ -76,7 +77,14 @@ public class AdminArticleService {
 		return articleRepo.save(existing); // 儲存更新後的資料
 	}
 
-	public void deleteArticle(Integer id) {
-		articleRepo.deleteById(id);
+	public void adminDeleteArticle(int articleId) {
+		ArticleBean article = articleRepo.findById(articleId)
+				.orElseThrow(() -> new NoSuchElementException("找不到文章"));
+
+		if (!article.isDeleted()) {
+			article.setDeleted(true);
+			article.setUpdatedDate(LocalDateTime.now());
+			articleRepo.save(article);
+		}
 	}
 }

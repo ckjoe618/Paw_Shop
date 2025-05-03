@@ -1,6 +1,8 @@
 package com.topics.member.controller;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,4 +54,22 @@ public class AdminMemberController {
 		return ResponseUtil.success(memberList);
 	}
 
+	@GetMapping("/member-growth")
+	public ResponseEntity<?> memberGrowthAnalysis() {
+		Map<String, Object> memberGrowthAnalysis = adminMemberService.memberGrowthAnalysis();
+		return ResponseUtil.success(memberGrowthAnalysis);
+	}
+	
+	@GetMapping("/member-gender")
+	public ResponseEntity<?> memberGenderAnalysis() {
+		Map<String, Object> memberGenderAnalysis = adminMemberService.memberGenderAnalysis();
+		return ResponseUtil.success(memberGenderAnalysis);
+	}
+	
+	@GetMapping("/member-location")
+	public ResponseEntity<?> memberCityDistribution() {
+		Map<String, Object> memberCityDistribution = adminMemberService.memberCityDistribution();
+		return ResponseUtil.success(memberCityDistribution);
+	}
+	
 }

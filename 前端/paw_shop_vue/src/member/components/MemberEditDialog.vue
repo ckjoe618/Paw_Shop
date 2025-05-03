@@ -60,9 +60,9 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import { useAuthStore } from "../stores/auth";
-import * as api from "@/api/memberApi/AdminApi.js";
+import { ref, watch, computed, nextTick } from "vue";
+import { useAuthStore } from "@/member/stores/auth";
+import * as api from "@/api/memberApi/AdminApi";
 import Swal from "sweetalert2";
 
 const authStore = useAuthStore();
@@ -94,20 +94,23 @@ const rules = {
 
 watch(
   dialog,
-  (val) => {
+  async (val) => {
     if (val) {
       localMember.value = { ...props.member };
     } else {
-      setTimeout(() => {
-        formRef.value?.resetValidation();
-        localMember.value = {};
-      });
+      await nextTick(); // 等待 DOM 清空完畢後再重設
+      formRef.value?.resetValidation();
+      localMember.value = {};
     }
   },
   { immediate: true }
 );
 
-const close = () => emit("update:dialog", false);
+const close = async () => {
+  emit("update:dialog", false);
+  await nextTick();
+  document.activeElement?.blur();
+};
 
 const submit = async () => {
   const valid = await formRef.value.validate();

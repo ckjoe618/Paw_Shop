@@ -39,6 +39,14 @@
           @click="changePassword"
           >修改密碼</v-btn
         >
+        <v-btn
+          color="success"
+          class="font-weight-bold text-white mx-2"
+          @click="oneClick"
+        >
+          <v-icon start>mdi-flash</v-icon>
+          一鍵輸入
+        </v-btn>
       </div>
     </v-form>
   </v-container>
@@ -83,12 +91,21 @@ const changePassword = async () => {
       showConfirmButton: false,
       timer: 1000,
     });
-    formRef.value.resetValidation();
-    form.value.password = "";
-    form.value.newPassword = "";
-    form.value.confirmPassword = "";
+    setTimeout(() => {
+      authStore.logout();
+      window.location.href = "/login";
+    }, 1000);
   } finally {
     loading.value = false;
   }
+};
+
+const oneClick = () => {
+  form.value = {
+    memberId: authStore.memberId,
+    password: "123456",
+    newPassword: "123456789",
+    confirmPassword: "123456789",
+  };
 };
 </script>

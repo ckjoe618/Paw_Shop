@@ -66,7 +66,7 @@
             :class="{ active: selectedCategory === '' }"
             style="cursor: pointer"
           >
-            <v-list-item-title>全部分類</v-list-item-title>
+            <v-list-item-title>全部</v-list-item-title>
           </v-list-item>
           <v-list-item
             v-for="category in categories"
@@ -159,7 +159,7 @@ const goToPostPage = () => {
 };
 
 const goToProfilePage = () => {
-  router.push("/member");
+  router.push("/discuss/favorites");
 };
 
 const goToArticle = (articleId) => {
