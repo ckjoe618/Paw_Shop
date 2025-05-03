@@ -2,7 +2,7 @@
   <v-card flat tile class="pa-0" style="position: sticky; top: 140px; z-index: 1;">
     <!-- 標題 -->
     <div class="text-h6 font-weight-bold px-4 pt-4 pb-2">
-      Category
+      分類
     </div>
     <v-divider class="mx-4"></v-divider>
 
@@ -17,21 +17,21 @@
         <template v-slot:prepend>
           <v-icon v-if="selectedCategory === null" size="small" color="green">mdi-check-circle</v-icon>
         </template>
-        <v-list-item-title>All</v-list-item-title>
+        <v-list-item-title>全部</v-list-item-title>
       </v-list-item>
 
       <v-list-item
-        v-for="category in categories"
-        :key="category"
-        :value="category"
-        @click="selectCategory(category)"
-        :class="{ 'bg-grey-lighten-3': selectedCategory === category }"
+        v-for="cat in categoryOptions"
+        :key="cat.value"
+        :value="cat.value"
+        @click="selectCategory(cat.value)"
+        :class="{ 'bg-grey-lighten-3': selectedCategory === cat.value }"
         class="rounded"
       >
         <template v-slot:prepend>
-          <v-icon v-if="selectedCategory === category" size="small" color="green">mdi-check-circle</v-icon>
+          <v-icon v-if="selectedCategory === cat.value" size="small" color="green">mdi-check-circle</v-icon>
         </template>
-        <v-list-item-title class="text-capitalize">{{ category }}</v-list-item-title>
+        <v-list-item-title>{{ cat.label }}</v-list-item-title>
       </v-list-item>
     </v-list>
 
@@ -63,11 +63,18 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValueCategory', 'update:modelValuePrice', 'filter-change'])
 
-const categories = ['food', 'supplies', 'supplements', 'pet_snacks', 'clean', 'catlitterseries']
+const categoryOptions = [
+  { value: 'food',            label: '主食' },
+  { value: 'supplies',        label: '生活用品&玩具' },
+  { value: 'supplements',     label: '保健品' },
+  { value: 'pet_snacks',      label: '副食&零食' },
+  { value: 'clean',           label: '沐浴&潔淨' },
+  { value: 'catlitterseries', label: '貓砂' }
+]
 const selectedCategory = ref(null)
 const priceRange = ref([0, 5000])
 
-// 保證初次與後續都同步 props 傳入值
+// 同步 props
 watchEffect(() => {
   selectedCategory.value = props.modelValueCategory
 })
@@ -88,6 +95,6 @@ function selectCategory(category) {
   selectedCategory.value = selectedCategory.value === category ? null : category
 }
 </script>
-  
-  <style scoped>
-  </style>
+
+<style scoped>
+</style>
