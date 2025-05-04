@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pt-16 px-4 pb-6">
+  <v-container class="pt-16 px-4 pb-16">
     <h2 class="text-h5 font-weight-bold mb-1">我的收藏</h2>
 
     <v-row>

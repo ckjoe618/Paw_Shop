@@ -36,6 +36,7 @@
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
         @click:append-inner="visible = !visible"
+        @keydown.enter="handlerLogin"
         v-model="password"
       ></v-text-field>
 
@@ -111,10 +112,10 @@ const loading = ref(false);
 const handlerLogin = () => performLogin(loginId.value, password.value);
 
 // 管理者快速登入
-const handlerAdminLogin = () => performLogin("user1", "123456");
+const handlerAdminLogin = () => performLogin("wxm1", "123456");
 
 // 使用者快速登入
-const handlerUserLogin = () => performLogin("user6", "123456");
+const handlerUserLogin = () => performLogin("cpr6", "123456");
 
 // Google 登入
 const handleGoogleLogin = async () => {
